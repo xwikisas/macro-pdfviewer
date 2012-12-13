@@ -2,7 +2,7 @@
 
 <xwikidoc>
   <web>XWiki</web>
-  <name>PDF Viewer Macro</name>
+  <name>PDFMacro</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -15,7 +15,7 @@
   <date>1355405608000</date>
   <contentUpdateDate>1355405608000</contentUpdateDate>
   <version>1.1</version>
-  <title>PDFMacro</title>
+  <title>PDF Viewer Macro</title>
   <template/>
   <defaultTemplate/>
   <validationScript/>
