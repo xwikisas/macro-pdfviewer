@@ -26,10 +26,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
    <groupId>org.xwiki.contrib</groupId>
-   <artifactId>xwiki-macro-pdf-parent</artifactId>
+   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
    <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>xwiki-macro-pdf-js</artifactId>
+  <artifactId>xwiki-macro-pdfviewer-js</artifactId>
   <packaging>pom</packaging>
   <name>XWiki Macro - PDF Viewer - Javascript</name>
   <version>1.0-SNAPSHOT</version>

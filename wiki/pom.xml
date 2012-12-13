@@ -26,10 +26,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
    <groupId>org.xwiki.contrib</groupId>
-   <artifactId>xwiki-macro-pdf-parent</artifactId>
+   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
    <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>xwiki-macro-pdf</artifactId>
+  <artifactId>xwiki-macro-pdfviewer</artifactId>
   <packaging>xar</packaging>
   <name>XWiki Macro - PDF Viewer</name>
   <build>
@@ -46,7 +46,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>xwiki-macro-pdf-js</artifactId>
+                  <artifactId>xwiki-macro-pdfviewer-js</artifactId>
                   <version>${project.version}</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
@@ -70,7 +70,7 @@
             </goals>
             <configuration>
               <file>${project.build.directory}/pdfviewer/pdfviewer.zip</file>
-              <sourceDocument>${basedir}/src/main/resources/XWiki/PDFMacro.xml</sourceDocument>
+              <sourceDocument>${basedir}/src/main/resources/XWiki/PDFViewerMacro.xml</sourceDocument>
             </configuration>
           </execution>
         </executions>

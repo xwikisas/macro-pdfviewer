@@ -2,8 +2,8 @@
 This package is based on pdf.js by andreasgal.
 See http://mozilla.github.com/pdf.js for more information
 
-It has been adapted and packaged for usage by the XWiki PDF Macro
-See http://extensions.xwiki.org/xwiki/bin/view/Extensions/PDFMacro for more information
+It has been adapted and packaged for usage by the XWiki PDF Viewer Macro
+See http://extensions.xwiki.org/xwiki/bin/view/Extensions/PDF+Viewer+Macro for more information
 
 The modified modules are:
 

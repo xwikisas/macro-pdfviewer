@@ -2,7 +2,7 @@
 
 <xwikidoc>
   <web>XWiki</web>
-  <name>PDFMacro</name>
+  <name>PDFViewerMacro</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -257,7 +257,7 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </visibility>
     </class>
-    <name>XWiki.PDFMacro</name>
+    <name>XWiki.PDFViewerMacro</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>c21007eb-5ebe-4048-9081-52d8739c58fb</guid>
@@ -274,7 +274,7 @@ No pdf URL provided
 #else
  #set($url = $doc.getAttachmentURL($file))
 #end
-#set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFMacro").getAttachmentURL("pdfviewer.zip"))
+#set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFViewerMacro").getAttachmentURL("pdfviewer.zip"))
 {{html clean=false}}
 &lt;iframe src="${pdfviewerurl}/pdf-viewer/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
 {{/html}}
@@ -355,7 +355,7 @@ No pdf URL provided
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
     </class>
-    <name>XWiki.PDFMacro</name>
+    <name>XWiki.PDFViewerMacro</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>2ca63cd8-423e-49aa-bf53-84a201c41d2d</guid>
@@ -421,7 +421,7 @@ No pdf URL provided
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
     </class>
-    <name>XWiki.PDFMacro</name>
+    <name>XWiki.PDFViewerMacro</name>
     <number>1</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>94db3764-f00a-486a-bbde-48057fff65b1</guid>
@@ -487,7 +487,7 @@ No pdf URL provided
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
     </class>
-    <name>XWiki.PDFMacro</name>
+    <name>XWiki.PDFViewerMacro</name>
     <number>2</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>90e37db1-ed7b-4b65-82d6-4e3678a0dd58</guid>
