@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.xwiki.contrib</groupId>
+  <artifactId>xwiki-macro-pdf-parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>XWiki Macro - PDF Viewer</name>
+  <packaging>pom</packaging>
+  <properties>
+    <platform.version>4.3</platform.version>
+  </properties>
+  <scm>
+    <connection>scm:git:git://github.com:xwiki-contrib/macro-pdfviewer.git</connection>
+    <developerConnection>scm:git:git@github.com:xwiki-contrib/macro-pdfviewer.git</developerConnection>
+    <url>https://github.com/xwiki-contrib/macro-pdfviewer</url>
+  </scm>
+  <modules>
+    <module>js</module>
+    <module>wiki</module>
+  </modules>
+  <distributionManagement>
+    <site>
+      <id>maven.xwikisas.com</id>
+      <url>scp://maven.xwikisas.com/home/maven/public_html/site</url>
+    </site>
+    <repository>
+      <id>maven.xwikisas.com</id>
+      <name>XWiki SAS Maven2 Remote Repository for Releases</name>
+      <url>scp://maven.xwikisas.com/home/maven/public_html/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>maven.xwikisas.com</id>
+      <name>XWiki SASMaven2 Development Repository for Snapshots</name>
+      <url>scp://maven.xwikisas.com/home/maven/public_html/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <build>
+   <pluginManagement>
+     <plugins>      
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-deploy-plugin</artifactId>
+         <!-- Lock down plugin version for build reproducibility -->
+         <version>2.7</version>
+         <!-- We're deploying using the SCP protocol so we need the SSH Wagon for Maven 3 to work -->
+         <dependencies>
+           <dependency>
+             <groupId>org.apache.maven.wagon</groupId>
+             <artifactId>wagon-ssh</artifactId>
+             <version>2.0</version>
+           </dependency>
+         </dependencies>
+       </plugin>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-site-plugin</artifactId>
+         <version>3.0</version>
+         <!-- Deactivate site plugin, we don't need it and apparently it has created issues to other people so 
+              I'll just try to avoid that -->
+         <configuration>
+           <skip>true</skip>
+           <skipDeploy>true</skipDeploy>
+         </configuration>
+       </plugin>
+     </plugins>
+   </pluginManagement>
+  </build>  
+</project>
+
