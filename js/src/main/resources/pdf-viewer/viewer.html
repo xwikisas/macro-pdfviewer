@@ -39,7 +39,9 @@ Modification include i
       // Ludovic Dubost changes to active locale from hash parameter
       var hashParams = PDFView.parseQueryString(location.hash.substring(1));
       var locale = hashParams['locale'];
-      document.write('<link rel="resource" type="application/l10n" href="l10n/' +  locale + '/viewer.properties"/>');
+      if(typeof(locale) != 'undefined') {
+        document.write('<link rel="resource" type="application/l10n" href="l10n/' +  locale + '/viewer.properties"/>');
+      }
     </script>
     <!-- End change Ludovic Dubost -->
   </head>
