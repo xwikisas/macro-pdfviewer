@@ -274,9 +274,16 @@ No pdf URL provided
 #else
  #set($url = $doc.getAttachmentURL($file))
 #end
+#set($url = $escapetool.url($url))
 #set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFViewerMacro").getAttachmentURL("pdfviewer.zip"))
 {{html clean=false}}
-&lt;iframe src="${pdfviewerurl}/pdf-viewer/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
+  &lt;!--[if lt IE 9 ]&gt;
+    &lt;div class="box warningmessage"&gt;PDF Viewer : not compatible with IE &lt;= 8&lt;/div&gt;
+  &lt;![endif]--&gt; 
+  &lt;![if !(lt IE 9)]&gt;
+    &lt;iframe src="${pdfviewerurl}/pdf-viewer/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&amp;&gt;&lt;/iframe&gt;
+  &lt;![endif]--&gt; 
+  &lt;/script&gt;
 {{/html}}
 #end
 {{/velocity}}</code>
