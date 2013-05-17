@@ -42,20 +42,11 @@
     <module>wiki</module>
   </modules>
   <distributionManagement>
-    <site>
-      <id>maven.xwikisas.com</id>
-      <url>scp://maven.xwikisas.com/home/maven/public_html/site</url>
-    </site>
     <repository>
-      <id>maven.xwikisas.com</id>
-      <name>XWiki SAS Maven2 Remote Repository for Releases</name>
-      <url>scp://maven.xwikisas.com/home/maven/public_html/releases</url>
+      <id>xwiki-staging</id>
+      <name>XWiki Staging Repository</name>
+      <url>http://nexus.xwiki.org/nexus/service/local/staging/deploy/maven2</url>
     </repository>
-    <snapshotRepository>
-      <id>maven.xwikisas.com</id>
-      <name>XWiki SASMaven2 Development Repository for Snapshots</name>
-      <url>scp://maven.xwikisas.com/home/maven/public_html/snapshots</url>
-    </snapshotRepository>
   </distributionManagement>
   <build>
    <pluginManagement>
