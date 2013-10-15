@@ -956,8 +956,9 @@ canvas {
 .page > a {
   display: block;
   position: absolute;
+  /* hack for IE10: https://github.com/mozilla/pdf.js/issues/3579 */
+  border: 5px solid transparent;
 }
-
 .page > a:hover {
   opacity: 0.2;
   background: #ff0;
