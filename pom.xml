@@ -26,7 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xwiki.contrib</groupId>
   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
-  <version>1.3</version>
+  <version>1.4-SNAPSHOT</version>
   <name>XWiki Macro - PDF Viewer</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <packaging>pom</packaging>
