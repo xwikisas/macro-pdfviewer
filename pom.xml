@@ -28,10 +28,30 @@
   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
   <version>1.3-SNAPSHOT</version>
   <name>XWiki Macro - PDF Viewer</name>
+  <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <packaging>pom</packaging>
   <properties>
     <platform.version>4.3</platform.version>
+    <xwiki.extension.features>ludovic:xwiki-macro-pdfviewer</xwiki.extension.features>
   </properties>
+  <developers>
+    <developer>
+      <id>otabaranu</id>
+      <name>Oana Tabaranu</name>
+    </developer>
+    <developer>
+      <id>rstavro</id>
+      <name>Raluca Stavro</name>
+    </developer>
+    <developer>
+      <id>ldubost</id>
+      <name>Ludovic Dubost</name>
+    </developer>
+    <developer>
+      <id>lucaa</id>
+      <name>Anca Luca</name>
+    </developer>
+  </developers>
   <scm>
     <connection>scm:git:git://github.com:xwiki-contrib/macro-pdfviewer.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/macro-pdfviewer.git</developerConnection>
