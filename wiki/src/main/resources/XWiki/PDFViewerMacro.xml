@@ -310,7 +310,7 @@ No pdf URL provided
       <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
-      <visibility>Global</visibility>
+      <visibility>Current Wiki</visibility>
     </property>
   </object>
   <object>

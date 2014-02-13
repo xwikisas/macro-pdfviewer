@@ -58,23 +58,57 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+    <plugin>
         <groupId>org.xwiki.platform</groupId>
         <artifactId>xwiki-platform-tool-xmldoc-update-plugin</artifactId>
         <executions>
           <execution>
             <phase>process-resources</phase>
-            <id>attach-template-features-xar</id>
+            <id>attach-viewerzip</id>
             <goals>
               <goal>attach</goal>
             </goals>
             <configuration>
               <file>${project.build.directory}/pdfviewer/pdfviewer.zip</file>
               <sourceDocument>${basedir}/src/main/resources/XWiki/PDFViewerMacro.xml</sourceDocument>
+              <author>xwiki:XWiki.Admin</author>
             </configuration>
           </execution>
         </executions>
        </plugin>
+      <!-- Since the xmldoc plugin is messing up the file and changing its author to XWiki.Admin, 
+           we fix that back with an xsl transformation -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <id>refix-parents</id>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <transformationSets>
+            <transformationSet>
+              <dir>${project.build.outputDirectory}</dir>
+              <outputDir>${project.build.outputDirectory}</outputDir>
+              <includes>
+                <include>**/*.xml</include>
+              </includes>
+              <stylesheet>src/main/build/transformation/fixauthor.xsl</stylesheet>
+              <parameters>
+                <parameter>
+                  <name>author</name>
+                  <value>xwiki:XWiki.Admin</value>
+                </parameter>
+              </parameters>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+      </plugin>
     </plugins>
     <extensions>
      <!-- Needed to add support for the "xar" packaging -->
