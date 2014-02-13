@@ -32,7 +32,6 @@
   <packaging>pom</packaging>
   <properties>
     <platform.version>4.3</platform.version>
-    <xwiki.extension.features>ludovic:xwiki-macro-pdfviewer</xwiki.extension.features>
   </properties>
   <developers>
     <developer>

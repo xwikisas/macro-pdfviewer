@@ -32,6 +32,10 @@
   <artifactId>xwiki-macro-pdfviewer</artifactId>
   <packaging>xar</packaging>
   <name>XWiki Macro - PDF Viewer</name>
+  <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
+  <properties>
+    <xwiki.extension.features>ludovic:xwiki-macro-pdfviewer</xwiki.extension.features>
+  </properties>
   <build>
    <plugins>
       <plugin>
