@@ -22,7 +22,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <attachment>
     <filename>pdftest.pdf</filename>
     <filesize>6528</filesize>
@@ -281,7 +281,7 @@ No pdf URL provided
     &lt;div class="box warningmessage"&gt;PDF Viewer : Not compatible with IE &lt; 10&lt;/div&gt;
   &lt;![endif]--&gt; 
   &lt;![if !(lt IE 10)]&gt;
-    &lt;iframe src="${pdfviewerurl}/pdf-viewer/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&amp;&gt;&lt;/iframe&gt;
+    &lt;iframe src="${pdfviewerurl}/pdf-viewer/root/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&amp;&gt;&lt;/iframe&gt;
   &lt;![endif]--&gt; 
   &lt;/script&gt;
 {{/html}}
