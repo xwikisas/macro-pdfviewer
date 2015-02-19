@@ -295,7 +295,7 @@ No pdf URL provided
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategory>content</defaultCategory>
+      <defaultCategory>Content</defaultCategory>
     </property>
     <property>
       <description>PDF Viewer based on Mozilla pdf.js</description>
