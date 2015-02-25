@@ -24,7 +24,7 @@ rendering.macro.pdfviewer.description=PDF Viewer based on Mozilla pdf.js
 rendering.macro.pdfviewer.parameter.file.name=File
 rendering.macro.pdfviewer.parameter.file.description=File or URL path to the PDF file
 rendering.macro.pdfviewer.parameter.width.name=Width
-rendering.macro.pdfviewer.parameter.width.description=The width height, in pixels. If not defined the default value will be used
+rendering.macro.pdfviewer.parameter.width.description=The viewer width, in pixels. If not defined the default value will be used
 rendering.macro.pdfviewer.parameter.height.name=Height
 rendering.macro.pdfviewer.parameter.height.description=The viewer height, in pixels. If not defined the default value will be used</content>
   <object>
