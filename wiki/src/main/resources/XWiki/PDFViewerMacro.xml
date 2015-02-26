@@ -433,7 +433,7 @@ No pdf URL provided
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>94db3764-f00a-486a-bbde-48057fff65b1</guid>
     <property>
-      <defaultValue>700</defaultValue>
+      <defaultValue>100%</defaultValue>
     </property>
     <property>
       <description/>
