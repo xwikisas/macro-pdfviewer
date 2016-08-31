@@ -31,10 +31,14 @@
   </parent>
   <artifactId>xwiki-macro-pdfviewer</artifactId>
   <packaging>xar</packaging>
-  <name>XWiki Macro - PDF Viewer</name>
+  <name>PDF Viewer Macro - UI</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <properties>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>PDF Viewer Macro</xwiki.extension.name>
+    <!-- Old names of this module used for retro compatibility when resolving dependencies of old extensions -->
     <xwiki.extension.features>ludovic:xwiki-macro-pdfviewer</xwiki.extension.features>
+    <xwiki.extension.category>macro</xwiki.extension.category>
   </properties>
   <build>
    <plugins>

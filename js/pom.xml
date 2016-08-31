@@ -31,7 +31,7 @@
   </parent>
   <artifactId>xwiki-macro-pdfviewer-js</artifactId>
   <packaging>pom</packaging>
-  <name>XWiki Macro - PDF Viewer - Javascript</name>
+  <name>PDF Viewer Macro - Javascript</name>
   <build>
     <plugins>
       <plugin>
