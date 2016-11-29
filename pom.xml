@@ -100,8 +100,6 @@
           <!-- Using a newer xar-plugin in order to benefit from the improved rules -->
           <version>6.4.8</version>
         </plugin>
-      </plugins>
-      <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
