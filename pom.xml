@@ -37,6 +37,8 @@
   <packaging>pom</packaging>
   <properties>
     <platform.version>${commons.version}</platform.version>
+    <!-- Prevent issue with Java version -->
+    <xwiki.enforcer.skip>true</xwiki.enforcer.skip>
   </properties>
   <developers>
     <developer>
@@ -102,28 +104,6 @@
        </plugin>
      </plugins>
    </pluginManagement>
-   <plugins>
-     <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-enforcer-plugin</artifactId>
-       <executions>
-         <execution>
-           <id>enforce-java</id>
-           <goals>
-             <goal>enforce</goal>
-           </goals>
-           <configuration>
-             <rules>
-               <requireJavaVersion>
-                 <message>Release with whatever you want :)</message>
-                 <version>1.6</version>
-               </requireJavaVersion>
-             </rules>
-           </configuration>
-         </execution>
-       </executions>
-     </plugin>
-   </plugins>
   </build>
   <modules>
     <module>js</module>
