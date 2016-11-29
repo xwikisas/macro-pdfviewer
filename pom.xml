@@ -119,11 +119,7 @@
               <goal>enforce</goal>
             </goals>
             <configuration>
-              <rules>
-                <requireJavaVersion>
-                  <skip>true</skip>
-                </requireJavaVersion>
-              </rules>
+              <skip>true</skip>
             </configuration>
           </execution>
         </executions>
