@@ -25,9 +25,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-   <groupId>org.xwiki.contrib</groupId>
-   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
-   <version>1.6-SNAPSHOT</version>
+    <groupId>org.xwiki.contrib</groupId>
+    <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
+    <version>1.6-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-macro-pdfviewer</artifactId>
   <packaging>xar</packaging>
@@ -41,7 +41,7 @@
     <xwiki.extension.category>macro</xwiki.extension.category>
   </properties>
   <build>
-   <plugins>
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -66,7 +66,7 @@
           </execution>
         </executions>
       </plugin>
-    <plugin>
+      <plugin>
         <groupId>org.xwiki.platform</groupId>
         <artifactId>xwiki-platform-tool-xmldoc-update-plugin</artifactId>
         <executions>
@@ -83,7 +83,7 @@
             </configuration>
           </execution>
         </executions>
-       </plugin>
+      </plugin>
       <!-- Since the xmldoc plugin is messing up the file and changing its author to XWiki.Admin, 
            we fix that back with an xsl transformation -->
       <plugin>
@@ -119,13 +119,13 @@
       </plugin>
     </plugins>
     <extensions>
-     <!-- Needed to add support for the "xar" packaging -->
-     <extension>
-       <groupId>org.xwiki.commons</groupId>
-       <artifactId>xwiki-commons-tool-xar-handlers</artifactId>
-       <version>${commons.version}</version>
-     </extension>
-   </extensions>
-  </build> 
+      <!-- Needed to add support for the "xar" packaging -->
+      <extension>
+        <groupId>org.xwiki.commons</groupId>
+        <artifactId>xwiki-commons-tool-xar-handlers</artifactId>
+        <version>${commons.version}</version>
+      </extension>
+    </extensions>
+  </build>
 </project>
 
