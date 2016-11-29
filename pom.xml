@@ -31,14 +31,12 @@
   </parent>
   <groupId>org.xwiki.contrib</groupId>
   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.7-SNAPSHOT</version>
   <name>PDF Viewer Macro - Parent POM</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <packaging>pom</packaging>
   <properties>
     <platform.version>${commons.version}</platform.version>
-    <!-- Prevent issue with Java version -->
-    <xwiki.enforcer.skip>true</xwiki.enforcer.skip>
   </properties>
   <developers>
     <developer>
@@ -89,21 +87,42 @@
     </snapshotRepository>
   </distributionManagement>
   <build>
-   <pluginManagement>
-     <plugins>
-       <plugin>
-        <groupId>org.xwiki.platform</groupId>
-        <artifactId>xwiki-platform-tool-xmldoc-update-plugin</artifactId>
-        <version>${platform.version}</version>
-       </plugin>
-       <plugin>
-        <groupId>org.xwiki.commons</groupId>
-        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
-        <!-- Using a newer xar-plugin in order to benefit from the improved rules -->
-        <version>6.4.8</version>
-       </plugin>
-     </plugins>
-   </pluginManagement>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-platform-tool-xmldoc-update-plugin</artifactId>
+          <version>${platform.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.xwiki.commons</groupId>
+          <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
+          <!-- Using a newer xar-plugin in order to benefit from the improved rules -->
+          <version>6.4.8</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <skip>true</skip>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
   <modules>
     <module>js</module>
