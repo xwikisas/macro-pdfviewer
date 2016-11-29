@@ -342,7 +342,7 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
       &lt;/script&gt;
     {{/html}}
   #elseif (!$document || $document.isNew())
-    {{error}}$services.localization.render('pdfviewer.error.nodocument', [$escapetool.html($services.model.serialize($docname, 'default'))]){{/error}}
+    {{error}}$services.localization.render('pdfviewer.error.nodocument', [$escapetool.html($escapetool.html($docname))]){{/error}}
   #else
     {{error}}$services.localization.render('pdfviewer.error.noattachment', [$escapetool.html($file), $escapetool.html($services.model.serialize($document.documentReference, 'default'))]){{/error}}
   #end
