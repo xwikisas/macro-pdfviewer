@@ -31,7 +31,7 @@
   </parent>
   <groupId>org.xwiki.contrib</groupId>
   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
   <name>PDF Viewer Macro - Parent POM</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <packaging>pom</packaging>
