@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc>
+<xwikidoc reference="XWiki.PDFViewerMacro" locale="">
   <web>XWiki</web>
   <name>PDFViewerMacro</name>
   <language/>
@@ -32,11 +32,10 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1348762397000</creationDate>
-  <date>1355405608000</date>
-  <contentUpdateDate>1355405608000</contentUpdateDate>
+  <date>1480380712000</date>
+  <contentUpdateDate>1462377376000</contentUpdateDate>
   <version>1.1</version>
   <title>PDF Viewer Macro</title>
-  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
@@ -47,7 +46,7 @@
     <filename>pdftest.pdf</filename>
     <filesize>6528</filesize>
     <author>XWiki.Admin</author>
-    <date>1355405594000</date>
+    <date>1462377376000</date>
     <version>1.1</version>
     <comment/>
     <content>JVBERi0xLjMNJeLjz9MNCjkgMCBvYmoNPDwvTGluZWFyaXplZCAxL0wgNjUyOC9PIDExL0UgMTgy
@@ -179,6 +178,7 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
       <validationScript/>
       <code>
         <disabled>0</disabled>
+        <editor>Text</editor>
         <name>code</name>
         <number>9</number>
         <prettyName>Macro code</prettyName>
@@ -188,7 +188,9 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </code>
       <contentDescription>
+        <contenttype>PureText</contenttype>
         <disabled>0</disabled>
+        <editor>PureText</editor>
         <name>contentDescription</name>
         <number>8</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
@@ -223,7 +225,9 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </defaultCategory>
       <description>
+        <contenttype>PureText</contenttype>
         <disabled>0</disabled>
+        <editor>PureText</editor>
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
@@ -286,25 +290,62 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
 #set($width = $context.macro.params.width)
 #set($height = $context.macro.params.height)
 #set($file = $context.macro.params.file)
+#set($docname = $context.macro.params.document)
+#set($asAuthor = $context.macro.params.asauthor &amp;&amp; ($context.macro.params.asauthor == "true" || $context.macro.params.asauthor == "yes" || $context.macro.params.asauthor == "1"))
 #if(!$file)
-No pdf URL provided
+  {{error}}$services.localization.render('pdfviewer.error.nofile'){{/error}}
 #else
-#if($file.startsWith("http"))
- #set($url = $file)
-#else
- #set($url = $doc.getAttachmentURL($file))
-#end
-#set($url = $escapetool.url($url))
-#set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFViewerMacro").getAttachmentURL("pdfviewer.zip"))
-{{html clean=false}}
-  &lt;!--[if lt IE 10]&gt;
-    &lt;div class="box warningmessage"&gt;PDF Viewer : Not compatible with IE &lt; 10&lt;/div&gt;
-  &lt;![endif]--&gt; 
-  &lt;![if !(lt IE 10)]&gt;
-    &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&amp;&gt;&lt;/iframe&gt;
-  &lt;![endif]--&gt; 
-  &lt;/script&gt;
-{{/html}}
+  #if($file.startsWith("http://") || $file.startsWith("https://"))
+    #set($url = $file)
+  #else
+    #if("$!docname" != "")
+      #set($document = $xwiki.getDocument($docname))
+    #else
+      #set($document = $doc)
+    #end
+    #set($attachment = $document.getAttachment($file))
+    #set($url = $NULL)
+    #if($attachment)
+      #set($url = $document.getAttachmentURL($file))
+    #elseif ($asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
+      #set($document = $xwiki.getDocumentAsAuthor($docname))
+      #set($attachment = $document.getAttachment($file))
+      #if($attachment)
+        #set($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
+        #set($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
+        #if ($digestFactory &amp;&amp; $encoder)
+          #set($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
+          #set($digest = $digestFactory.instance)
+          #set($is = $digest.getInputStream($attachment.contentInputStream))
+          #set($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
+          #set($discard = $is.close())
+          #if ($xcontext.userReference)
+            #set($discard = $digest.update($services.model.serialize($xcontext.userReference, 'default').getBytes('UTF-8')))
+          #end
+          #set($discard = $digest.update($contentAuthor.getBytes('UTF-8')))
+          #set($digest = $encoder.encode($digest.digest))
+          #set($url = $xwiki.getDocument("XWiki.PDFViewerService").getExternalURL('get', "reference=$escapetool.url($services.model.serialize($document.documentReference, 'default'))&amp;filename=$escapetool.url($attachment.filename)&amp;user=$escapetool.url($contentAuthor)&amp;key=$digest"))
+        #end
+      #end
+    #end
+  #end
+  #if ($url)
+    #set($url = $escapetool.url($url))
+    #set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFViewerMacro").getAttachmentURL("pdfviewer.zip"))
+    {{html clean=false}}
+      &lt;!--[if lt IE 10]&gt;
+        &lt;div class="box warningmessage"&gt;PDF Viewer : Not compatible with IE &lt; 10&lt;/div&gt;
+      &lt;![endif]--&gt;
+      &lt;![if !(lt IE 10)]&gt;
+        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&amp;&gt;&lt;/iframe&gt;
+      &lt;![endif]--&gt;
+      &lt;/script&gt;
+    {{/html}}
+  #elseif (!$document || $document.isNew())
+    {{error}}$services.localization.render('pdfviewer.error.nodocument', [$escapetool.html($services.model.serialize($docname, 'default'))]){{/error}}
+  #else
+    {{error}}$services.localization.render('pdfviewer.error.noattachment', [$escapetool.html($file), $escapetool.html($services.model.serialize($document.documentReference, 'default'))]){{/error}}
+  #end
 #end
 {{/velocity}}</code>
     </property>
@@ -353,6 +394,7 @@ No pdf URL provided
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </defaultValue>
       <description>
+        <contenttype/>
         <disabled>0</disabled>
         <name>description</name>
         <number>2</number>
@@ -419,6 +461,7 @@ No pdf URL provided
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </defaultValue>
       <description>
+        <contenttype/>
         <disabled>0</disabled>
         <name>description</name>
         <number>2</number>
@@ -453,16 +496,16 @@ No pdf URL provided
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>94db3764-f00a-486a-bbde-48057fff65b1</guid>
     <property>
-      <defaultValue>100%</defaultValue>
+      <defaultValue/>
     </property>
     <property>
-      <description/>
+      <description>Reference of the document containing the file (not used if file is a URL)</description>
     </property>
     <property>
       <mandatory/>
     </property>
     <property>
-      <name>width</name>
+      <name>document</name>
     </property>
   </object>
   <object>
@@ -485,6 +528,7 @@ No pdf URL provided
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </defaultValue>
       <description>
+        <contenttype/>
         <disabled>0</disabled>
         <name>description</name>
         <number>2</number>
@@ -519,6 +563,73 @@ No pdf URL provided
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>90e37db1-ed7b-4b65-82d6-4e3678a0dd58</guid>
     <property>
+      <defaultValue>100%</defaultValue>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>width</name>
+    </property>
+  </object>
+  <object>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <contenttype/>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <name>XWiki.PDFViewerMacro</name>
+    <number>3</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>80e795a9-da2d-4f3e-8732-1d3efb97b4a0</guid>
+    <property>
       <defaultValue>1000</defaultValue>
     </property>
     <property>
@@ -529,6 +640,73 @@ No pdf URL provided
     </property>
     <property>
       <name>height</name>
+    </property>
+  </object>
+  <object>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <contenttype/>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <name>XWiki.PDFViewerMacro</name>
+    <number>4</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>71393ffb-5ae1-4257-acc6-b20371e6313d</guid>
+    <property>
+      <defaultValue>0</defaultValue>
+    </property>
+    <property>
+      <description>If this value is true (or 1 or yes) and the user has no access to the  document to which the PDF file is attached, the PDF file could still be viewed on behalf of the author of the document containing the macro (if that author has access to the containing document obviously).</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>asauthor</name>
     </property>
   </object>
   <content>

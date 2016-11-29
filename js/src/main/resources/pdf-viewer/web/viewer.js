@@ -6628,16 +6628,29 @@ var PDFViewerApplication = {
 };
 window.PDFView = PDFViewerApplication; // obsolete name, using it as an alias
 
-
-function webViewerLoad(evt) {
-  PDFViewerApplication.initialize().then(webViewerInitialized);
+function removeElement(element) {
+  if (element) {
+    element.parentNode.removeChild(element);
+  }
 }
 
-function webViewerInitialized() {
+function webViewerLoad(evt) {
   var queryString = document.location.search.substring(1);
   var params = PDFViewerApplication.parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
+  var viewerOnly = file.indexOf('PDFViewerService?') != -1;
 
+  if (viewerOnly) {
+    removeElement(document.getElementById('secondaryPrint'));
+    removeElement(document.getElementById('secondaryDownload'));
+    removeElement(document.getElementById('print'));
+    removeElement(document.getElementById('download'));
+  }
+
+  PDFViewerApplication.initialize().then(webViewerInitialized(file, viewerOnly));
+}
+
+function webViewerInitialized(file, viewerOnly) {
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
   fileInput.className = 'fileInput';
@@ -6822,12 +6835,13 @@ function webViewerInitialized() {
   document.getElementById('openFile').addEventListener('click',
     SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
 
-  document.getElementById('print').addEventListener('click',
-    SecondaryToolbar.printClick.bind(SecondaryToolbar));
+  if (!viewerOnly) {
+    document.getElementById('print').addEventListener('click',
+        SecondaryToolbar.printClick.bind(SecondaryToolbar));
 
-  document.getElementById('download').addEventListener('click',
-    SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
-
+    document.getElementById('download').addEventListener('click',
+        SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
+  }
 
   if (file && file.lastIndexOf('file:', 0) === 0) {
     // file:-scheme. Load the contents in the main thread because QtWebKit

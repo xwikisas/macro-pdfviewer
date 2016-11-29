@@ -31,7 +31,7 @@
   </parent>
   <groupId>org.xwiki.contrib</groupId>
   <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
   <name>PDF Viewer Macro - Parent POM</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <packaging>pom</packaging>
@@ -40,71 +40,55 @@
   </properties>
   <developers>
     <developer>
-      <id>otabaranu</id>
-      <name>Oana Tabaranu</name>
-    </developer>
-    <developer>
-      <id>rstavro</id>
-      <name>Raluca Stavro</name>
+      <id>sbaloul</id>
+      <name>Sofiane Baloul</name>
     </developer>
     <developer>
       <id>ldubost</id>
       <name>Ludovic Dubost</name>
     </developer>
     <developer>
+      <id>dgervalle</id>
+      <name>Denis Gervalle</name>
+    </developer>
+    <developer>
       <id>lucaa</id>
       <name>Anca Luca</name>
     </developer>
     <developer>
-      <id>sbaloul</id>
-      <name>Sofiane Baloul</name>
+      <id>rstavro</id>
+      <name>Raluca Stavro</name>
+    </developer>
+    <developer>
+      <id>otabaranu</id>
+      <name>Oana Tabaranu</name>
     </developer>
   </developers>
   <scm>
     <connection>scm:git:git://github.com:xwiki-contrib/macro-pdfviewer.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/macro-pdfviewer.git</developerConnection>
-    <url>https://github.com/xwiki-contrib/macro-pdfviewer</url>
+    <url>https://github.com/xwiki-contrib/macro-pdfviewer/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <modules>
-    <module>js</module>
-    <module>wiki</module>
-  </modules>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.xwiki.org/jira/browse/PDFVIEWER</url>
+  </issueManagement>
   <distributionManagement>
     <repository>
       <id>xwiki-staging</id>
       <name>XWiki Staging Repository</name>
       <url>http://nexus.xwiki.org/nexus/service/local/staging/deploy/maven2</url>
     </repository>
+    <snapshotRepository>
+      <id>nexus.xwiki.org</id>
+      <name>XWiki Maven Development Repository for Snapshots</name>
+      <url>http://nexus.xwiki.org/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
   </distributionManagement>
   <build>
    <pluginManagement>
-     <plugins>      
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-deploy-plugin</artifactId>
-         <!-- Lock down plugin version for build reproducibility -->
-         <version>2.7</version>
-         <!-- We're deploying using the SCP protocol so we need the SSH Wagon for Maven 3 to work -->
-         <dependencies>
-           <dependency>
-             <groupId>org.apache.maven.wagon</groupId>
-             <artifactId>wagon-ssh</artifactId>
-             <version>2.0</version>
-           </dependency>
-         </dependencies>
-       </plugin>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-site-plugin</artifactId>
-         <version>3.0</version>
-         <!-- Deactivate site plugin, we don't need it and apparently it has created issues to other people so 
-              I'll just try to avoid that -->
-         <configuration>
-           <skip>true</skip>
-           <skipDeploy>true</skipDeploy>
-         </configuration>
-       </plugin>
+     <plugins>
        <plugin>
         <groupId>org.xwiki.platform</groupId>
         <artifactId>xwiki-platform-tool-xmldoc-update-plugin</artifactId>
@@ -114,10 +98,14 @@
         <groupId>org.xwiki.commons</groupId>
         <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
         <!-- Using a newer xar-plugin in order to benefit from the improved rules -->
-        <version>6.4.2</version>
+        <version>6.4.8</version>
        </plugin>
      </plugins>
    </pluginManagement>
-  </build>  
+  </build>
+  <modules>
+    <module>js</module>
+    <module>wiki</module>
+  </modules>
 </project>
 
