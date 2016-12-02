@@ -64,7 +64,7 @@
 
   if(services.security.authorization.hasAccess(Right.VIEW, userRef, pdfDocRef)) {
     // Changing the context user
-    def currentUserRef = xcontext.context.userReference
+    def currentUserRef = xcontext.context.getUserReference()
     xcontext.context.setUserReference(userRef)
     try {
       // Getting the document
@@ -81,8 +81,6 @@
       }
       digest.update(services.model.serialize(userRef, 'default').getBytes('UTF-8'))
       def check = encoder.encode(digest.digest)
-      println(key)
-      println(check)
       if(key.equals(check)) {
         // Adding the PDF content in the response
         response.setContentType("application/pdf")
