@@ -333,15 +333,14 @@ YW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN
     #set($url = $escapetool.url($url))
     #set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFViewerMacro").getAttachmentURL("pdfviewer.zip"))
     {{html clean=false}}
+      &lt;div&gt;
       &lt;!--[if lt IE 10]&gt;
         &lt;div class="box warningmessage"&gt;PDF Viewer : Not compatible with IE &lt; 10&lt;/div&gt;
       &lt;![endif]--&gt;
       &lt;![if !(lt IE 10)]&gt;
-        &lt;div&gt;
-        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&amp;&gt;&lt;/iframe&gt;
-        &lt;/div&gt;
-      &lt;![endif]--&gt;
-      &lt;/script&gt;
+        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
+      &lt;![endif]-->
+      &lt;/div&gt;
     {{/html}}
   #elseif (!$document || $document.isNew())
     {{error}}$services.localization.render('pdfviewer.error.nodocument', [$escapetool.html($escapetool.html($docname))]){{/error}}
