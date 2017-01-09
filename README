@@ -7,7 +7,9 @@ See http://extensions.xwiki.org/xwiki/bin/view/Extension/PDF+Viewer+Macro for mo
 
 The modified modules are:
 
-viewer.html
+pdf-viewer.web
+  viewer.html
+  viewer.js
 
 This package is based on pdf.js version v0.5.5-182-g5289a87 
 http://github.com/mozilla/pdf.js/zipball/master
