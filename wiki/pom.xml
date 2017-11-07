@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -19,27 +18,38 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.xwiki.contrib</groupId>
-    <artifactId>xwiki-macro-pdfviewer-parent</artifactId>
+    <groupId>com.xwiki.pdfviewer</groupId>
+    <artifactId>macro-pdfviewer</artifactId>
     <version>1.7-SNAPSHOT</version>
   </parent>
-  <artifactId>xwiki-macro-pdfviewer</artifactId>
+  <artifactId>macro-pdfviewer-ui</artifactId>
   <packaging>xar</packaging>
   <name>PDF Viewer Macro - UI</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <properties>
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>PDF Viewer Macro</xwiki.extension.name>
-    <!-- Old names of this module used for retro compatibility when resolving dependencies of old extensions -->
-    <xwiki.extension.features>ludovic:xwiki-macro-pdfviewer</xwiki.extension.features>
     <xwiki.extension.category>macro</xwiki.extension.category>
+    <!-- Old names of this module used for retro compatibility when resolving dependencies of old extensions -->
+    <xwiki.extension.features>org.xwiki.contrib:xwiki-macro-pdfviewer</xwiki.extension.features>
+    <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
+      buying a license or getting a trial license, but they cannot edit or delete them. -->
+    <xwiki.extension.licensing.publicDocuments>
+      XWiki.PDFViewerMacro
+    </xwiki.extension.licensing.publicDocuments>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>PDF Viewer Macro (Pro)</xwiki.extension.name>
   </properties>
+  <dependencies>
+    <dependency>
+      <groupId>com.xwiki.licensing</groupId>
+      <artifactId>application-licensing-licensor-api</artifactId>
+      <version>${licensing.version}</version>
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
@@ -54,7 +64,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>xwiki-macro-pdfviewer-js</artifactId>
+                  <artifactId>macro-pdfviewer-js</artifactId>
                   <version>${project.version}</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
@@ -127,5 +137,9 @@
       </extension>
     </extensions>
   </build>
+  <scm>
+    <url>https://github.com/xwikisas/macro-pdfviewer/</url>
+    <tag>HEAD</tag>
+  </scm>
 </project>
 
