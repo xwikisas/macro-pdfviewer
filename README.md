@@ -4,7 +4,6 @@ PDF Viewer Macro for XWiki using Mozilla pdf.js
 
 * Project Lead: [Ludovic Dubost](https://github.com/ldubost)
 * [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/PDFViewerMacro)
-* [Issue Tracker](https://github.com/xwikisas/macro-pdfviewer/issues)
 * Communication: [Mailing List](http://dev.xwiki.org/xwiki/bin/view/Community/MailingLists>), [IRC]( http://dev.xwiki.org/xwiki/bin/view/Community/IRC)
 * [Development Practices](http://dev.xwiki.org)
 * Minimal XWiki version supported: XWiki 8.4

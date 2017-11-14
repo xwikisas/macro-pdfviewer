@@ -37,7 +37,7 @@
   <title>PDFViewer Macro Translations</title>
   <comment/>
   <minorEdit>false</minorEdit>
-  <syntaxId>xwiki/2.1</syntaxId>
+  <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
   <content>rendering.macro.pdfviewer.name=PDF Viewer
 rendering.macro.pdfviewer.description=PDF Viewer based on Mozilla pdf.js
@@ -54,7 +54,7 @@ rendering.macro.pdfviewer.parameter.asauthor.description=If this value is true (
 pdfviewer.error.nodocument=The document [{0}] does not exists or you have no access to that document.
 pdfviewer.error.noattachment=The file attachment [{0}] does not exists in document [{1}].
 pdfviewer.error.nofile=No PDF filename or absolute URL provided.
-pdfviewer.error.noValidLicense=There is no valid license for the PDF Viewer Macro (Pro). To get one, please visit the {0}Licenses section{1}.</content>
+pdfviewer.error.noValidLicense=There is no valid license for the PDF Viewer Macro (Pro).</content>
   <object>
     <name>XWiki.PDFViewerMacroTranslations</name>
     <number>0</number>

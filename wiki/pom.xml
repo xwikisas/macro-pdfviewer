@@ -32,9 +32,6 @@
   <name>PDF Viewer Macro - UI</name>
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <properties>
-    <xwiki.extension.category>macro</xwiki.extension.category>
-    <!-- Old names of this module used for retro compatibility when resolving dependencies of old extensions -->
-    <xwiki.extension.features>org.xwiki.contrib:xwiki-macro-pdfviewer</xwiki.extension.features>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
       buying a license or getting a trial license, but they cannot edit or delete them. -->
     <xwiki.extension.licensing.publicDocuments>
@@ -79,6 +76,7 @@
       <plugin>
         <groupId>org.xwiki.platform</groupId>
         <artifactId>xwiki-platform-tool-xmldoc-update-plugin</artifactId>
+        <version>${platform.version}</version>
         <executions>
           <execution>
             <phase>process-resources</phase>
