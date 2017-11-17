@@ -1,4 +1,4 @@
-# PDF Viewer Macro
+# PDF Viewer Macro (Pro)
 
 PDF Viewer Macro for XWiki using Mozilla pdf.js
 
