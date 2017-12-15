@@ -39,10 +39,7 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>
-Sample PDF Viewer
-
-{{pdfviewer file="pdftest.pdf" /}}</content>
+  <content>{{pdfviewer file="pdftest.pdf" /}}</content>
   <attachment>
     <filename>pdftest.pdf</filename>
     <author>xwiki:XWiki.Admin</author>
@@ -172,12 +169,12 @@ Sample PDF Viewer
       </visibility>
     </class>
     <property>
-      <code>{{velocity}}
+      <code>{{include reference="Licenses.Code.VelocityMacros"/}}
+
+{{velocity}}
 #set ($mainPageReference = $services.model.createDocumentReference('', ['XWiki'], 'PDFViewerService'))
 #if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
-  {{error}}
-    $services.localization.render('pdfviewer.error.noValidLicense')
-  {{/error}}
+  {{error}}#getMissingLicenseMessage('pdfviewer.extension.name'){{/error}}
 #else
   #set($width = $context.macro.params.width)
   #set($height = $context.macro.params.height)
