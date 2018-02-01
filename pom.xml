@@ -34,7 +34,7 @@
   <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
   <packaging>pom</packaging>
   <properties>
-    <licensing.version>1.8-SNAPSHOT</licensing.version>
+    <licensing.version>1.8</licensing.version>
   </properties>
   <scm>
     <connection>scm:git:https://github.com/xwikisas/macro-pdfviewer.git</connection>
