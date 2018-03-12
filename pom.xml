@@ -36,6 +36,10 @@
   <properties>
     <licensing.version>1.8</licensing.version>
   </properties>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/xwikisas/macro-pdfviewer/issues</url>
+  </issueManagement>
   <scm>
     <connection>scm:git:https://github.com/xwikisas/macro-pdfviewer.git</connection>
     <developerConnection>scm:git:https://github.com/xwikisas/macro-pdfviewer.git</developerConnection>
