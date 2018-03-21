@@ -31,7 +31,7 @@
   <artifactId>macro-pdfviewer</artifactId>
   <version>1.9-SNAPSHOT</version>
   <name>PDF Viewer Macro - Parent POM</name>
-  <description>PDF Viewer Macro based on Mozilla's pdf.js</description>
+  <description>This macro allows to view PDF files attached to XWiki page right inside the XWiki page.</description>
   <packaging>pom</packaging>
   <properties>
     <licensing.version>1.8</licensing.version>

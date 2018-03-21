@@ -1,6 +1,6 @@
 # PDF Viewer Macro (Pro)
 
-PDF Viewer Macro for XWiki using Mozilla pdf.js
+This macro allows to view PDF files attached to XWiki page right inside the XWiki page.
 
 * Project Lead: [Ludovic Dubost](https://github.com/ldubost)
 * [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/PDFViewerMacro)
