@@ -34,7 +34,7 @@
   <description>This macro allows to view PDF files attached to XWiki page right inside the XWiki page.</description>
   <packaging>pom</packaging>
   <properties>
-    <licensing.version>1.12.1</licensing.version>
+    <licensing.version>1.12.2</licensing.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
