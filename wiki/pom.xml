@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.pdfviewer</groupId>
     <artifactId>macro-pdfviewer</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.8.3</version>
   </parent>
   <artifactId>macro-pdfviewer-ui</artifactId>
   <packaging>xar</packaging>
@@ -138,7 +138,7 @@
   </build>
   <scm>
     <url>https://github.com/xwikisas/macro-pdfviewer/</url>
-    <tag>HEAD</tag>
+    <tag>macro-pdfviewer-1.8.3</tag>
   </scm>
 </project>
 
