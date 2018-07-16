@@ -176,51 +176,55 @@
 #if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
   {{error}}#getMissingLicenseMessage('pdfviewer.extension.name'){{/error}}
 #else
-  #set($width = $context.macro.params.width)
-  #set($height = $context.macro.params.height)
-  #set($file = $context.macro.params.file)
-  #set($docname = $context.macro.params.document)
-  #set($asAuthor = $context.macro.params.asauthor &amp;&amp; ($context.macro.params.asauthor == "true" || $context.macro.params.asauthor == "yes" || $context.macro.params.asauthor == "1"))
-  #if(!$file)
+  #set ($width = $context.macro.params.width)
+  #set ($height = $context.macro.params.height)
+  #set ($file = $context.macro.params.file)
+  #set ($docname = $context.macro.params.document)
+  #set ($asAuthor = $context.macro.params.asauthor &amp;&amp; ($context.macro.params.asauthor == "true" || $context.macro.params.asauthor == "yes" || $context.macro.params.asauthor == "1"))
+  #if (!$file)
     {{error}}$services.localization.render('pdfviewer.error.nofile'){{/error}}
   #else
-    #if($file.startsWith("http://") || $file.startsWith("https://"))
-      #set($url = $file)
+    #if ($file.startsWith('http://') || $file.startsWith('https://'))
+      #set ($url = $file)
     #else
-      #if("$!docname" != "")
-        #set($document = $xwiki.getDocument($docname))
+      #if ("$!docname" != '')
+        #set ($document = $xwiki.getDocument($docname))
       #else
-        #set($document = $doc)
+        #set ($document = $doc)
       #end
-      #set($attachment = $document.getAttachment($file))
-      #set($url = $NULL)
-      #if($attachment)
-        #set($url = $document.getAttachmentURL($file))
+      #set ($attachment = $document.getAttachment($file))
+      #set ($url = $NULL)
+      #if ($attachment)
+        #set ($url = $document.getAttachmentURL($file))
       #elseif ($asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
-        #set($document = $xwiki.getDocumentAsAuthor($docname))
-        #set($attachment = $document.getAttachment($file))
-        #if($attachment)
-          #set($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
-          #set($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
+        #set ($document = $xwiki.getDocumentAsAuthor($docname))
+        #set ($attachment = $document.getAttachment($file))
+        #if( $attachment)
+          #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
+          #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
           #if ($digestFactory &amp;&amp; $encoder)
-            #set($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
-            #set($digest = $digestFactory.instance)
-            #set($is = $digest.getInputStream($attachment.contentInputStream))
-            #set($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
-            #set($discard = $is.close())
+            #set ($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
+            #set ($digest = $digestFactory.instance)
+            #set ($is = $digest.getInputStream($attachment.contentInputStream))
+            #set ($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
+            #set ($discard = $is.close())
             #if ($xcontext.userReference)
-              #set($discard = $digest.update($services.model.serialize($xcontext.userReference, 'default').getBytes('UTF-8')))
+              #set ($discard = $digest.update($services.model.serialize($xcontext.userReference, 'default').getBytes('UTF-8')))
             #end
-            #set($discard = $digest.update($contentAuthor.getBytes('UTF-8')))
-            #set($digest = $encoder.encode($digest.digest))
-            #set($url = $xwiki.getDocument("XWiki.PDFViewerService").getExternalURL('get', "reference=$escapetool.url($services.model.serialize($document.documentReference, 'default'))&amp;filename=$escapetool.url($attachment.filename)&amp;user=$escapetool.url($contentAuthor)&amp;key=$digest"))
+            #set ($discard = $digest.update($contentAuthor.getBytes('UTF-8')))
+            #set ($digest = $encoder.encode($digest.digest))
+            #set ($queryString = $escapetool.url({'reference': $services.model.serialize($document.documentReference, 'default'),
+                                                  'filename': $attachment.filename,
+                                                  'user': $contentAuthor,
+                                                  'key': $digest}))
+            #set ($url = $xwiki.getDocument('XWiki.PDFViewerService').getExternalURL('get', $queryString))
           #end
         #end
       #end
     #end
     #if ($url)
-      #set($url = $escapetool.url($url))
-      #set($pdfviewerurl = $xwiki.getDocument("XWiki.PDFViewerMacro").getAttachmentURL("pdfviewer.zip"))
+      #set ($url = $escapetool.url($url))
+      #set ($pdfviewerurl = $xwiki.getDocument('XWiki.PDFViewerMacro').getAttachmentURL('pdfviewer.zip'))
       {{html clean=false}}
         &lt;div&gt;
         &lt;!--[if lt IE 10]&gt;
@@ -454,7 +458,7 @@
       <defaultValue>100%</defaultValue>
     </property>
     <property>
-      <description> </description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -520,7 +524,7 @@
       <defaultValue>1000</defaultValue>
     </property>
     <property>
-      <description> </description>
+      <description/>
     </property>
     <property>
       <mandatory/>
