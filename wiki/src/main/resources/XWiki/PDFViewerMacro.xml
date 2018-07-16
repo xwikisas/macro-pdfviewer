@@ -235,6 +235,14 @@
     {{error}}$services.localization.render('pdfviewer.error.noattachment', [$escapetool.html($file), $escapetool.html($services.model.serialize($document.documentReference, 'default'))]){{/error}}
   #end
 #end
+
+#macro(isActive)
+  #set ($activeClass = $NULL)
+  #set ($isActive = $request.file == $file)
+  #if ("$!request.file" == '')
+    #set ($isActive = $foreach.index == 0)
+  #end
+#end
 {{/velocity}}
 
 {{velocity}}
@@ -244,13 +252,50 @@
 #else
   #set ($width = $context.macro.params.width)
   #set ($height = $context.macro.params.height)
-  #set ($file = $context.macro.params.file)
+  #set ($fileParam = $context.macro.params.file)
   #set ($docname = $context.macro.params.document)
   #set ($asAuthor = $context.macro.params.asauthor &amp;&amp; ($context.macro.params.asauthor == 'true' || $context.macro.params.asauthor == 'yes' || $context.macro.params.asauthor == '1'))
-  #if (!$file)
+  #if (!$fileParam)
     {{error}}$services.localization.render('pdfviewer.error.nofile'){{/error}}
   #else
-    #displayFile($file)
+    #set ($files = $fileParam.split(','))
+    #if ($files.size() == 1)
+      #displayFile($files[0])
+    #else
+      ## Display each PDF file in its own tab, in the page content.
+      ##===========
+      ## Display the Tabs
+      ##===========
+      {{html clean="false"}}
+      &lt;div class="floatcontainer"&gt;
+        &lt;ul class="xwikitabbar"&gt;
+        #foreach ($file in $files)
+          #isActive
+          #if ($isActive)
+            #set ($activeClass = "class='active'")
+          #end
+          &lt;li id="$escapetool.xml($file)" $activeClass&gt;
+            &lt;a href="$doc.getURL('view', "file=$escapetool.url($file)")"&gt;$file&lt;/a&gt;
+          &lt;/li&gt;
+        #end
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      {{/html}}
+      ##==========================
+      ## Include the Tab data for the selected Tab
+      ##==========================
+      {{html clean="false" wiki="true"}}
+      &lt;div class='xwikitabpanescontainer'&gt;
+      #foreach ($file in $files)
+        #isActive
+        #if ($isActive)
+          #displayFile($file)
+          #break
+        #end
+      #end
+      &lt;/div&gt;
+      {{/html}}
+    #end
   #end
 #end
 {{/velocity}}</code>
