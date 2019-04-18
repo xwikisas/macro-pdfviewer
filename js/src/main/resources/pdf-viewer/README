@@ -1,10 +1,9 @@
-
 This package is based on pdf.js by andreasgal.
 See http://mozilla.github.com/pdf.js for more information
 
 It has been adapted and packaged for usage by the XWiki PDF Viewer Macro
-See http://extensions.xwiki.org/xwiki/bin/view/Extension/PDF+Viewer+Macro for more information
+https://store.xwiki.com/xwiki/bin/view/Extension/PDFViewerMacro
 
-This package is based on pdf.js version 1.1.3
-https://github.com/mozilla/pdf.js/tree/v1.1.3
+This package is based on pdf.js version 2.1.266
+https://github.com/mozilla/pdf.js/tree/v2.1.266
 
