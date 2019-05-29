@@ -227,7 +227,7 @@
         &lt;div class="box warningmessage"&gt;PDF Viewer : Not compatible with IE &lt; 10&lt;/div&gt;
       &lt;![endif]--&gt;
       &lt;![if !(lt IE 10)]&gt;
-        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${context.language}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
+        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${xcontext.locale}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
       &lt;![endif]--&gt;
       &lt;/div&gt;
     {{/html}}
@@ -252,11 +252,11 @@
 #if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
   {{error}}#getMissingLicenseMessage('pdfviewer.extension.name'){{/error}}
 #else
-  #set ($width = $context.macro.params.width)
-  #set ($height = $context.macro.params.height)
-  #set ($fileParam = $context.macro.params.file)
-  #set ($docname = $context.macro.params.document)
-  #set ($asAuthor = $context.macro.params.asauthor &amp;&amp; ($context.macro.params.asauthor == 'true' || $context.macro.params.asauthor == 'yes' || $context.macro.params.asauthor == '1'))
+  #set ($width = $xcontext.macro.params.width)
+  #set ($height = $xcontext.macro.params.height)
+  #set ($fileParam = $xcontext.macro.params.file)
+  #set ($docname = $xcontext.macro.params.document)
+  #set ($asAuthor = $xcontext.macro.params.asauthor &amp;&amp; ($xcontext.macro.params.asauthor == 'true' || $xcontext.macro.params.asauthor == 'yes' || $xcontext.macro.params.asauthor == '1'))
   #if (!$fileParam)
     {{error}}$services.localization.render('pdfviewer.error.nofile'){{/error}}
   #else
