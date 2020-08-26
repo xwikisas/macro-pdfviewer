@@ -1781,6 +1781,10 @@ let validateFileURL;
 {
   const HOSTED_VIEWER_ORIGINS = ["null", "http://mozilla.github.io", "https://mozilla.github.io"];
 
+  // START XWiki Customization - External PDFs are not displayed #15
+  var qsParams = new URLSearchParams(window.location.search);
+  var XWIKI_HOSTED_VIEWER_ORIGINS = qsParams.get('trustedOrigins').split(',') || [];
+  // END XWiki Customization
   validateFileURL = function (file) {
     if (file === undefined) {
       return;
@@ -1789,7 +1793,7 @@ let validateFileURL;
     try {
       const viewerOrigin = new URL(window.location.href).origin || "null";
 
-      if (HOSTED_VIEWER_ORIGINS.includes(viewerOrigin)) {
+      if (HOSTED_VIEWER_ORIGINS.includes(viewerOrigin) || XWIKI_HOSTED_VIEWER_ORIGINS.includes(viewerOrigin)) {
         return;
       }
 

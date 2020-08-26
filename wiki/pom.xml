@@ -37,6 +37,10 @@
     <xwiki.extension.licensing.publicDocuments>
       XWiki.PDFViewerMacro
     </xwiki.extension.licensing.publicDocuments>
+    <xwiki.extension.licensing.excludedDocuments>
+      PDFViewer.WebHome,
+      PDFViewer.Code.PDFViewerConfiguration
+    </xwiki.extension.licensing.excludedDocuments>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>PDF Viewer Macro (Pro)</xwiki.extension.name>
     <xwiki.extension.category>macro</xwiki.extension.category>

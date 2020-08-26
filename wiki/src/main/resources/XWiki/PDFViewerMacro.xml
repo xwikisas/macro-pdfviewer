@@ -217,7 +217,13 @@
 #macro(displayFile $file)
   #getUrlFromFile($file)
   #if ($url)
-    #set ($url = $escapetool.url($url))
+    #set ($pdfViewerConfigDoc = $xwiki.getDocument('PDFViewer.Code.PDFViewerConfiguration'))
+    #set ($trustedOrigins = $pdfViewerConfigDoc.getValue('trustedOrigins'))
+    #set ($trustedOrigins = $stringtool.join($trustedOrigins.split('\r\n'), ','))
+    #set ($queryString = $escapetool.url({
+      'file': $url,
+      'trustedOrigins': $trustedOrigins
+    }))
     #set ($pdfviewerurl = $xwiki.getDocument('XWiki.PDFViewerMacro').getAttachmentURL('pdfviewer.zip'))
     ## Attachment URL have query parameters for cache issue.
     #set ($pdfviewerurl = $pdfviewerurl.split('\?')[0])
@@ -227,7 +233,7 @@
         &lt;div class="box warningmessage"&gt;PDF Viewer : Not compatible with IE &lt; 10&lt;/div&gt;
       &lt;![endif]--&gt;
       &lt;![if !(lt IE 10)]&gt;
-        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?file=${url}#locale=${xcontext.locale}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
+        &lt;iframe src="${pdfviewerurl}/pdf-viewer/web/viewer.html?${queryString}#locale=${xcontext.locale}" width="${width}" height="${height}"&gt;&lt;/iframe&gt;
       &lt;![endif]--&gt;
       &lt;/div&gt;
     {{/html}}
