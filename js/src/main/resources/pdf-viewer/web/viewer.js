@@ -1837,12 +1837,30 @@ function loadAndEnablePDFBug(enabledTabs) {
   });
 }
 
+// START XWIKI Customization - PDFVIEWER-13: Allow author of the macro to delegate its view right on the PDF document.
+function removeElement(element) {
+  if (element) {
+    element.parentNode.removeChild(element);
+  }
+}
+//END XWIKI Customization
+
 function webViewerInitialized() {
   const appConfig = PDFViewerApplication.appConfig;
   let file;
   const queryString = document.location.search.substring(1);
   const params = (0, _ui_utils.parseQueryString)(queryString);
   file = "file" in params ? params.file : _app_options.AppOptions.get("defaultUrl");
+  // START XWIKI Customization - PDFVIEWER-13: Allow author of the macro to delegate its view right on the PDF document.
+  var viewerOnly = file.indexOf('PDFViewerService?') != -1;
+  appConfig.secondaryToolbar.viewerOnly = viewerOnly;
+  if (viewerOnly) {
+    removeElement(document.getElementById('secondaryPrint'));
+    removeElement(document.getElementById('secondaryDownload'));
+    removeElement(document.getElementById('print'));
+    removeElement(document.getElementById('download'));
+  }
+  // END XWIKI Customization
   validateFileURL(file);
   const fileInput = document.createElement("input");
   fileInput.id = appConfig.openFileInputName;
@@ -11043,14 +11061,6 @@ class SecondaryToolbar {
       eventName: "openfile",
       close: true
     }, {
-      element: options.printButton,
-      eventName: "print",
-      close: true
-    }, {
-      element: options.downloadButton,
-      eventName: "download",
-      close: true
-    }, {
       element: options.viewBookmarkButton,
       eventName: null,
       close: true
@@ -11131,6 +11141,20 @@ class SecondaryToolbar {
       eventName: "documentproperties",
       close: true
     }];
+    // START XWIKI Customization - PDFVIEWER-13: Allow author of the macro to delegate its view right on the PDF document.
+    if (!options.viewerOnly) {
+      this.buttons.push({
+        element: options.printButton,
+        eventName: "print",
+        close: true
+      });
+      this.buttons.push({
+        element: options.downloadButton,
+        eventName: "download",
+        close: true
+      });
+    }
+    // END XWIKI Customization
     this.items = {
       firstPage: options.firstPageButton,
       lastPage: options.lastPageButton,
