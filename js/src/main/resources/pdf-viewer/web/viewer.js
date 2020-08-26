@@ -437,7 +437,9 @@ const PDFViewerApplication = {
     await this._initializeL10n();
 
     if (this.isViewerEmbedded && _app_options.AppOptions.get("externalLinkTarget") === _pdfjsLib.LinkTarget.NONE) {
-      _app_options.AppOptions.set("externalLinkTarget", _pdfjsLib.LinkTarget.TOP);
+      // START XWiki Customization - https://jira.xwiki.org/browse/PDFVIEWER-2
+      _app_options.AppOptions.set("externalLinkTarget", _pdfjsLib.LinkTarget.BLANK);
+      // END XWiki Customization
     }
 
     await this._initializeViewerComponents();
@@ -1781,7 +1783,7 @@ let validateFileURL;
 {
   const HOSTED_VIEWER_ORIGINS = ["null", "http://mozilla.github.io", "https://mozilla.github.io"];
 
-  // START XWiki Customization - External PDFs are not displayed #15
+  // START XWiki Customization - https://github.com/xwikisas/macro-pdfviewer/issues/15
   var qsParams = new URLSearchParams(window.location.search);
   var XWIKI_HOSTED_VIEWER_ORIGINS = qsParams.get('trustedOrigins').split(',') || [];
   // END XWiki Customization
