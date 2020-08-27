@@ -42,7 +42,7 @@
   <content>{{include reference="Licenses.Code.VelocityMacros"/}}
 
 {{velocity}}
-#set ($mainPageReference = $services.model.createDocumentReference('', ['PDFViewer', 'Code'], 'PDFViewerConfiguration'))
+#set ($mainPageReference = $services.model.createDocumentReference('', ['PDFViewer', 'Code'], 'WebHome'))
 #if ($services.licensing.licensor.hasLicensureForEntity($mainPageReference))
   {{include reference="PDFViewer.Code.PDFViewerConfiguration"/}}
 #else
