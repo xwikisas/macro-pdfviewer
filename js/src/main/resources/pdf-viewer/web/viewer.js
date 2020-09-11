@@ -1783,11 +1783,7 @@ let validateFileURL;
 {
   const HOSTED_VIEWER_ORIGINS = ["null", "http://mozilla.github.io", "https://mozilla.github.io"];
 
-  // START XWiki Customization - https://github.com/xwikisas/macro-pdfviewer/issues/15
-  var qsParams = new URLSearchParams(window.location.search);
-  var XWIKI_HOSTED_VIEWER_ORIGINS = qsParams.get('trustedOrigins').split(',') || [];
-  // END XWiki Customization
-  validateFileURL = function (file) {
+  validateFileURL = function (file, XWIKI_HOSTED_VIEWER_ORIGINS) {
     if (file === undefined) {
       return;
     }
@@ -1861,7 +1857,12 @@ function webViewerInitialized() {
     removeElement(document.getElementById('download'));
   }
   // END XWIKI Customization
-  validateFileURL(file);
+  // START XWiki Customization - https://github.com/xwikisas/macro-pdfviewer/issues/15
+  // The trustedorigins and withcredentials are lowercased in params because of the parseQueryString method.
+  let XWIKI_HOSTED_VIEWER_ORIGINS = params.trustedorigins;
+  let withCredentials = params.withcredentials;
+  // END XWiki Customization
+  validateFileURL(file, XWIKI_HOSTED_VIEWER_ORIGINS);
   const fileInput = document.createElement("input");
   fileInput.id = appConfig.openFileInputName;
   fileInput.className = "fileInput";
@@ -1937,7 +1938,7 @@ function webViewerInitialized() {
   }, true);
 
   try {
-    webViewerOpenFileViaURL(file);
+    webViewerOpenFileViaURL(file, withCredentials);
   } catch (reason) {
     PDFViewerApplication.l10n.get("loading_error", null, "An error occurred while loading the PDF.").then(msg => {
       PDFViewerApplication.error(msg, reason);
@@ -1947,7 +1948,7 @@ function webViewerInitialized() {
 
 let webViewerOpenFileViaURL;
 {
-  webViewerOpenFileViaURL = function (file) {
+  webViewerOpenFileViaURL = function (file, withCredentials) {
     if (file && file.lastIndexOf("file:", 0) === 0) {
       PDFViewerApplication.setTitleUsingUrl(file);
       const xhr = new XMLHttpRequest();
@@ -1963,7 +1964,12 @@ let webViewerOpenFileViaURL;
     }
 
     if (file) {
-      PDFViewerApplication.open(file);
+      if (withCredentials) {
+        const args = {'withCredentials': true};
+        PDFViewerApplication.open(file, args);
+      } else {
+        PDFViewerApplication.open(file);
+      }
     }
   };
 }

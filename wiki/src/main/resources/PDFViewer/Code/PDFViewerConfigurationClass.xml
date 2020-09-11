@@ -72,6 +72,21 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
     </trustedOrigins>
+    <withCredentials>
+      <customDisplay/>
+      <defaultValue/>
+      <disabled>0</disabled>
+      <displayFormType>select</displayFormType>
+      <displayType>yesno</displayType>
+      <hint>Enable this in closed with that uses "Access-Control-Allow-Credentials: true"</hint>
+      <name>withCredentials</name>
+      <number>2</number>
+      <prettyName>With credentials</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+    </withCredentials>
   </class>
   <object>
     <name>PDFViewer.Code.PDFViewerConfigurationClass</name>

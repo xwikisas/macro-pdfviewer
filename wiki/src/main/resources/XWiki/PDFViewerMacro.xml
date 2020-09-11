@@ -219,10 +219,12 @@
   #if ($url)
     #set ($pdfViewerConfigDoc = $xwiki.getDocument('PDFViewer.Code.PDFViewerConfiguration'))
     #set ($trustedOrigins = $pdfViewerConfigDoc.getValue('trustedOrigins'))
+    #set ($withCredentials = $pdfViewerConfigDoc.getValue('withCredentials'))
     #set ($trustedOrigins = $stringtool.join($trustedOrigins.split('\r\n'), ','))
     #set ($queryString = $escapetool.url({
       'file': $url,
-      'trustedOrigins': $trustedOrigins
+      'trustedOrigins': $trustedOrigins,
+      'withCredentials': $withCredentials
     }))
     #set ($pdfviewerurl = $xwiki.getDocument('XWiki.PDFViewerMacro').getAttachmentURL('pdfviewer.zip'))
     ## Attachment URL have query parameters for cache issue.
