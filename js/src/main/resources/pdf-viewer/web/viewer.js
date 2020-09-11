@@ -1965,7 +1965,7 @@ let webViewerOpenFileViaURL;
 
     if (file) {
       if (withCredentials) {
-        const args = {'withCredentials': true};
+        const args = {'withCredentials': withCredentials == 1};
         PDFViewerApplication.open(file, args);
       } else {
         PDFViewerApplication.open(file);
