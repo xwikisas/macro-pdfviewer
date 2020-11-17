@@ -31,7 +31,7 @@
   <artifactId>macro-pdfviewer</artifactId>
   <version>2.1.2-SNAPSHOT</version>
   <name>PDF Viewer Macro - Parent POM</name>
-  <description>This macro allows to view PDF files attached to XWiki page right inside the XWiki page.</description>
+  <description>Display attached PDF files or PDFs from external URLs inside XWiki pages. Use the tabbed layout to show multiple PDF files in the same XWiki page. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
   <packaging>pom</packaging>
   <properties>
     <licensing.version>1.16</licensing.version>

@@ -30,7 +30,7 @@
   <artifactId>macro-pdfviewer-ui</artifactId>
   <packaging>xar</packaging>
   <name>PDF Viewer Macro - UI</name>
-  <description>This macro allows to view PDF files attached to XWiki page right inside the XWiki page.</description>
+  <description>Display attached PDF files or PDFs from external URLs inside XWiki pages. Use the tabbed layout to show multiple PDF files in the same XWiki page. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
   <properties>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
       buying a license or getting a trial license, but they cannot edit or delete them. -->
