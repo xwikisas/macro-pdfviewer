@@ -401,7 +401,7 @@
       <name>file</name>
     </property>
     <property>
-      <type>com.xwiki.macro.pdfviewer.PDFResourceReference</type>
+      <type>com.xwiki.pdfviewer.PDFResourceReference</type>
     </property>
   </object>
   <object>

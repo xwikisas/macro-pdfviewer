@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -17,23 +16,29 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
+ */
+package com.xwiki.pdfviewer;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>macro-pdfviewer</artifactId>
-    <groupId>com.xwiki.pdfviewer</groupId>
-    <version>2.1.9-SNAPSHOT</version>
-  </parent>
-  <artifactId>macro-pdfviewer-api</artifactId>
-  <name>PDF Viewer Macro - API</name>
-  <description>APIs to manage PDF attachments.</description>
-  <dependencies>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-api</artifactId>
-      <version>${rendering.version}</version>
-    </dependency>
-  </dependencies>
-</project>
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
+
+/**
+ * The object is used to associate a picker to the reference parameter.
+ * attachmentPicker is available from XWiki 11.5 version.
+ *
+ * @version $Id$
+ * @since 2.2
+ */
+public class PDFResourceReference extends ResourceReference
+{
+    /**
+     * Creates a new pdf resource reference.
+     *
+     * @param reference the resource reference
+     * @param type the resource type
+     */
+    public PDFResourceReference(String reference, ResourceType type)
+    {
+        super(reference, type);
+    }
+}

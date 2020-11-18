@@ -49,7 +49,7 @@
   <modules>
     <module>js</module>
     <module>wiki</module>
-    <module>macro-pdfviewer-api</module>
+    <module>api</module>
   </modules>
 </project>
 
