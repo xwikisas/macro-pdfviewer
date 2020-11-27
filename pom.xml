@@ -47,9 +47,9 @@
     <tag>HEAD</tag>
   </scm>
   <modules>
+    <module>api</module>
     <module>js</module>
     <module>wiki</module>
-    <module>api</module>
   </modules>
 </project>
 
