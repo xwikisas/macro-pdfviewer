@@ -400,6 +400,9 @@
     <property>
       <name>file</name>
     </property>
+    <property>
+      <type>com.xwiki.pdfviewer.PDFResourceReference</type>
+    </property>
   </object>
   <object>
     <name>XWiki.PDFViewerMacro</name>

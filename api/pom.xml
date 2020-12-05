@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -23,33 +22,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.xwiki.parent</groupId>
-    <artifactId>xwikisas-parent-platform</artifactId>
-    <version>9.11-5</version>
+    <artifactId>macro-pdfviewer</artifactId>
+    <groupId>com.xwiki.pdfviewer</groupId>
+    <version>2.1.2-SNAPSHOT</version>
   </parent>
-  <groupId>com.xwiki.pdfviewer</groupId>
-  <artifactId>macro-pdfviewer</artifactId>
-  <version>2.1.2-SNAPSHOT</version>
-  <name>PDF Viewer Macro - Parent POM</name>
-  <description>Display attached PDF files or PDFs from external URLs inside XWiki pages. Use the tabbed layout to show multiple PDF files in the same XWiki page. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
-  <packaging>pom</packaging>
-  <properties>
-    <licensing.version>1.16</licensing.version>
-  </properties>
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/xwikisas/macro-pdfviewer/issues</url>
-  </issueManagement>
-  <scm>
-    <connection>scm:git:git://github.com/xwikisas/macro-pdfviewer.git</connection>
-    <developerConnection>scm:git:git@github.com:xwikisas/macro-pdfviewer.git</developerConnection>
-    <url>https://github.com/xwikisas/macro-pdfviewer/tree/master</url>
-    <tag>HEAD</tag>
-  </scm>
-  <modules>
-    <module>api</module>
-    <module>js</module>
-    <module>wiki</module>
-  </modules>
+  <artifactId>macro-pdfviewer-api</artifactId>
+  <name>PDF Viewer Macro - API</name>
+  <description>APIs to manage PDF attachments.</description>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-api</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
+  </dependencies>
 </project>
-
