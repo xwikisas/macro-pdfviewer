@@ -44,6 +44,11 @@
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>PDF Viewer Macro (Pro)</xwiki.extension.name>
     <xwiki.extension.category>macro</xwiki.extension.category>
+
+    <!-- Components -->
+    <xwiki.extension.components>
+      org.xwiki.rendering.macro.Macro/pdfviewer
+    </xwiki.extension.components>
   </properties>
   <dependencies>
     <dependency>
