@@ -25,7 +25,7 @@
   <parent>
    <groupId>com.xwiki.pdfviewer</groupId>
    <artifactId>macro-pdfviewer</artifactId>
-   <version>2.2.1</version>
+   <version>2.2.2-SNAPSHOT</version>
   </parent>
   <artifactId>macro-pdfviewer-js</artifactId>
   <packaging>pom</packaging>
