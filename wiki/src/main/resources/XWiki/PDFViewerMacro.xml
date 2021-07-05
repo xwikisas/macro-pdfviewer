@@ -182,13 +182,16 @@
     #else
       #set ($document = $doc)
     #end
-    #set ($attachment = $document.getAttachment($file))
+    ## The file macro parameter can hold either only the attachment name for xwiki versions below 11.5, or the full
+    ## attachment reference on newer versions, since this is needed for the attachment picker.
+    #set ($filename = $services.model.resolveAttachment($file).getName())
+    #set ($attachment = $document.getAttachment($filename))
     #set ($url = $NULL)
     #if ($attachment)
-      #set ($url = $document.getAttachmentURL($file))
+      #set ($url = $document.getAttachmentURL($filename))
     #elseif ($asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
       #set ($document = $xwiki.getDocumentAsAuthor($docname))
-      #set ($attachment = $document.getAttachment($file))
+      #set ($attachment = $document.getAttachment($filename))
       #if( $attachment)
         #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
         #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
