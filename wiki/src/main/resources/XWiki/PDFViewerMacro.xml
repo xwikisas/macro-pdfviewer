@@ -177,22 +177,31 @@
   #if ($file.startsWith('http://') || $file.startsWith('https://'))
     #set ($url = $file)
   #else
+    ## Checking what document and attachment to use.
+    #set ($authorRightsNeeded = false)
     #if ("$!docname" != '')
       #set ($document = $xwiki.getDocument($docname))
+      #if (!$document.getAttachment($file) &amp;&amp; $asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
+        #set ($document = $xwiki.getDocumentAsAuthor($docname))
+        #set ($authorRightsNeeded = true)
+      #end
     #else
       #set ($document = $doc)
     #end
-    ## The file macro parameter can hold either only the attachment name for xwiki versions below 11.5, or the full
-    ## attachment reference on newer versions, since this is needed for the attachment picker.
-    #set ($filename = $services.model.resolveAttachment($file).getName())
-    #set ($attachment = $document.getAttachment($filename))
+    #set ($attachment = $document.getAttachment($file))
+    #if (!$attachment)
+      #set ($attachmentRef = $services.model.resolveAttachment($file))
+      #set ($document = $xwiki.getDocument($attachmentRef.getParent()))
+      #set ($attachment = $document.getAttachment($attachmentRef.getName()))
+    #end
+    ## Getting the url.
+    #set ($filename = $file)
     #set ($url = $NULL)
     #if ($attachment)
-      #set ($url = $document.getAttachmentURL($filename))
-    #elseif ($asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
-      #set ($document = $xwiki.getDocumentAsAuthor($docname))
-      #set ($attachment = $document.getAttachment($filename))
-      #if( $attachment)
+      #set ($filename = $attachment.getFilename())
+      #if (!$authorRightsNeeded)
+        #set ($url = $document.getAttachmentURL($attachment.getFilename()))
+      #else
         #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
         #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
         #if ($digestFactory &amp;&amp; $encoder)
@@ -245,7 +254,7 @@
   #elseif (!$document || $document.isNew())
     {{error}}$services.localization.render('pdfviewer.error.nodocument', [$escapetool.html($escapetool.html($docname))]){{/error}}
   #else
-    {{error}}$services.localization.render('pdfviewer.error.noattachment', [$escapetool.html($file), $escapetool.html($services.model.serialize($document.documentReference, 'default'))]){{/error}}
+    {{error}}$services.localization.render('pdfviewer.error.noattachment', [$escapetool.html($filename), $escapetool.html($services.model.serialize($document.documentReference, 'default'))]){{/error}}
   #end
 #end
 
