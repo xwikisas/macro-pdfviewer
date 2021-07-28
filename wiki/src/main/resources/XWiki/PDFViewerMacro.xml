@@ -175,7 +175,7 @@
 #macro (getUrlFromFile $file)
   #set ($url = $NULL)
   ## If the url is not directly specified, the attachment reference can be taken either directly from the file macro
-  ## parameter for xwiki versions starting with 11.5, since an attachment picker is used, or by using the file and
+  ## parameter for xwiki versions starting with 11.5, since an attachment picker is used, or by using both the file and
   ## document parameters.
   #if ($file.startsWith('http://') || $file.startsWith('https://'))
     #set ($url = $file)
