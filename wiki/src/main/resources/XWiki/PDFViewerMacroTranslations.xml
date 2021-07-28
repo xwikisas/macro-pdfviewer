@@ -42,9 +42,9 @@
   <content>rendering.macro.pdfviewer.name=PDF Viewer
 rendering.macro.pdfviewer.description=PDF Viewer based on Mozilla pdf.js
 rendering.macro.pdfviewer.parameter.file.name=File
-rendering.macro.pdfviewer.parameter.file.description=Name of the PDF file or absolute URL to the PDF file
+rendering.macro.pdfviewer.parameter.file.description=The full PDF file reference, an absolute URL or only the name of the attachment when is used along with the document parameter.
 rendering.macro.pdfviewer.parameter.document.name=Document
-rendering.macro.pdfviewer.parameter.document.description=Reference to the XWiki document to which the file is attached. If not defined, the current document is used. If file argument is an absolute URL, this argument is ignored.
+rendering.macro.pdfviewer.parameter.document.description=Reference to the XWiki document to which the file is attached. If not defined, the current document or only the file parameter are used. If file argument is an absolute URL or the attachment does not exists, this argument is ignored.
 rendering.macro.pdfviewer.parameter.width.name=Width
 rendering.macro.pdfviewer.parameter.width.description=The viewer width, in pixels. If not defined the default value will be used
 rendering.macro.pdfviewer.parameter.height.name=Height
