@@ -172,11 +172,13 @@
       <code>{{include reference="Licenses.Code.VelocityMacros"/}}
 
 {{velocity output="false"}}
-#macro (checkDocumentAsAuthor $documentName)
-  #if (!$services.security.authorization.hasAccess('view', $documentName) &amp;&amp; $asAuthor &amp;&amp;
+#macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
+  #if (!$services.security.authorization.hasAccess('view', $documentReference) &amp;&amp; $asAuthor &amp;&amp;
       $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
-    #set ($document = $xwiki.getDocumentAsAuthor($documentName))
+    #set ($document = $xwiki.getDocumentAsAuthor($documentReference))
     #set ($authorRightsNeeded = true)
+  #else
+    #set ($document = $xwiki.getDocument($documentReference))
   #end
 #end
 
@@ -194,8 +196,7 @@
     #set ($filename = $file)
     #set ($authorRightsNeeded = false)
     #if ("$!docname" != '')
-      #set ($document = $xwiki.getDocument($docname))
-      #checkDocumentAsAuthor($docname)
+      #maybeGetDocumentAsAuthor($docname $asAuthor)
     #else
       #set ($document = $doc)
     #end
@@ -203,8 +204,7 @@
     #if (!$attachment)
       #set ($attachmentReference = $services.model.resolveAttachment($file))
       #set ($filename = $attachmentReference.name)
-      #set ($document = $xwiki.getDocument($attachmentReference.parent))
-      #checkDocumentAsAuthor($attachmentReference.parent)
+      #maybeGetDocumentAsAuthor($attachmentReference.parent $asAuthor)
       #set ($attachment = $document.getAttachment($filename))
     #end
     #set ($url = $NULL)
