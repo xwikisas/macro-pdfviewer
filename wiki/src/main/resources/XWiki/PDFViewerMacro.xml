@@ -243,6 +243,16 @@
       <code>{{include reference="Licenses.Code.VelocityMacros"/}}
 
 {{velocity output="false"}}
+#macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
+  #if (!$services.security.authorization.hasAccess('view', $documentReference) &amp;&amp; $asAuthor &amp;&amp;
+      $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
+    #set ($document = $xwiki.getDocumentAsAuthor($documentReference))
+    #set ($authorRightsNeeded = true)
+  #else
+    #set ($document = $xwiki.getDocument($documentReference))
+  #end
+#end
+
 #macro (getUrlFromFile $file)
   #set ($url = $NULL)
   ## If the url is not directly specified, the attachment reference can be taken either directly from the file macro
@@ -257,12 +267,7 @@
     #set ($filename = $file)
     #set ($authorRightsNeeded = false)
     #if ("$!docname" != '')
-      #set ($document = $xwiki.getDocument($docname))
-      #if (!$document.getAttachment($file) &amp;&amp; $asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp;
-          $xwiki.exists('XWiki.PDFViewerService'))
-        #set ($document = $xwiki.getDocumentAsAuthor($docname))
-        #set ($authorRightsNeeded = true)
-      #end
+      #maybeGetDocumentAsAuthor($docname $asAuthor)
     #else
       #set ($document = $doc)
     #end
@@ -270,7 +275,7 @@
     #if (!$attachment)
       #set ($attachmentReference = $services.model.resolveAttachment($file))
       #set ($filename = $attachmentReference.name)
-      #set ($document = $xwiki.getDocument($attachmentReference.parent))
+      #maybeGetDocumentAsAuthor($attachmentReference.parent $asAuthor)
       #set ($attachment = $document.getAttachment($filename))
     #end
     #set ($url = $NULL)
