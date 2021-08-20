@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
 
 <!--
  * See the NOTICE file distributed with this work for additional
@@ -27,12 +27,9 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1348762397000</creationDate>
   <parent>XWiki.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1510072670000</date>
-  <contentUpdateDate>1510072255000</contentUpdateDate>
   <version>1.1</version>
   <title>PDF Viewer Macro</title>
   <comment/>
@@ -42,8 +39,9 @@
   <content>{{pdfviewer file="pdftest.pdf" /}}</content>
   <attachment>
     <filename>pdftest.pdf</filename>
+    <mimetype>application/pdf</mimetype>
+    <charset>UTF-8</charset>
     <author>xwiki:XWiki.Admin</author>
-    <date>1510072255000</date>
     <version>1.1</version>
     <comment/>
     <content>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RRsNZW5kc3RyZWFtDWVuZG9iag0xIDAgb2JqDTw8L0xlbmd0aCAzODA3L1N1YnR5cGUvWE1ML1R5cGUvTWV0YWRhdGE+PnN0cmVhbQ0KPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNC4yLjEtYzA0MyA1Mi4zNzI3MjgsIDIwMDkvMDEvMTgtMTU6NTY6MzcgICAgICAgICI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+CiAgICAgICAgIDxkYzpmb3JtYXQ+YXBwbGljYXRpb24vcGRmPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5Vbmtub3duPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8ZGM6ZGVzY3JpcHRpb24+CiAgICAgICAgICAgIDxyZGY6QWx0PgogICAgICAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiLz4KICAgICAgICAgICAgPC9yZGY6QWx0PgogICAgICAgICA8L2RjOmRlc2NyaXB0aW9uPgogICAgICAgICA8ZGM6dGl0bGU+CiAgICAgICAgICAgIDxyZGY6QWx0PgogICAgICAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPjE3MjUuUERGPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOkFsdD4KICAgICAgICAgPC9kYzp0aXRsZT4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnBkZj0iaHR0cDovL25zLmFkb2JlLmNvbS9wZGYvMS4zLyI+CiAgICAgICAgIDxwZGY6Q3JlYXRpb25EYXRlLS1UZXh0PjEtSmFuLTMgMTg6MTVQTTwvcGRmOkNyZWF0aW9uRGF0ZS0tVGV4dD4KICAgICAgICAgPHBkZjpLZXl3b3Jkcy8+CiAgICAgICAgIDxwZGY6UHJvZHVjZXI+QWNyb2JhdCBQREZXcml0ZXIgMy4wMiBmb3IgV2luZG93czwvcGRmOlByb2R1Y2VyPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD4xNzI1LmZtPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDExLTA1LTEzVDIyOjI3OjQwLTAzOjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxMS0wNS0xM1QyMjoyNzo0MC0wMzowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIj4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+dXVpZDpmNTlhZDFmNS1jZTUyLTVmNGQtOGNlZi0xYjE1YjI3ODMyN2M8L3htcE1NOkRvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnV1aWQ6YTgzM2I4MWQtYzkwZi1mMzRmLWJhYjktN2UwMTU4OWIzNTQ2PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+DWVuZHN0cmVhbQ1lbmRvYmoNMiAwIG9iag08PC9GaWx0ZXIvRmxhdGVEZWNvZGUvRmlyc3QgMTQvTGVuZ3RoIDE3Mi9OIDMvVHlwZS9PYmpTdG0+PnN0cmVhbQ0KaN6EjssKwjAQRX9lvqCZaR5tQLqwiy5EKEVwEbIIWDRgW2kj2L83qbhw5epw75kLIwFBAVdQgCbY7Vg9PccAxA7+shiiqDvLTuujZ6279ktVGVa7ezO7NR43bhgcYJYLVbLzzYe+nfwYDGZaogQCyrDUZKvKbrOu2X9X5rOCH1h2dGH2rygFV5TaPJcRSFxH8FKmsiCVEuoiJRI8ARWqzQmyf355CzAACCY+Jg1lbmRzdHJlYW0NZW5kb2JqDTMgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0ZpcnN0IDQvTGVuZ3RoIDE3OC9OIDEvVHlwZS9PYmpTdG0+PnN0cmVhbQ0KaN50zUsLgkAUBeC/MjudxTgPE0NEkKRFIQgZrtUZyR5z4Tpi/fukVi1an3O+syWCpCnPZ3cB9M/2ZmGxlO/QtG4EW7TO+JIdWstCIreJjKryN2WsNk/3p7OSMlZRMDwoP5rXAqgnn/IS9AcuEiWkFJEMlVLxRjARekJ4lFcIeu4N+nmP0LWOVMW+wdEZJGEgFBkASTNaDctE+WnurqZ3q1uP7m6+j+uAZtlbgAEAPklCpA1lbmRzdHJlYW0NZW5kb2JqDTQgMCBvYmoNPDwvRGVjb2RlUGFybXM8PC9Db2x1bW5zIDQvUHJlZGljdG9yIDEyPj4vRmlsdGVyL0ZsYXRlRGVjb2RlL0lEWzw0NzE0OTUxMDQzM0RENDg4MkYwNUY4QzEyNDIyMzczND48RkY2RkZDMjdFRThGNDIzRUIyRTJFQzlDOUNCQTMxQTE+XS9JbmZvIDggMCBSL0xlbmd0aCA0Mi9Sb290IDEwIDAgUi9TaXplIDkvVHlwZS9YUmVmL1dbMSAyIDFdPj5zdHJlYW0NCmjeYmIAAiZGdhkGJgZ+bSDByAki+IBiL5YAWQwMjDCC8R9AgAEALS0DGA1lbmRzdHJlYW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN</content>
@@ -63,11 +61,51 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
+      <async_cached>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_cached</name>
+        <number>12</number>
+        <prettyName>Cached</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_cached>
+      <async_context>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>async_context</name>
+        <number>13</number>
+        <prettyName>Context elements</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>5</size>
+        <unmodifiable>0</unmodifiable>
+        <values>doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </async_context>
+      <async_enabled>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_enabled</name>
+        <number>11</number>
+        <prettyName>Asynchronous rendering</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_enabled>
       <code>
         <disabled>0</disabled>
         <editor>Text</editor>
         <name>code</name>
-        <number>9</number>
+        <number>10</number>
         <prettyName>Macro code</prettyName>
         <rows>20</rows>
         <size>40</size>
@@ -79,21 +117,43 @@
         <disabled>0</disabled>
         <editor>PureText</editor>
         <name>contentDescription</name>
-        <number>8</number>
+        <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
       <contentType>
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
         <multiSelect>0</multiSelect>
         <name>contentType</name>
         <number>7</number>
-        <prettyName>Macro content type</prettyName>
+        <prettyName>Macro content availability</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator>|</separator>
         <separators>|</separators>
@@ -155,6 +215,8 @@
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
         <multiSelect>0</multiSelect>
         <name>visibility</name>
         <number>6</number>
@@ -169,14 +231,33 @@
       </visibility>
     </class>
     <property>
+      <async_cached/>
+    </property>
+    <property>
+      <async_context/>
+    </property>
+    <property>
+      <async_enabled/>
+    </property>
+    <property>
       <code>{{include reference="Licenses.Code.VelocityMacros"/}}
 
 {{velocity output="false"}}
+#macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
+  #if (!$services.security.authorization.hasAccess('view', $documentReference) &amp;&amp; $asAuthor &amp;&amp;
+      $xwiki.hasProgrammingRights() &amp;&amp; $xwiki.exists('XWiki.PDFViewerService'))
+    #set ($document = $xwiki.getDocumentAsAuthor($documentReference))
+    #set ($authorRightsNeeded = true)
+  #else
+    #set ($document = $xwiki.getDocument($documentReference))
+  #end
+#end
+
 #macro (getUrlFromFile $file)
   #set ($url = $NULL)
   ## If the url is not directly specified, the attachment reference can be taken either directly from the file macro
-  ## parameter for xwiki versions starting with 11.5, since an attachment picker is used, or by using both the file and
-  ## document parameters.
+  ## parameter, since an attachment picker is used, or by using both the file and document parameters, for macros added
+  ## in xwiki versions before 11.5.
   #if ($file.startsWith('http://') || $file.startsWith('https://'))
     #set ($url = $file)
   #else
@@ -186,12 +267,7 @@
     #set ($filename = $file)
     #set ($authorRightsNeeded = false)
     #if ("$!docname" != '')
-      #set ($document = $xwiki.getDocument($docname))
-      #if (!$document.getAttachment($file) &amp;&amp; $asAuthor &amp;&amp; $xwiki.hasProgrammingRights() &amp;&amp;
-          $xwiki.exists('XWiki.PDFViewerService'))
-        #set ($document = $xwiki.getDocumentAsAuthor($docname))
-        #set ($authorRightsNeeded = true)
-      #end
+      #maybeGetDocumentAsAuthor($docname $asAuthor)
     #else
       #set ($document = $doc)
     #end
@@ -199,7 +275,7 @@
     #if (!$attachment)
       #set ($attachmentReference = $services.model.resolveAttachment($file))
       #set ($filename = $attachmentReference.name)
-      #set ($document = $xwiki.getDocument($attachmentReference.parent))
+      #maybeGetDocumentAsAuthor($attachmentReference.parent $asAuthor)
       #set ($attachment = $document.getAttachment($filename))
     #end
     #set ($url = $NULL)
@@ -329,6 +405,9 @@
     </property>
     <property>
       <contentDescription/>
+    </property>
+    <property>
+      <contentJavaType/>
     </property>
     <property>
       <contentType>No content</contentType>
@@ -504,6 +583,9 @@
     <property>
       <name>document</name>
     </property>
+    <property>
+      <type/>
+    </property>
   </object>
   <object>
     <name>XWiki.PDFViewerMacro</name>
@@ -578,6 +660,9 @@
     </property>
     <property>
       <name>width</name>
+    </property>
+    <property>
+      <type/>
     </property>
   </object>
   <object>
@@ -654,6 +739,9 @@
     <property>
       <name>height</name>
     </property>
+    <property>
+      <type/>
+    </property>
   </object>
   <object>
     <name>XWiki.PDFViewerMacro</name>
@@ -728,6 +816,9 @@
     </property>
     <property>
       <name>asauthor</name>
+    </property>
+    <property>
+      <type/>
     </property>
   </object>
 </xwikidoc>
