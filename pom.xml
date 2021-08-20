@@ -48,7 +48,6 @@
   </scm>
   <modules>
     <module>api</module>
-    <module>js</module>
     <module>wiki</module>
   </modules>
 </project>
