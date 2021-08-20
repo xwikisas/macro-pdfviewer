@@ -243,7 +243,7 @@
       'trustedOrigins': $trustedOrigins,
       'withCredentials': $withCredentials
     }))
-    #set ($pdfviewerurl = $services.webjars.url('pdf-js/2.9.359/web/viewer.html'))
+    #set ($pdfviewerurl = $services.webjars.url('pdf-js', 'web/viewer.html'))
     ## Attachment URL have query parameters for cache issue.
     #set ($pdfviewerurl = $pdfviewerurl.split('\?')[0])
     {{html clean=false}}
