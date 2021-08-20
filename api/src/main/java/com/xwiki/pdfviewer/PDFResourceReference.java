@@ -24,7 +24,6 @@ import org.xwiki.rendering.listener.reference.ResourceType;
 
 /**
  * The object is used to associate a picker to the reference parameter.
- * attachmentPicker is available from XWiki 11.5 version.
  *
  * @version $Id$
  * @since 2.2
