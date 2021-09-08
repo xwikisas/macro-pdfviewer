@@ -1,1 +1,2 @@
 com.xwiki.pdfviewer.internal.PDFResourceReferenceConverter
+com.xwiki.pdfviewer.internal.macro.PDFViewerMacro
