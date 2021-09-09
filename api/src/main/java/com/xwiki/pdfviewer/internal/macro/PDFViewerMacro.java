@@ -42,7 +42,7 @@ import org.xwiki.template.TemplateManager;
 import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 
 @Component
-@Named("pdfviewer2")
+@Named("pdfviewer")
 @Singleton
 public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
 {

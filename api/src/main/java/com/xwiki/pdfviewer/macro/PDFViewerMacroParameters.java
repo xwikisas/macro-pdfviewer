@@ -23,40 +23,43 @@ import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyMandatory;
+import org.xwiki.properties.annotation.PropertyName;
 
 import com.xwiki.pdfviewer.PDFResourceReference;
 
 public class PDFViewerMacroParameters
 {
     /**
-     * To add.
+     * The PDF file to be viewer. Use the full attachment reference to specify the PDF file, an absolute URL or only the
+     * name of the attachment when is used along with the document parameter.
      */
     private String file;
 
     /**
-     * To add.
+     * The viewer width, in pixels. Use a percentage value, example: 25%, 50%, 100%.
+     */
+    private String width = "100%";
+
+    /**
+     * The viewer height, in pixels.
+     */
+    private int height = 1000;
+
+    /**
+     * String reference of the document that contains the file. It is not used if file is an URL or the resulted
+     * attachment reference does not actually exists.
      */
     private String document;
 
     /**
-     * To add.
-     */
-    private String width;
-
-    /**
-     * To add.
-     */
-    private int height;
-
-    /**
-     * To add.
+     * If this value is true and the user has no access to the  document to which the PDF file is attached, the PDF file
+     * could still be viewed on behalf of the author of the document containing the macro (if that author has access to
+     * the containing document).
      */
     private boolean asauthor;
 
     /**
-     * To add.
-     * 
-     * @return to add
+     * @return the reference to the PDF file, an absolute URL or simply the file name
      */
     public String getFile()
     {
@@ -64,11 +67,12 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * To add.
+     * Set the value of the PDF file by using a full attachment reference, an absolute URL or simply the file name.
      * 
-     * @param file to add
+     * @param file the reference to the PDF file, an absolute URL or simply the file name
      */
-    @PropertyDescription("File or URL path to the PDF file")
+    @PropertyDescription("The full PDF file reference, an absolute URL or only the name of the attachment when is "
+        + "used along with the document parameter.")
     @PropertyDisplayType(PDFResourceReference.class)
     @PropertyMandatory
     public void setFile(String file)
@@ -77,30 +81,7 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * To add.
-     * 
-     * @return to add
-     */
-    public String getDocument()
-    {
-        return document;
-    }
-
-    /**
-     * To add.
-     * 
-     * @param document to add
-     */
-    @PropertyDescription("Reference of the document containing the file (not used if file is an URL)")
-    public void setDocument(String document)
-    {
-        this.document = document;
-    }
-
-    /**
-     * To add.
-     * 
-     * @return to add
+     * @return the display width of the PDF file
      */
     public String getWidth()
     {
@@ -108,19 +89,18 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * To add.
+     * Set the display width of the PDF file.
      * 
-     * @param width to add
+     * @param width display width of the PDF file
      */
+    @PropertyDescription("The viewer width, in pixels. If not defined the default value will be used")
     public void setWidth(String width)
     {
         this.width = width;
     }
 
     /**
-     * To add.
-     * 
-     * @return to add
+     * @return the display height of the PDF file
      */
     public int getHeight()
     {
@@ -128,19 +108,41 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * To add.
+     * Set the display height of the PDF file.
      * 
-     * @param height to add
+     * @param height display height of the PDF file
      */
+    @PropertyDescription("The viewer height, in pixels. If not defined the default value will be used")
     public void setHeight(int height)
     {
         this.height = height;
     }
 
     /**
-     * To add.
+     * @return the reference of the document that contains the file to be viewed
+     */
+    public String getDocument()
+    {
+        return document;
+    }
+
+    /**
+     * Set the reference of the document that contains the file to be viewed.
      * 
-     * @return to add
+     * @param document reference of the document that contains the file
+     */
+    @PropertyDescription("Reference to the XWiki document where the file is attached. If not defined, the current "
+        + "document or only the file parameter are used. If file argument is an absolute URL or the attachment does "
+        + "not exists, this argument is ignored.")
+    @PropertyAdvanced
+    public void setDocument(String document)
+    {
+        this.document = document;
+    }
+
+    /**
+     * @return {@code true} if the view right of the PDF file document should be delegated to the users that requests to
+     *         see it through the macro, {@code false} otherwise
      */
     public boolean getAsauthor()
     {
@@ -148,14 +150,17 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * To add.
+     * Set whether to delegate the view right of document where the PDF file is located to the user that wants to see it
+     * through the pdfviewer macro.
      * 
-     * @param asauthor to add
+     * @param asauthor {@code true} if the view right of the PDF file document should be delegated to the users that
+     *            requests to see it through the macro, {@code false} otherwise
      */
-    @PropertyDescription("If this value is true (or 1 or yes) and the user has no access to the  document to which "
-        + "the PDF file is attached, the PDF file could still be viewed on behalf of the author of the document "
-        + "containing the macro (if that author has access to the containing document obviously).")
+    @PropertyDescription("If this value is true and the user has no access to the  document to which the PDF file is "
+        + "attached, the PDF file could still be viewed on behalf of the author of the document containing the macro "
+        + "(if that author has access to the containing document).")
     @PropertyAdvanced
+    @PropertyName("Delegate my view right")
     public void setAsauthor(boolean asauthor)
     {
         this.asauthor = asauthor;
