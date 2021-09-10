@@ -20,10 +20,8 @@
 package com.xwiki.pdfviewer.macro;
 
 import org.xwiki.properties.annotation.PropertyAdvanced;
-import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyMandatory;
-import org.xwiki.properties.annotation.PropertyName;
 
 import com.xwiki.pdfviewer.PDFResourceReference;
 
@@ -36,7 +34,7 @@ public class PDFViewerMacroParameters
     private String file;
 
     /**
-     * The viewer width, in pixels. Use a percentage value, example: 25%, 50%, 100%.
+     * The viewer width, in pixels. Uses a percentage value, for example: 25%, 50%, 100%.
      */
     private String width = "100%";
 
@@ -46,7 +44,7 @@ public class PDFViewerMacroParameters
     private int height = 1000;
 
     /**
-     * String reference of the document that contains the file. It is not used if file is an URL or the resulted
+     * String reference of the document that contains the file. It is ignored if file is an URL or the resulted
      * attachment reference does not actually exists.
      */
     private String document;
@@ -71,8 +69,6 @@ public class PDFViewerMacroParameters
      * 
      * @param file the reference to the PDF file, an absolute URL or simply the file name
      */
-    @PropertyDescription("The full PDF file reference, an absolute URL or only the name of the attachment when is "
-        + "used along with the document parameter.")
     @PropertyDisplayType(PDFResourceReference.class)
     @PropertyMandatory
     public void setFile(String file)
@@ -93,7 +89,6 @@ public class PDFViewerMacroParameters
      * 
      * @param width display width of the PDF file
      */
-    @PropertyDescription("The viewer width, in pixels. If not defined the default value will be used")
     public void setWidth(String width)
     {
         this.width = width;
@@ -112,14 +107,13 @@ public class PDFViewerMacroParameters
      * 
      * @param height display height of the PDF file
      */
-    @PropertyDescription("The viewer height, in pixels. If not defined the default value will be used")
     public void setHeight(int height)
     {
         this.height = height;
     }
 
     /**
-     * @return the reference of the document that contains the file to be viewed
+     * @return the reference of the document that contains the PDF file to be viewed
      */
     public String getDocument()
     {
@@ -127,13 +121,10 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * Set the reference of the document that contains the file to be viewed.
+     * Set the reference of the document that contains the PDF file to be viewed.
      * 
-     * @param document reference of the document that contains the file
+     * @param document reference of the document that contains the PDF file
      */
-    @PropertyDescription("Reference to the XWiki document where the file is attached. If not defined, the current "
-        + "document or only the file parameter are used. If file argument is an absolute URL or the attachment does "
-        + "not exists, this argument is ignored.")
     @PropertyAdvanced
     public void setDocument(String document)
     {
@@ -156,11 +147,7 @@ public class PDFViewerMacroParameters
      * @param asauthor {@code true} if the view right of the PDF file document should be delegated to the users that
      *            requests to see it through the macro, {@code false} otherwise
      */
-    @PropertyDescription("If this value is true and the user has no access to the  document to which the PDF file is "
-        + "attached, the PDF file could still be viewed on behalf of the author of the document containing the macro "
-        + "(if that author has access to the containing document).")
     @PropertyAdvanced
-    @PropertyName("Delegate my view right")
     public void setAsauthor(boolean asauthor)
     {
         this.asauthor = asauthor;

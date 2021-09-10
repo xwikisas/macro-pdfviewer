@@ -19,7 +19,6 @@
  */
 package com.xwiki.pdfviewer.internal.macro;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,7 +29,6 @@ import javax.script.ScriptContext;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
@@ -46,10 +44,6 @@ import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 @Singleton
 public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
 {
-    protected static final LocalDocumentReference LICENSOR_DOC = new LocalDocumentReference("Licenses", "WebHome");
-
-    protected static final LocalDocumentReference TEMPLATE_DOC = new LocalDocumentReference("Sandbox", "TestPage2");
-
     protected static final String FILE_BIND_NAME = "file";
 
     protected static final String DOCUMENT_BIND_NAME = "docname";
@@ -70,11 +64,11 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     private Logger logger;
 
     /**
-     * To add.
+     * Create and initialize the descriptor of the macro.
      */
     public PDFViewerMacro()
     {
-        super("PDF Viewer", "View pdf attachments inside wiki pages without downloading or importing them.",
+        super("PDF Viewer", "View PDF attachments inside wiki pages without downloading or importing them.",
             PDFViewerMacroParameters.class);
     }
 
@@ -87,7 +81,7 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
         try {
             this.bindParameters(parameters);
 
-            return Arrays.asList(this.templateManager.execute(customTemplate).getRoot());
+            return this.templateManager.execute(customTemplate).getChildren();
         } catch (Exception e) {
             logger.warn("Failed to render custom template. Root cause is: [{}]", ExceptionUtils.getRootCauseMessage(e));
         }
