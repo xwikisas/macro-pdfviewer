@@ -50,11 +50,12 @@ public class PDFViewerMacroParameters
     private String document;
 
     /**
-     * If this value is true and the user has no access to the  document to which the PDF file is attached, the PDF file
-     * could still be viewed on behalf of the author of the document containing the macro (if that author has access to
-     * the containing document).
+     * If this value is true (or 1 or yes) and the user has no access to the  document to which the PDF file is
+     * attached, the PDF file could still be viewed on behalf of the author of the document containing the macro (if
+     * that author has access to the containing document). TODO: change the type to boolean and add a migration for the
+     * old values.
      */
-    private boolean asauthor;
+    private String asAuthor = "0";
 
     /**
      * @return the reference to the PDF file, an absolute URL or simply the file name
@@ -132,25 +133,25 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * @return {@code true} if the view right of the PDF file document should be delegated to the users that requests to
-     *         see it through the macro, {@code false} otherwise
+     * @return true (or 1 or yes) if the view right of the PDF file document should be delegated to the users that
+     *         requests to see it through the macro, false (or 0 or no) otherwise
      */
-    public boolean getAsauthor()
+    public String getAsauthor()
     {
-        return asauthor;
+        return asAuthor;
     }
 
     /**
      * Set whether to delegate the view right of document where the PDF file is located to the user that wants to see it
      * through the pdfviewer macro.
      * 
-     * @param asauthor {@code true} if the view right of the PDF file document should be delegated to the users that
-     *            requests to see it through the macro, {@code false} otherwise
+     * @param asAuthor true (or 1 or yes) if the view right of the PDF file document should be delegated to the users
+     *            that requests to see it through the macro, false (or 0 or no) otherwise
      */
     @PropertyAdvanced
-    public void setAsauthor(boolean asauthor)
+    public void setAsauthor(String asAuthor)
     {
-        this.asauthor = asauthor;
+        this.asAuthor = asAuthor;
     }
 
 }

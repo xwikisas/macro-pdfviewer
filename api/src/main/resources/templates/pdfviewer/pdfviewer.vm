@@ -34,6 +34,8 @@
       #set ($filename = $attachmentReference.name)
       #maybeGetDocumentAsAuthor($attachmentReference.parent $asAuthor)
       #set ($attachment = $document.getAttachment($filename))
+      ## This is needed for the error message when the user has no access to the document.
+      #set ($docname = $attachmentReference.parent)
     #end
     #set ($url = $NULL)
     #if ($attachment)
@@ -113,6 +115,7 @@
   #error("#getMissingLicenseMessage('pdfviewer.extension.name')")
 #else
   #set ($fileParam = $file)
+  #set ($asAuthor = $asAuthor && ($asAuthor == 'true' || $asAuthor == 'yes' || $asAuthor == '1'))
   #if (!$fileParam)
     #error("$services.localization.render('pdfviewer.error.nofile')")
   #else

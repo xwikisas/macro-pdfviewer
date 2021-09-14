@@ -19,6 +19,7 @@
  */
 package com.xwiki.pdfviewer.internal.macro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,8 +31,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
@@ -81,9 +84,19 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
         try {
             this.bindParameters(parameters);
 
-            return this.templateManager.execute(customTemplate).getChildren();
+            // This conversion was added to avoid the problem described by
+            // https://jira.xwiki.org/browse/XRENDERING-615 and should be removed after the application starts depending
+            // on a version of XWiki >= the version where it's fixed.
+            List<Block> modifiedBlocks = new ArrayList<Block>();
+            for (Block block : this.templateManager.execute(customTemplate).getChildren()) {
+                RawBlock xdomBlock = (RawBlock) block;
+                modifiedBlocks.add(new RawBlock(xdomBlock.getRawContent(), Syntax.XHTML_1_0));
+            }
+
+            return modifiedBlocks;
         } catch (Exception e) {
-            logger.warn("Failed to render custom template. Root cause is: [{}]", ExceptionUtils.getRootCauseMessage(e));
+            logger.warn("Failed to render PDFViewer macro template. Root cause is: [{}]",
+                ExceptionUtils.getRootCauseMessage(e));
         }
         return null;
     }
