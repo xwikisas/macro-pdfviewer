@@ -109,7 +109,7 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
         scriptContext.setAttribute(WIDTH_BIND_NAME, parameters.getWidth(), ScriptContext.ENGINE_SCOPE);
         scriptContext.setAttribute(HEIGHT_BIND_NAME, parameters.getHeight(), ScriptContext.ENGINE_SCOPE);
         scriptContext.setAttribute(DOCUMENT_BIND_NAME, parameters.getDocument(), ScriptContext.ENGINE_SCOPE);
-        scriptContext.setAttribute(ASAUTHOR_BIND_NAME, parameters.getAsauthor(), ScriptContext.ENGINE_SCOPE);
+        scriptContext.setAttribute(ASAUTHOR_BIND_NAME, parameters.getAsAuthor(), ScriptContext.ENGINE_SCOPE);
     }
 
     @Override

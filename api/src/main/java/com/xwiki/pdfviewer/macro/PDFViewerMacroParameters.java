@@ -136,7 +136,7 @@ public class PDFViewerMacroParameters
      * @return true (or 1 or yes) if the view right of the PDF file document should be delegated to the users that
      *         requests to see it through the macro, false (or 0 or no) otherwise
      */
-    public String getAsauthor()
+    public String getAsAuthor()
     {
         return asAuthor;
     }
@@ -149,7 +149,7 @@ public class PDFViewerMacroParameters
      *            that requests to see it through the macro, false (or 0 or no) otherwise
      */
     @PropertyAdvanced
-    public void setAsauthor(String asAuthor)
+    public void setAsAuthor(String asAuthor)
     {
         this.asAuthor = asAuthor;
     }
