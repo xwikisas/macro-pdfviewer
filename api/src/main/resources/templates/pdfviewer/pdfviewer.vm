@@ -10,7 +10,7 @@
   #end
 #end
 
-#macro (getUrlFromFile $file)
+#macro (getUrlFromFile $file $docname)
   #set ($url = $NULL)
   ## If the url is not directly specified, the attachment reference can be taken either directly from the file macro
   ## parameter, since an attachment picker is used, or by using both the file and document parameters, for macros added
@@ -69,8 +69,8 @@
   #end
 #end
 
-#macro(displayFile $file)
-  #getUrlFromFile($file)
+#macro(displayFile $file $docname)
+  #getUrlFromFile($file $docname)
   #if ($url)
     #set ($pdfViewerConfigDoc = $xwiki.getDocument('PDFViewer.Code.PDFViewerConfiguration'))
     #set ($trustedOrigins = $pdfViewerConfigDoc.getValue('trustedOrigins'))
@@ -114,14 +114,16 @@
 #if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
   #error("#getMissingLicenseMessage('pdfviewer.extension.name')")
 #else
-  #set ($fileParam = $file)
-  #set ($asAuthor = $asAuthor && ($asAuthor == 'true' || $asAuthor == 'yes' || $asAuthor == '1'))
-  #if (!$fileParam)
+  #set ($width = $params.width)
+  #set ($height = $params.height)
+  #set ($filesDocument = $params.document)
+  #set ($files = $params.files)
+  #set ($asAuthor = $params.asAuthor && ($params.asAuthor == 'true' || $params.asAuthor == 'yes' || $params.asAuthor == '1'))
+  #if (!$files)
     #error("$services.localization.render('pdfviewer.error.nofile')")
   #else
-    #set ($files = $fileParam.split(','))
     #if ($files.size() == 1)
-      #displayFile($files[0])
+      #displayFile($files[0] $filesDocument)
     #else
       ## Display each PDF file in its own tab, in the page content.
       ##===========
@@ -147,7 +149,7 @@
       #foreach ($file in $files)
         #isActive
         #if ($isActive)
-          #displayFile($file)
+          #displayFile($file $filesDocument)
           #break
         #end
       #end

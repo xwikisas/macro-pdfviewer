@@ -19,6 +19,8 @@
  */
 package com.xwiki.pdfviewer.macro;
 
+import java.util.List;
+
 import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyMandatory;
@@ -28,13 +30,13 @@ import com.xwiki.pdfviewer.PDFResourceReference;
 public class PDFViewerMacroParameters
 {
     /**
-     * The PDF file to be viewer. Use the full attachment reference to specify the PDF file, an absolute URL or only the
+     * The PDF files to be viewed. Use the full attachment reference to specify a PDF file, an absolute URL or only the
      * name of the attachment when is used along with the document parameter.
      */
-    private String file;
+    private List<String> files;
 
     /**
-     * The viewer width, in pixels. Uses a percentage value, for example: 25%, 50%, 100%.
+     * The viewer width. Uses a percentage value, for example: 25%, 50%, 100%.
      */
     private String width = "100%";
 
@@ -44,37 +46,38 @@ public class PDFViewerMacroParameters
     private int height = 1000;
 
     /**
-     * String reference of the document that contains the file. It is ignored if file is an URL or the resulted
-     * attachment reference does not actually exists.
+     * String reference of the document that contains one or multiple files. In case of each file, it can be ignored if
+     * that file is an URL or the computed attachment reference does not actually exists.
      */
     private String document;
 
     /**
-     * If this value is true (or 1 or yes) and the user has no access to the  document to which the PDF file is
-     * attached, the PDF file could still be viewed on behalf of the author of the document containing the macro (if
-     * that author has access to the containing document). TODO: change the type to boolean and add a migration for the
-     * old values.
+     * If this value is true (or 1 or yes) and the user has no access to the document to which the PDF file is attached,
+     * the PDF file could still be viewed on behalf of the author of the document containing the macro (if that author
+     * has access to the containing document).
+     * TODO: change the type to boolean and add a migration for the old values.
      */
     private String asAuthor = "0";
 
     /**
-     * @return the reference to the PDF file, an absolute URL or simply the file name
+     * @return the list of PDF files
      */
-    public String getFile()
+    public List<String> getFiles()
     {
-        return this.file;
+        return this.files;
     }
 
     /**
-     * Set the value of the PDF file by using a full attachment reference, an absolute URL or simply the file name.
+     * Set the value of the PDF files. One file is represented by using a full attachment reference, an absolute URL or
+     * simply the file name.
      * 
-     * @param file the reference to the PDF file, an absolute URL or simply the file name
+     * @param files the list of PDF files
      */
     @PropertyDisplayType(PDFResourceReference.class)
     @PropertyMandatory
-    public void setFile(String file)
+    public void setFile(List<String> files)
     {
-        this.file = file;
+        this.files = files;
     }
 
     /**
@@ -114,7 +117,7 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * @return the reference of the document that contains the PDF file to be viewed
+     * @return the reference of the document that contains the PDF files to be viewed
      */
     public String getDocument()
     {
@@ -122,9 +125,9 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * Set the reference of the document that contains the PDF file to be viewed.
+     * Set the reference of the document that contains the PDF files to be viewed.
      * 
-     * @param document reference of the document that contains the PDF file
+     * @param document reference of the document that contains the PDF files
      */
     @PropertyAdvanced
     public void setDocument(String document)
@@ -133,8 +136,9 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * @return true (or 1 or yes) if the view right of the PDF file document should be delegated to the users that
-     *         requests to see it through the macro, false (or 0 or no) otherwise
+     * @return whether to access the PDF file on behalf of the last author of the page calling the PDF Viewer macro
+     *         (using their access rights) rather than on behalf of the current user (using the access rights of the
+     *         current user)
      */
     public String getAsAuthor()
     {
@@ -142,8 +146,8 @@ public class PDFViewerMacroParameters
     }
 
     /**
-     * Set whether to delegate the view right of document where the PDF file is located to the user that wants to see it
-     * through the pdfviewer macro.
+     * Set whether to access the PDF file on behalf of the last author of the page calling the PDF Viewer macro (using
+     * their access rights) rather than on behalf of the current user (using the access rights of the current user).
      * 
      * @param asAuthor true (or 1 or yes) if the view right of the PDF file document should be delegated to the users
      *            that requests to see it through the macro, false (or 0 or no) otherwise
@@ -153,5 +157,4 @@ public class PDFViewerMacroParameters
     {
         this.asAuthor = asAuthor;
     }
-
 }
