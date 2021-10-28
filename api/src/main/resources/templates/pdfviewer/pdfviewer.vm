@@ -84,29 +84,29 @@
     #set ($pdfviewerurl = $services.webjars.url('pdf-js', 'web/viewer.html'))
     ## Attachment URL have query parameters for cache issue.
     #set ($pdfviewerurl = $pdfviewerurl.split('\?')[0])
-      <div>
-      <!--[if lt IE 10]>
-        <div class="box warningmessage">PDF Viewer : Not compatible with IE < 10</div>
-      <![endif]-->
-      <![if !(lt IE 10)]>
-        <iframe src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="${width}" height="${height}">
-        </iframe>
-      <![endif]-->
-      </div>
+    <div>
+    <!--[if lt IE 10]>
+      <div class="box warningmessage">PDF Viewer : Not compatible with IE < 10</div>
+    <![endif]-->
+    <![if !(lt IE 10)]>
+      <iframe src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="${width}" height="${height}">
+      </iframe>
+    <![endif]-->
+    </div>
   #elseif (!$document || $document.isNew())
     #error("$services.localization.render(
-    	'pdfviewer.error.nodocument', [$escapetool.html($escapetool.html($docname))])")
+       'pdfviewer.error.nodocument', [$escapetool.xml($docname)])")
   #else
     #error("$services.localization.render('pdfviewer.error.noattachment',[$escapetool.html($filename),
     	$escapetool.html($services.model.serialize($document.documentReference, 'default'))])")
   #end
 #end
 
-#macro(isActive)
+#macro(checkIfActive)
   #set ($activeClass = $NULL)
-  #set ($isActive = $request.file == $file)
-  #if ("$!request.file" == '')
-    #set ($isActive = $foreach.index == 0)
+  #set ($isActive = ("$!request.file" == '' && $foreach.index == 0) || $request.file == $file)
+  #if ($isActive)
+    #set ($activeClass = "class='active'")
   #end
 #end
 
@@ -132,10 +132,7 @@
       <div class="floatcontainer">
         <ul class="xwikitabbar">
         #foreach ($file in $files)
-          #isActive
-          #if ($isActive)
-            #set ($activeClass = "class='active'")
-          #end
+          #checkIfActive()
           <li id="$escapetool.xml($file)" $activeClass>
             <a href="$doc.getURL('view', "file=$escapetool.url($file)")">$file</a>
           </li>
@@ -147,7 +144,7 @@
       ##==========================
       <div class='xwikitabpanescontainer'>
       #foreach ($file in $files)
-        #isActive
+        #checkIfActive()
         #if ($isActive)
           #displayFile($file $filesDocument)
           #break

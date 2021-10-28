@@ -22,6 +22,7 @@ package com.xwiki.pdfviewer.macro;
 import java.util.List;
 
 import org.xwiki.properties.annotation.PropertyAdvanced;
+import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyMandatory;
 
@@ -76,6 +77,8 @@ public class PDFViewerMacroParameters
      */
     @PropertyDisplayType(PDFResourceReference.class)
     @PropertyMandatory
+    @PropertyDescription("The full PDF file reference, an absolute URL or only the name of the attachment when is used "
+        + "along with the document parameter. Multiple files can be defined.")
     public void setFile(List<String> files)
     {
         this.files = files;
@@ -94,6 +97,8 @@ public class PDFViewerMacroParameters
      * 
      * @param width display width of the PDF file
      */
+    @PropertyDescription("The viewer width, defined as a percentage (e.g. 50%, 100%). If not defined, the default "
+        + "value will be used")
     public void setWidth(String width)
     {
         this.width = width;
@@ -112,6 +117,7 @@ public class PDFViewerMacroParameters
      * 
      * @param height display height of the PDF file
      */
+    @PropertyDescription("The viewer height, in pixels. If not defined, the default value will be used")
     public void setHeight(int height)
     {
         this.height = height;
@@ -131,6 +137,9 @@ public class PDFViewerMacroParameters
      * @param document reference of the document that contains the PDF files
      */
     @PropertyAdvanced
+    @PropertyDescription("Reference to the XWiki document to which the file is attached. If not defined, the current "
+        + "document or only the file parameter is used. If file argument is an absolute URL or the attachment does "
+        + "not exists, this argument is ignored. The same is applied for each defined file.")
     public void setDocument(String document)
     {
         this.document = document;
@@ -154,6 +163,9 @@ public class PDFViewerMacroParameters
      *            that requests to see it through the macro, false (or 0 or no) otherwise
      */
     @PropertyAdvanced
+    @PropertyDescription("If this value is true (or 1 or yes) and the viewing user has no access to the document "
+        + "containing the PDF file, the PDF file could still be viewed on behalf of your view right (if you have view "
+        + "right on the containing document).")
     public void setAsAuthor(String asAuthor)
     {
         this.asAuthor = asAuthor;
