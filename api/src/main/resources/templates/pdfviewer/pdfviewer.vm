@@ -133,7 +133,7 @@
         <ul class="xwikitabbar">
         #foreach ($file in $files)
           #checkIfActive()
-          <li id="$escapetool.xml($file)" $activeClass>
+          <li id="$escapetool.xml($file)" $!activeClass>
             <a href="$doc.getURL('view', "file=$escapetool.url($file)")">$file</a>
           </li>
         #end
