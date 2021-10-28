@@ -1,0 +1,156 @@
+#includeMacros('Licenses.Code.VelocityMacros')
+
+#macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
+  #if (!$services.security.authorization.hasAccess('view', $documentReference) && $asAuthor &&
+      $xwiki.hasProgrammingRights() && $xwiki.exists('XWiki.PDFViewerService'))
+    #set ($document = $xwiki.getDocumentAsAuthor($documentReference))
+    #set ($authorRightsNeeded = true)
+  #else
+    #set ($document = $xwiki.getDocument($documentReference))
+  #end
+#end
+
+#macro (getUrlFromFile $file $docname)
+  #set ($url = $NULL)
+  ## If the url is not directly specified, the attachment reference can be taken either directly from the file macro
+  ## parameter, since an attachment picker is used, or by using both the file and document parameters, for macros added
+  ## in xwiki versions before 11.5.
+  #if ($file.startsWith('http://') || $file.startsWith('https://'))
+    #set ($url = $file)
+  #else
+    ## For backwards compatibility with the macros added in older versions, first it is checked if the file name
+    ## specified exists on the defined document or on the current one before considering the file parameter as the full
+    ## reference. The filename is needed for the error message when no attachment is found.
+    #set ($filename = $file)
+    #set ($authorRightsNeeded = false)
+    #if ("$!docname" != '')
+      #maybeGetDocumentAsAuthor($docname $asAuthor)
+    #else
+      #set ($document = $doc)
+    #end
+    #set ($attachment = $document.getAttachment($file))
+    #if (!$attachment)
+      #set ($attachmentReference = $services.model.resolveAttachment($file))
+      #set ($filename = $attachmentReference.name)
+      #maybeGetDocumentAsAuthor($attachmentReference.parent $asAuthor)
+      #set ($attachment = $document.getAttachment($filename))
+      ## This is needed for the error message when the user has no access to the document.
+      #set ($docname = $attachmentReference.parent)
+    #end
+    #set ($url = $NULL)
+    #if ($attachment)
+      #if (!$authorRightsNeeded)
+        #set ($url = $document.getAttachmentURL($attachment.getFilename()))
+      #else
+        #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
+        #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
+        #if ($digestFactory && $encoder)
+          #set ($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
+          #set ($digest = $digestFactory.instance)
+          #set ($is = $digest.getInputStream($attachment.contentInputStream))
+          #set ($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
+          #set ($discard = $is.close())
+          #if ($xcontext.userReference)
+            #set ($discard = 
+            	$digest.update($services.model.serialize($xcontext.userReference, 'default').getBytes('UTF-8')))
+          #end
+          #set ($discard = $digest.update($contentAuthor.getBytes('UTF-8')))
+          #set ($digest = $encoder.encode($digest.digest))
+          #set ($queryString = $escapetool.url({
+          	'reference': $services.model.serialize($document.documentReference, 'default'),
+            'filename': $attachment.filename,
+            'user': $contentAuthor,
+            'key': $digest
+          }))
+          #set ($url = $xwiki.getDocument('XWiki.PDFViewerService').getExternalURL('get', $queryString))
+        #end
+      #end
+    #end
+  #end
+#end
+
+#macro(displayFile $file $docname)
+  #getUrlFromFile($file $docname)
+  #if ($url)
+    #set ($pdfViewerConfigDoc = $xwiki.getDocument('PDFViewer.Code.PDFViewerConfiguration'))
+    #set ($trustedOrigins = $pdfViewerConfigDoc.getValue('trustedOrigins'))
+    #set ($withCredentials = $pdfViewerConfigDoc.getValue('withCredentials'))
+    #set ($trustedOrigins = $stringtool.join($trustedOrigins.split('\r\n'), ','))
+    #set ($queryString = $escapetool.url({
+      'file': $url,
+      'trustedOrigins': $trustedOrigins,
+      'withCredentials': $withCredentials
+    }))
+    #set ($pdfviewerurl = $services.webjars.url('pdf-js', 'web/viewer.html'))
+    ## Attachment URL have query parameters for cache issue.
+    #set ($pdfviewerurl = $pdfviewerurl.split('\?')[0])
+    <div>
+    <!--[if lt IE 10]>
+      <div class="box warningmessage">PDF Viewer : Not compatible with IE < 10</div>
+    <![endif]-->
+    <![if !(lt IE 10)]>
+      <iframe src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="${width}" height="${height}">
+      </iframe>
+    <![endif]-->
+    </div>
+  #elseif (!$document || $document.isNew())
+    #error("$services.localization.render(
+      'pdfviewer.error.nodocument', [$escapetool.xml($docname)])")
+  #else
+    #error("$services.localization.render('pdfviewer.error.noattachment',[$escapetool.html($filename),
+    	$escapetool.html($services.model.serialize($document.documentReference, 'default'))])")
+  #end
+#end
+
+#macro(checkIfActive)
+  #set ($activeClass = $NULL)
+  #set ($isActive = ("$!request.file" == '' && $foreach.index == 0) || $request.file == $file)
+  #if ($isActive)
+    #set ($activeClass = "class='active'")
+  #end
+#end
+
+#set ($mainPageReference = $services.model.createDocumentReference('', ['XWiki'], 'PDFViewerService'))
+#if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
+  #error("#getMissingLicenseMessage('pdfviewer.extension.name')")
+#else
+  #set ($width = $params.width)
+  #set ($height = $params.height)
+  #set ($filesDocument = $params.document)
+  #set ($files = $params.files)
+  #set ($asAuthor = $params.asAuthor && ($params.asAuthor == 'true' || $params.asAuthor == 'yes' || $params.asAuthor == '1'))
+  #if (!$files)
+    #error("$services.localization.render('pdfviewer.error.nofile')")
+  #else
+    #if ($files.size() == 1)
+      #displayFile($files[0] $filesDocument)
+    #else
+      ## Display each PDF file in its own tab, in the page content.
+      ##===========
+      ## Display the Tabs
+      ##===========
+      <div class="floatcontainer">
+        <ul class="xwikitabbar">
+        #foreach ($file in $files)
+          #checkIfActive()
+          <li id="$escapetool.xml($file)" $!activeClass>
+            <a href="$doc.getURL('view', "file=$escapetool.url($file)")">$file</a>
+          </li>
+        #end
+        </ul>
+      </div>
+      ##==========================
+      ## Include the Tab data for the selected Tab
+      ##==========================
+      <div class='xwikitabpanescontainer'>
+      #foreach ($file in $files)
+        #checkIfActive()
+        #if ($isActive)
+          #displayFile($file $filesDocument)
+          #break
+        #end
+      #end
+      </div>
+    #end
+  #end
+#end

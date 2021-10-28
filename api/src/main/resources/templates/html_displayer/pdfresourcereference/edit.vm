@@ -22,7 +22,8 @@
 #set ($parameters = {
     'data-upload-allowed': $services.security.authorization.hasAccess('edit'),
     'data-accept': "$pdfFileNameExtensions, $pdfMediaTypes",
-    'placeholder': $services.localization.render('rendering.macro.pdfviewer.placeholder')
+    'placeholder': $services.localization.render('rendering.macro.pdfviewer.placeholder'),
+    'multiple': 'multiple'
 })
 #set ($discard = $parameters.putAll($displayer.parameters))
 #set ($discard = $parameters.put('class', "$!parameters.get('class') pick-attachment-resource"))
