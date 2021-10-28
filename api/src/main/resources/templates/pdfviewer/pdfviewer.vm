@@ -95,7 +95,7 @@
     </div>
   #elseif (!$document || $document.isNew())
     #error("$services.localization.render(
-       'pdfviewer.error.nodocument', [$escapetool.xml($docname)])")
+      'pdfviewer.error.nodocument', [$escapetool.xml($docname)])")
   #else
     #error("$services.localization.render('pdfviewer.error.noattachment',[$escapetool.html($filename),
     	$escapetool.html($services.model.serialize($document.documentReference, 'default'))])")
