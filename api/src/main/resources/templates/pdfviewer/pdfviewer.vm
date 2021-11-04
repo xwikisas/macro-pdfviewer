@@ -117,11 +117,12 @@
   #set ($width = $params.width)
   #set ($height = $params.height)
   #set ($filesDocument = $params.document)
-  #set ($files = $params.files)
+  #set ($fileParam = $params.file)
   #set ($asAuthor = $params.asAuthor && ($params.asAuthor == 'true' || $params.asAuthor == 'yes' || $params.asAuthor == '1'))
-  #if (!$files)
+  #if (!$fileParam)
     #error("$services.localization.render('pdfviewer.error.nofile')")
   #else
+    #set ($files = $fileParam.split(','))
     #if ($files.size() == 1)
       #displayFile($files[0] $filesDocument)
     #else
