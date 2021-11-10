@@ -19,8 +19,6 @@
  */
 package com.xwiki.pdfviewer.macro;
 
-import java.util.List;
-
 import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
@@ -31,10 +29,11 @@ import com.xwiki.pdfviewer.PDFResourceReference;
 public class PDFViewerMacroParameters
 {
     /**
-     * The PDF files to be viewed. Use the full attachment reference to specify a PDF file, an absolute URL or only the
-     * name of the attachment when is used along with the document parameter.
+     * One or multiple PDF files to be viewed. In case multiple files are defined, the {@code String} will contain a
+     * list with comma as delimiter. Use the full attachment reference to specify a PDF file, an absolute URL or only
+     * the name of the attachment when is used along with the document parameter.
      */
-    private List<String> files;
+    private String file;
 
     /**
      * The viewer width. Uses a percentage value, for example: 25%, 50%, 100%.
@@ -62,26 +61,26 @@ public class PDFViewerMacroParameters
     private String asAuthor = "0";
 
     /**
-     * @return the list of PDF files
+     * @return one or a list of PDF files
      */
-    public List<String> getFiles()
+    public String getFile()
     {
-        return this.files;
+        return this.file;
     }
 
     /**
-     * Set the value of the PDF files. One file is represented by using a full attachment reference, an absolute URL or
-     * simply the file name.
+     * Set the value of one or multiple files. One file is represented by using a full attachment reference, an absolute
+     * URL or simply the file name.
      * 
-     * @param files the list of PDF files
+     * @param file one or a list of PDF files
      */
     @PropertyDisplayType(PDFResourceReference.class)
     @PropertyMandatory
     @PropertyDescription("The full PDF file reference, an absolute URL or only the name of the attachment when is used "
         + "along with the document parameter. Multiple files can be defined.")
-    public void setFile(List<String> files)
+    public void setFile(String file)
     {
-        this.files = files;
+        this.file = file;
     }
 
     /**
