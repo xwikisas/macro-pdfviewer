@@ -81,7 +81,7 @@
       'trustedOrigins': $trustedOrigins,
       'withCredentials': $withCredentials
     }))
-    #set ($pdfviewerurl = $services.webjars.url('pdf-js', 'web/viewer.html'))
+    #set ($pdfviewerurl = $services.webjars.url('com.xwiki.pdfviewer:macro-pdfviewer-webjar', 'web/viewer.html'))
     ## Attachment URL have query parameters for cache issue.
     #set ($pdfviewerurl = $pdfviewerurl.split('\?')[0])
     <div>
@@ -89,7 +89,8 @@
       <div class="box warningmessage">PDF Viewer : Not compatible with IE < 10</div>
     <![endif]-->
     <![if !(lt IE 10)]>
-      <iframe src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="${width}" height="${height}">
+      <iframe class="pdfviewer" src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="${width}"
+        height="${height}">
       </iframe>
     <![endif]-->
     </div>
