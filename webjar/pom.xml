@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>macro-pdfviewer</artifactId>
+    <groupId>com.xwiki.pdfviewer</groupId>
+    <version>2.3.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>macro-pdfviewer-webjar</artifactId>
+  <name>PDF Viewer Macro - Webjar</name>
+  <description>Resources needed by the PDFViewer.</description>
+  <packaging>webjar</packaging>
+  <properties>
+    <webjar.contentDirectory>
+      ${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}
+    </webjar.contentDirectory>
+    <pdfjs.version>2.9.359</pdfjs.version>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Unpack the pdf.js webjar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.webjars</groupId>
+                  <artifactId>pdf-js</artifactId>
+                  <version>${pdfjs.version}</version>
+                  <type>jar</type>
+                  <includes>META-INF/resources/webjars/pdf-js/${pdfjs.version}/**</includes>
+                  <fileMappers>
+                    <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                      <pattern>^\QMETA-INF/resources/webjars/pdf-js/${pdfjs.version}/\E</pattern>
+                      <replacement>./</replacement>
+                    </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                  </fileMappers>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${webjar.contentDirectory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Add XWiki customizations to the PDF.JS -->
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.3</version>
+        <executions>
+          <execution>
+            <id>fix-viewer-js</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>${webjar.contentDirectory}/web/viewer.js</file>
+              <replacements>
+                <!-- Issue #15: External PDFs are not displayed -->
+                <replacement>
+                  <token>const HOSTED_VIEWER_ORIGINS[^;]*</token>
+                  <value>$0;
+                    const queryString = document.location.search.substring(1);
+                    const params = (0, _ui_utils.parseQueryString)(queryString);
+                    HOSTED_VIEWER_ORIGINS.push.apply(HOSTED_VIEWER_ORIGINS, params.trustedorigins.split(','))</value>
+                </replacement>
+                <replacement>
+                  <token>PDFViewerApplication.open\(file\);</token>
+                  <value>
+                    let withCredentials = /withCredentials=1(&amp;|\$)/.test(window.location.search);
+                    PDFViewerApplication.open(file, {'withCredentials': withCredentials});
+                  </value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
+          <execution>
+            <id>fix-viewer-html</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>${webjar.contentDirectory}/web/viewer.html</file>
+              <replacements>
+                <replacement>
+                  <token>&lt;script src="viewer\.js"</token>
+                  <value>&lt;script src="../pdfviewer-customizations.js"&gt;&lt;/script&gt;$0</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <!-- Cancel custom MANIFEST file (since it's not generated for "webjar" packaging) -->
+            <manifestFile combine.self="override" />
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
