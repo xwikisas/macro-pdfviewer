@@ -98,11 +98,9 @@
                 <replacement>
                   <token>PDFViewerApplication.open\(file\);</token>
                   <value>
-                    var index = window.location.search.indexOf('withCredentials=');
-                    var withCredentials = index == -1 ? 0 : window.location.search[index + 'withCredentials='.length];
-                    if (withCredentials == '1') PDFViewerApplication.open(file, {'withCredentials': true});
-                    else
-                    $0</value>
+                    let withCredentials = /withCredentials=1(&amp;|\$)/.test(window.location.search);
+                    PDFViewerApplication.open(file, {'withCredentials': withCredentials});
+                  </value>
                 </replacement>
               </replacements>
             </configuration>
