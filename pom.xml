@@ -34,7 +34,7 @@
   <description>Display attached PDF files or PDFs from external URLs inside XWiki pages. Use the tabbed layout to show multiple PDF files in the same XWiki page. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
   <packaging>pom</packaging>
   <properties>
-    <licensing.version>1.20</licensing.version>
+    <licensing.version>1.21.1</licensing.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
