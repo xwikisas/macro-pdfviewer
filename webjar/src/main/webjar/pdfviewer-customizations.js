@@ -2,8 +2,29 @@
    window.addEventListener('load', function() {
       setExternalLinkTarget();
       setViewRights();
+      addCopyButton();
    }, true);
+  // #40: Add a copyable link of the PDF file location in the macro toolbar
+  function addCopyButton() {
+	  var toolbar = document.getElementById('toolbarViewerRight');
+    var secondaryToolbar = document.getElementById('secondaryToolbar');
 
+    var linkButton = document.getElementById('print').cloneNode(true);
+    var secondaryLinkButton = document.getElementById('secondaryPrint').cloneNode(true);
+
+    linkButton.setAttribute('id', 'copy');
+    linkButton.classList.add('copy');
+    linkButton.classList.remove('print');
+    linkButton.removeAttribute('data-l10n-id');
+
+    secondaryLinkButton.setAttribute('id', 'secondaryCopy');
+ 	  secondaryLinkButton.classList.add('copy');
+    secondaryLinkButton.classList.remove('print');
+    secondaryLinkButton.removeAttribute('data-l10n-id');
+
+    toolbar.prepend(linkButton);
+    secondaryToolbar.prepend(secondaryLinkButton);
+  }
   // PDFVIEWER-2: Open the links inside the PDF documents in a new tab
   function setExternalLinkTarget() {
     PDFViewerApplication.preferences.set('externalLinkTarget', 2);

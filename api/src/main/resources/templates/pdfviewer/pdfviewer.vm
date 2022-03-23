@@ -94,6 +94,7 @@
       </iframe>
     <![endif]-->
     </div>
+    #set ($dispose = $xwiki.jsx.use('XWiki.PDFViewerMacro'))
   #elseif (!$document || $document.isNew())
     #error("$services.localization.render(
       'pdfviewer.error.nodocument', [$escapetool.xml($docname)])")
