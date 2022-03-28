@@ -53,6 +53,7 @@ pdfviewer.error.noattachment=The file attachment [{0}] does not exists in docume
 pdfviewer.error.nofile=No PDF filename or absolute URL provided.
 pdfviewer.extension.name=PDF Viewer Macro (Pro)
 pdfviewer.viewer.notification.copied=PDF file link copied to the clipboard!
+pdfviewer.viewer.notification.copyFail=Failed to copy PDF link
 pdfviewer.viewer.buttons.copy=Copy PDF link
 admin.pdfviewermacro=PDF Viewer Macro (Pro)</content>
   <object>
