@@ -135,36 +135,41 @@
     </property>
     <property>
       <code>require(['jquery'], function ($) {
-  $(window).on( "load", function() {
-    let viewerFrame = $('iframe.pdfviewer');
-    let secondaryMenuButton = viewerFrame.contents().find('#secondaryToolbarToggle');
-    // Triggered when clicking the permalink button.
-    let copyPdfPermalink = function () {
-      let fileName = new URL(viewerFrame.attr('src'), location.origin).searchParams.get('file');
-      if (!fileName.includes('http://') &amp;&amp; !fileName.includes('https://')) {
-        fileName = location.origin + fileName;
-      }
-      navigator.clipboard.writeText(fileName).then(function() {
-      // After upgrading the parent to 13.8, the Require plugin for translations should be used.
-      // See https://extensions.xwiki.org/xwiki/bin/view/Extension/Localization/#HFromJavaScript
-        new
-        XWiki.widgets.Notification($jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.linkCopied')), 'done');
-      }, function() {
-        new
-        XWiki.widgets.Notification($jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.copyLinkFail')), 'error');
-      });
-      // If the secondary menu is open, we need to close it / untoggle it.
-      if (secondaryMenuButton.hasClass('toggled')) {
-        secondaryMenuButton.click();
-      }
+  $(function() {
+    const iframe = document.getElementsByClassName('pdfviewer')[0];
+    const initPermalinkButton = function () {
+      let viewerFrame = $(iframe);
+      let secondaryMenuButton = viewerFrame.contents().find('#secondaryToolbarToggle');
+      // Triggered when clicking the permalink button.
+      let copyPdfPermalink = function () {
+        let fileName = new URL(viewerFrame.attr('src'), location.origin).searchParams.get('file');
+        let pdfURL = new URL(fileName, location.origin).toString();
+        navigator.clipboard.writeText(pdfURL).then(function() {
+          // After upgrading the parent to 13.8, the Require plugin for translations should be used.
+          // See https://extensions.xwiki.org/xwiki/bin/view/Extension/Localization/#HFromJavaScript
+          new XWiki.widgets.Notification($jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.linkCopied')), 'done');
+        }, function() {
+          new XWiki.widgets.Notification($jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.copyLinkFail')), 'error');
+        });
+        // If the secondary menu is open, we need to close it / untoggle it.
+        if (secondaryMenuButton.hasClass('toggled')) {
+          secondaryMenuButton.click();
+        }
+      };
+      viewerFrame.contents()
+        .find('button.permalink')
+          .attr('title', $jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
+          .on('click', copyPdfPermalink)
+          .find('span')
+            .text($jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
+            .removeAttr('data-l10n-id');
     };
-    viewerFrame.contents()
-      .find('button.permalink')
-        .attr('title', $jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
-        .on('click', copyPdfPermalink)
-        .find('span')
-          .text($jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
-          .removeAttr('data-l10n-id');
+
+    if (iframe.contentDocument.readyState === 'complete') {
+      initPermalinkButton();
+    } else {
+      iframe.contentWindow.addEventListener('load', initPermalinkButton);
+    }
   });
 });</code>
     </property>
