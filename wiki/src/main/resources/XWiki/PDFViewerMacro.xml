@@ -168,7 +168,7 @@
     if (iframe.contentDocument.readyState === 'complete') {
       initPermalinkButton();
     } else {
-      iframe.contentWindow.addEventListener('load', initPermalinkButton);
+      iframe.contentWindow.addEventListener('load', function() { setTimeout(initPermalinkButton, 0); });
     }
   });
 });</code>

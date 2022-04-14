@@ -1,11 +1,9 @@
 (function() {
-   document.addEventListener('DOMContentLoaded', function() {
-      addPermalinkButton();
-   });
    window.addEventListener('load', function() {
       setExternalLinkTarget();
       setViewRights();
-   }, true);
+      addPermalinkButton();
+   });
   // #40: Add a copyable link of the PDF file location in the macro toolbar
   function addPermalinkButton() {
 	  var toolbar = document.getElementById('toolbarViewerRight');
