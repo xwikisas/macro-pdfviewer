@@ -147,9 +147,15 @@
         navigator.clipboard.writeText(pdfURL).then(function() {
           // After upgrading the parent to 13.8, the Require plugin for translations should be used.
           // See https://extensions.xwiki.org/xwiki/bin/view/Extension/Localization/#HFromJavaScript
-          new XWiki.widgets.Notification($jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.linkCopied')), 'done');
+          new XWiki.widgets.Notification(
+            $jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.linkCopied')),
+            'done'
+          );
         }, function() {
-          new XWiki.widgets.Notification($jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.copyLinkFail')), 'error');
+          new XWiki.widgets.Notification(
+            $jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.copyLinkFail')),
+            'error'
+          );
         });
         // If the secondary menu is open, we need to close it / untoggle it.
         if (secondaryMenuButton.hasClass('toggled')) {
@@ -168,9 +174,11 @@
     if (iframe.contentDocument.readyState === 'complete') {
       initPermalinkButton(iframe);
     } else {
-      // We setTimeout to 0 because we want all the listeners of load event to finish executing before we run our function.
-      // This will guarantee that the permalink button will be there when initPermalinkButton runs.
-      iframe.contentWindow.addEventListener('load', function() { setTimeout(function () { initPermalinkButton(iframe); }, 0); });
+      // We setTimeout to 0 because we want all the listeners of load event to finish executing before we run our
+      // function. This will guarantee that the permalink button will be there when initPermalinkButton runs.
+      iframe
+        .contentWindow
+        .addEventListener('load', function() { setTimeout(function () { initPermalinkButton(iframe); }, 0); });
     }
   });
 });</code>
