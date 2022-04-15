@@ -137,7 +137,7 @@
       <code>require(['jquery'], function ($) {
   $(function() {
     const iframe = document.getElementsByClassName('pdfviewer')[0];
-    const initPermalinkButton = function () {
+    const initPermalinkButton = function (iframe) {
       let viewerFrame = $(iframe);
       let secondaryMenuButton = viewerFrame.contents().find('#secondaryToolbarToggle');
       // Triggered when clicking the permalink button.
@@ -166,9 +166,11 @@
     };
 
     if (iframe.contentDocument.readyState === 'complete') {
-      initPermalinkButton();
+      initPermalinkButton(iframe);
     } else {
-      iframe.contentWindow.addEventListener('load', function() { setTimeout(initPermalinkButton, 0); });
+      // We setTimeout to 0 because we want all the listeners of load event to finish executing before we run our function.
+      // This will guarantee that the permalink button will be there when initPermalinkButton runs.
+      iframe.contentWindow.addEventListener('load', function() { setTimeout(function () { initPermalinkButton(iframe); }, 0); });
     }
   });
 });</code>
