@@ -121,6 +121,27 @@
               </replacements>
             </configuration>
           </execution>
+          <execution>
+            <id>fix-viewer-css</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>${webjar.contentDirectory}/web/viewer.css</file>
+              <replacements>
+                <replacement>
+                  <token>mask-image: var\(--toolbarButton-download-icon\);\n}</token>
+                  <value>$0
+.toolbarButton.permalink::before,
+.secondaryToolbarButton.permalink::before {
+  -webkit-mask-image: url(images/toolbarButton-permalink.svg);
+  mask-image: url(images/toolbarButton-permalink.svg);
+}</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>

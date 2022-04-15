@@ -47,4 +47,150 @@
     <content>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RRsNZW5kc3RyZWFtDWVuZG9iag0xIDAgb2JqDTw8L0xlbmd0aCAzODA3L1N1YnR5cGUvWE1ML1R5cGUvTWV0YWRhdGE+PnN0cmVhbQ0KPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNC4yLjEtYzA0MyA1Mi4zNzI3MjgsIDIwMDkvMDEvMTgtMTU6NTY6MzcgICAgICAgICI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+CiAgICAgICAgIDxkYzpmb3JtYXQ+YXBwbGljYXRpb24vcGRmPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5Vbmtub3duPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8ZGM6ZGVzY3JpcHRpb24+CiAgICAgICAgICAgIDxyZGY6QWx0PgogICAgICAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiLz4KICAgICAgICAgICAgPC9yZGY6QWx0PgogICAgICAgICA8L2RjOmRlc2NyaXB0aW9uPgogICAgICAgICA8ZGM6dGl0bGU+CiAgICAgICAgICAgIDxyZGY6QWx0PgogICAgICAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPjE3MjUuUERGPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOkFsdD4KICAgICAgICAgPC9kYzp0aXRsZT4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnBkZj0iaHR0cDovL25zLmFkb2JlLmNvbS9wZGYvMS4zLyI+CiAgICAgICAgIDxwZGY6Q3JlYXRpb25EYXRlLS1UZXh0PjEtSmFuLTMgMTg6MTVQTTwvcGRmOkNyZWF0aW9uRGF0ZS0tVGV4dD4KICAgICAgICAgPHBkZjpLZXl3b3Jkcy8+CiAgICAgICAgIDxwZGY6UHJvZHVjZXI+QWNyb2JhdCBQREZXcml0ZXIgMy4wMiBmb3IgV2luZG93czwvcGRmOlByb2R1Y2VyPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD4xNzI1LmZtPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDExLTA1LTEzVDIyOjI3OjQwLTAzOjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxMS0wNS0xM1QyMjoyNzo0MC0wMzowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIj4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+dXVpZDpmNTlhZDFmNS1jZTUyLTVmNGQtOGNlZi0xYjE1YjI3ODMyN2M8L3htcE1NOkRvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnV1aWQ6YTgzM2I4MWQtYzkwZi1mMzRmLWJhYjktN2UwMTU4OWIzNTQ2PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+DWVuZHN0cmVhbQ1lbmRvYmoNMiAwIG9iag08PC9GaWx0ZXIvRmxhdGVEZWNvZGUvRmlyc3QgMTQvTGVuZ3RoIDE3Mi9OIDMvVHlwZS9PYmpTdG0+PnN0cmVhbQ0KaN6EjssKwjAQRX9lvqCZaR5tQLqwiy5EKEVwEbIIWDRgW2kj2L83qbhw5epw75kLIwFBAVdQgCbY7Vg9PccAxA7+shiiqDvLTuujZ6279ktVGVa7ezO7NR43bhgcYJYLVbLzzYe+nfwYDGZaogQCyrDUZKvKbrOu2X9X5rOCH1h2dGH2rygFV5TaPJcRSFxH8FKmsiCVEuoiJRI8ARWqzQmyf355CzAACCY+Jg1lbmRzdHJlYW0NZW5kb2JqDTMgMCBvYmoNPDwvRmlsdGVyL0ZsYXRlRGVjb2RlL0ZpcnN0IDQvTGVuZ3RoIDE3OC9OIDEvVHlwZS9PYmpTdG0+PnN0cmVhbQ0KaN50zUsLgkAUBeC/MjudxTgPE0NEkKRFIQgZrtUZyR5z4Tpi/fukVi1an3O+syWCpCnPZ3cB9M/2ZmGxlO/QtG4EW7TO+JIdWstCIreJjKryN2WsNk/3p7OSMlZRMDwoP5rXAqgnn/IS9AcuEiWkFJEMlVLxRjARekJ4lFcIeu4N+nmP0LWOVMW+wdEZJGEgFBkASTNaDctE+WnurqZ3q1uP7m6+j+uAZtlbgAEAPklCpA1lbmRzdHJlYW0NZW5kb2JqDTQgMCBvYmoNPDwvRGVjb2RlUGFybXM8PC9Db2x1bW5zIDQvUHJlZGljdG9yIDEyPj4vRmlsdGVyL0ZsYXRlRGVjb2RlL0lEWzw0NzE0OTUxMDQzM0RENDg4MkYwNUY4QzEyNDIyMzczND48RkY2RkZDMjdFRThGNDIzRUIyRTJFQzlDOUNCQTMxQTE+XS9JbmZvIDggMCBSL0xlbmd0aCA0Mi9Sb290IDEwIDAgUi9TaXplIDkvVHlwZS9YUmVmL1dbMSAyIDFdPj5zdHJlYW0NCmjeYmIAAiZGdhkGJgZ+bSDByAki+IBiL5YAWQwMjDCC8R9AgAEALS0DGA1lbmRzdHJlYW0NZW5kb2JqDXN0YXJ0eHJlZg0xMTYNJSVFT0YN</content>
     <filesize>6528</filesize>
   </attachment>
+  <object>
+    <name>XWiki.PDFViewerMacro</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>b4f6c31c-6fbf-4efb-ac4b-9abf8c215ab2</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>require(['jquery'], function ($) {
+  $(function() {
+    const iframe = document.getElementsByClassName('pdfviewer')[0];
+    const initPermalinkButton = function (iframe) {
+      let viewerFrame = $(iframe);
+      let secondaryMenuButton = viewerFrame.contents().find('#secondaryToolbarToggle');
+      // Triggered when clicking the permalink button.
+      let copyPdfPermalink = function () {
+        let fileName = new URL(viewerFrame.attr('src'), location.origin).searchParams.get('file');
+        let pdfURL = new URL(fileName, location.origin).toString();
+        navigator.clipboard.writeText(pdfURL).then(function() {
+          // After upgrading the parent to 13.8, the Require plugin for translations should be used.
+          // See https://extensions.xwiki.org/xwiki/bin/view/Extension/Localization/#HFromJavaScript
+          new XWiki.widgets.Notification(
+            $jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.linkCopied')),
+            'done'
+          );
+        }, function() {
+          new XWiki.widgets.Notification(
+            $jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.copyLinkFail')),
+            'error'
+          );
+        });
+        // If the secondary menu is open, we need to close it / untoggle it.
+        if (secondaryMenuButton.hasClass('toggled')) {
+          secondaryMenuButton.click();
+        }
+      };
+      viewerFrame.contents()
+        .find('button.permalink')
+          .attr('title', $jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
+          .on('click', copyPdfPermalink)
+          .find('span')
+            .text($jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
+            .removeAttr('data-l10n-id');
+    };
+
+    if (iframe.contentDocument.readyState === 'complete') {
+      initPermalinkButton(iframe);
+    } else {
+      // We setTimeout to 0 because we want all the listeners of load event to finish executing before we run our
+      // function. This will guarantee that the permalink button will be there when initPermalinkButton runs.
+      iframe
+        .contentWindow
+        .addEventListener('load', function() { setTimeout(function () { initPermalinkButton(iframe); }, 0); });
+    }
+  });
+});</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
 </xwikidoc>
