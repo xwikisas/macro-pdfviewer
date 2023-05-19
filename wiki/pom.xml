@@ -105,6 +105,15 @@
           </transformationSets>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.xwiki.commons</groupId>
+        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
+        <configuration>
+          <contentPages>
+            <contentPage>.*/PDFViewer/WebHome\.xml</contentPage>
+          </contentPages>
+        </configuration>
+      </plugin>
     </plugins>
     <extensions>
       <!-- Needed to add support for the "xar" packaging -->

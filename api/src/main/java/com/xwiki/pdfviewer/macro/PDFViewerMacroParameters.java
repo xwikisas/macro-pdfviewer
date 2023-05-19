@@ -26,6 +26,12 @@ import org.xwiki.properties.annotation.PropertyMandatory;
 
 import com.xwiki.pdfviewer.PDFResourceReference;
 
+/**
+ * Parameters for PDF Viewer Macro.
+ *
+ * @version $Id$
+ * @since 2.3
+ */
 public class PDFViewerMacroParameters
 {
     /**
