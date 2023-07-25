@@ -131,9 +131,9 @@
   #end
 #end
 
-#set ($mainPageReference = $services.model.createDocumentReference('', ['XWiki'], 'PDFViewerService'))
+#set ($mainPageReference = $services.model.createDocumentReference('', ['PDFViewer', 'Code'], 'WebHome'))
 #if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
-  #error("#getMissingLicenseMessage('pdfviewer.extension.name')")
+  #error("#getMissingLicenseMessageHTML('pdfviewer.extension.name')")
 #else
   #set ($width = $params.width)
   #set ($height = $params.height)

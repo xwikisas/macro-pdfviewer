@@ -53,11 +53,12 @@
 
   def userRef = services.model.resolveDocument(user)
   def pdfDocRef = services.model.resolveDocument(reference)
+  def currentUserRef = xcontext.context.getUserReference()
 
-  if(services.security.authorization.hasAccess(Right.VIEW, userRef, pdfDocRef)) {
-    // Changing the context user
-    def currentUserRef = xcontext.context.getUserReference()
     xcontext.context.setUserReference(userRef)
+  if(services.security.authorization.hasAccess(Right.VIEW, currentUserRef, pdfDocRef)) {
+    // Changing the context user
+
     try {
       // Getting the document
       def pdfXDoc = xwiki.getDocument(pdfDocRef)
