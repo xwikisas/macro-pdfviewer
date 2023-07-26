@@ -35,11 +35,14 @@
   ## parameter, since an attachment picker is used, or by using both the file and document parameters, for macros added
   ## in xwiki versions before 11.5.
   #if ($file.startsWith('http://') || $file.startsWith('https://'))
-     #set ($attachRef = $services.model.resolveAttachment($file, "resource/standardURL"))
-     #set ($docRef = $services.model.resolveDocument('', 'default', $attachRef))
-     #if ($services.security.authorization.hasAccess('view', $docRef))
-        #set ($url = $file)
-     #end
+    #set ($attachRef = $services.model.resolveAttachment($file, "resource/standardURL"))
+    #set ($docRef = $attachRef.getDocumentReference())
+    #set ($fileName = $attachRef.getName())
+    #if ("$!fileName" == "$file")
+      #set ($url = $file)
+    #elseif ($services.security.authorization.hasAccess('view', $docRef))
+      #set ($url = $file)
+    #end
   #else
     ## For backwards compatibility with the macros added in older versions, first it is checked if the file name
     ## specified exists on the defined document or on the current one before considering the file parameter as the full
