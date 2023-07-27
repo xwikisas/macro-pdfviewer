@@ -39,7 +39,7 @@
     #set ($docRef = $attachRef.getDocumentReference())
     #set ($fileName = $attachRef.getName())
     #if ("$!fileName" == "$!file" || $services.security.authorization.hasAccess('view', $docRef))
-      #set ($url = $file)
+      #set ($url = $file) 
     #end
   #else
     ## For backwards compatibility with the macros added in older versions, first it is checked if the file name
