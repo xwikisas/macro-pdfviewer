@@ -38,9 +38,7 @@
     #set ($attachRef = $services.model.resolveAttachment($file, "resource/standardURL"))
     #set ($docRef = $attachRef.getDocumentReference())
     #set ($fileName = $attachRef.getName())
-    #if ("$!fileName" == "$file")
-      #set ($url = $file)
-    #elseif ($services.security.authorization.hasAccess('view', $docRef))
+    #if ("$!fileName" == "$!file" || $services.security.authorization.hasAccess('view', $docRef))
       #set ($url = $file)
     #end
   #else
