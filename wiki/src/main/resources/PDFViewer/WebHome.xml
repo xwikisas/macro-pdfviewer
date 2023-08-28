@@ -24,7 +24,7 @@
   <web>PDFViewer</web>
   <name>WebHome</name>
   <language/>
-  <defaultLanguage>en</defaultLanguage>
+  <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
   <parent>ActiveDirectory.WebHome</parent>
@@ -35,7 +35,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>{{include reference="Licenses.Code.VelocityMacros"/}}
 
 {{velocity}}

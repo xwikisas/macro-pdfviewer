@@ -70,60 +70,6 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <!-- Since the xmldoc plugin is messing up the file and changing its author to XWiki.Admin, 
-           we fix that back with an xsl transformation -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>xml-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>process-resources</phase>
-            <id>refix-parents</id>
-            <goals>
-              <goal>transform</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <transformationSets>
-            <transformationSet>
-              <dir>${project.build.outputDirectory}</dir>
-              <outputDir>${project.build.outputDirectory}</outputDir>
-              <includes>
-                <include>**/*.xml</include>
-              </includes>
-              <stylesheet>src/main/build/transformation/fixauthor.xsl</stylesheet>
-              <parameters>
-                <parameter>
-                  <name>author</name>
-                  <value>xwiki:XWiki.Admin</value>
-                </parameter>
-              </parameters>
-            </transformationSet>
-          </transformationSets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.xwiki.commons</groupId>
-        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
-        <configuration>
-          <contentPages>
-            <contentPage>.*/PDFViewer/WebHome\.xml</contentPage>
-          </contentPages>
-        </configuration>
-      </plugin>
-    </plugins>
-    <extensions>
-      <!-- Needed to add support for the "xar" packaging -->
-      <extension>
-        <groupId>org.xwiki.commons</groupId>
-        <artifactId>xwiki-commons-tool-xar-handlers</artifactId>
-        <version>${commons.version}</version>
-      </extension>
-    </extensions>
-  </build>
   <scm>
     <url>https://github.com/xwikisas/macro-pdfviewer/</url>
     <tag>HEAD</tag>
