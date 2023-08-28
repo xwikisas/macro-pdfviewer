@@ -29,6 +29,10 @@
   <artifactId>macro-pdfviewer-api</artifactId>
   <name>PDF Viewer Macro - API</name>
   <description>APIs to manage PDF attachments.</description>
+  <properties>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>PDF Viewer API (Pro)</xwiki.extension.name>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.xwiki.platform</groupId>

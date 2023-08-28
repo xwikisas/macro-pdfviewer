@@ -47,8 +47,8 @@
     <tag>HEAD</tag>
   </scm>
   <modules>
-    <module>api</module>
-    <module>webjar</module>
-    <module>wiki</module>
+    <module>macro-pdfviewer-api</module>
+    <module>macro-pdfviewer-ui</module>
+    <module>macro-pdfviewer-webjar</module>
   </modules>
 </project>

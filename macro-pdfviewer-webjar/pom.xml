@@ -31,12 +31,13 @@
   <description>Resources needed by the PDFViewer.</description>
   <packaging>webjar</packaging>
   <properties>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>PDF Viewer WebJar (Pro)</xwiki.extension.name>
     <webjar.contentDirectory>
       ${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}
     </webjar.contentDirectory>
     <pdfjs.version>2.9.359</pdfjs.version>
   </properties>
-
   <build>
     <plugins>
       <!-- Unpack the pdf.js webjar -->

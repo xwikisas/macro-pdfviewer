@@ -70,8 +70,4 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-  <scm>
-    <url>https://github.com/xwikisas/macro-pdfviewer/</url>
-    <tag>HEAD</tag>
-  </scm>
 </project>
