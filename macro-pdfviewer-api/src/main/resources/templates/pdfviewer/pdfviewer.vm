@@ -147,7 +147,9 @@
   #if (!$fileParam)
     #error("$services.localization.render('pdfviewer.error.nofile')")
   #else
-    #set ($files = $fileParam.split(','))
+    ## This macro can display multiple PDFs and they are separated by a comma, so make sure that files that contain this
+    ## character are not broken.
+    #set ($files = $fileParam.split("(?<=\.pdf),"))
     #if ($files.size() == 1)
       #displayFile($files[0] $filesDocument)
     #else
