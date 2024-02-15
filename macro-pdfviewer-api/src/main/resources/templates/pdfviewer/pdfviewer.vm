@@ -17,8 +17,8 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-#includeMacros('Licenses.Code.VelocityMacros')
-
+##!source.syntax=xwiki/2.1
+{{velocity output="false"}}
 #macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
   #if (!$services.security.authorization.hasAccess('view', $documentReference) && $asAuthor &&
       $xwiki.hasProgrammingRights() && $xwiki.exists('XWiki.PDFViewerService'))
@@ -134,11 +134,14 @@
     #set ($activeClass = "class='active'")
   #end
 #end
+{{/velocity}}
 
+{{velocity}}
 #set ($mainPageReference = $services.model.createDocumentReference('', ['PDFViewer', 'Code'], 'WebHome'))
 #if (!$services.licensing.licensor.hasLicensureForEntity($mainPageReference))
-  #error("#getMissingLicenseMessageHTML('pdfviewer.extension.name')")
+  {{missingLicenseMessage extensionName="pdfviewer.extension.name"/}}
 #else
+  {{html clean="false"}}
   #set ($width = $params.width)
   #set ($height = $params.height)
   #set ($filesDocument = $params.document)
@@ -181,4 +184,6 @@
       </div>
     #end
   #end
+  {{/html}}
 #end
+{{/velocity}}
