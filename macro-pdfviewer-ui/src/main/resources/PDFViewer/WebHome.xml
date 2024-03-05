@@ -36,14 +36,12 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{include reference="Licenses.Code.VelocityMacros"/}}
-
-{{velocity}}
+  <content>{{velocity}}
 #set ($mainPageReference = $services.model.createDocumentReference('', ['PDFViewer', 'Code'], 'WebHome'))
 #if ($services.licensing.licensor.hasLicensureForEntity($mainPageReference))
   {{include reference="PDFViewer.Code.PDFViewerConfiguration"/}}
 #else
-  {{error}}#getMissingLicenseMessage('pdfviewer.extension.name'){{/error}}
+  {{missingLicenseMessage extensionName="pdfviewer.extension.name"/}}
 #end
 {{/velocity}}</content>
   <object>
