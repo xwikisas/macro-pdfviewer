@@ -19,7 +19,7 @@
 ## ---------------------------------------------------------------------------
 ##!source.syntax=xwiki/2.1
 {{velocity output="false"}}
-#macro (areAuthorRightsNeeded $documentReference)
+#macro (areAuthorRightsNeeded $documentReference $asAuthor)
   #if (!$services.security.authorization.hasAccess('view', $documentReference) && $asAuthor &&
       $xwiki.hasProgrammingRights() && $xwiki.exists('XWiki.PDFViewerService'))
     #set ($authorRightsNeeded = true)
@@ -29,7 +29,7 @@
 #end
 
 #macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
-  #areAuthorRightsNeeded($documentReference)
+  #areAuthorRightsNeeded($documentReference $asAuthor)
   #if ($authorRightsNeeded)
     #set ($document = $xwiki.getDocumentAsAuthor($documentReference))
   #else
