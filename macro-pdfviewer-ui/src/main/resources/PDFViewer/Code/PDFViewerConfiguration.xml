@@ -51,8 +51,8 @@
     &lt;dl&gt;
       #foreach ($prop in $class.properties)
         &lt;dt&gt;
-          &lt;label for="${configClassName}_0_$prop.name"&gt;$prop.prettyName&lt;/label&gt;
-          &lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;
+          &lt;label for="${configClassName}_0_$prop.name"&gt;$escapetool.xml($services.localization.render("${configClassName}_${prop.name}"))&lt;/label&gt;
+          &lt;span class="xHint"&gt;$escapetool.xml($services.localization.render("${configClassName}_${prop.name}.hint"))&lt;/span&gt;
         &lt;/dt&gt;
         &lt;dd&gt;
           {{/html}}${pdfConfigDoc.display($prop.name, 'edit')}{{html clean="false"}}

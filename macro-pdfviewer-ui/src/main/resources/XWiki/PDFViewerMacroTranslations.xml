@@ -55,7 +55,11 @@ pdfviewer.extension.name=PDF Viewer Macro (Pro)
 pdfviewer.viewer.notification.linkCopied=PDF file link copied to the clipboard!
 pdfviewer.viewer.notification.copyLinkFail=Failed to copy PDF link
 pdfviewer.viewer.buttons.copyLink=Copy PDF link
-admin.pdfviewermacro=PDF Viewer Macro (Pro)</content>
+admin.pdfviewermacro=PDF Viewer Macro (Pro)
+PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins=Trusted origins
+PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins.hint=Add the viewer origins you trust, each on a new line. If you use pdfs located on external domains, you should append the domain of your wiki to this field. i.e. 'http://localhost:8080'.
+PDFViewer.Code.PDFViewerConfigurationClass_withCredentials=With credentials
+PDFViewer.Code.PDFViewerConfigurationClass_withCredentials.hint=Enable this if you access pdfs located on external domains that need authentication. With this field enabled, your validation cookies will be forwarded to the server that holds the pdfs.</content>
   <object>
     <name>XWiki.PDFViewerMacroTranslations</name>
     <number>0</number>
