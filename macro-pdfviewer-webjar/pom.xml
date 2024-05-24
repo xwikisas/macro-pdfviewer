@@ -36,7 +36,7 @@
     <webjar.contentDirectory>
       ${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}
     </webjar.contentDirectory>
-    <pdfjs.version>2.9.359</pdfjs.version>
+    <pdfjs.version>4.2.67</pdfjs.version>
   </properties>
   <build>
     <plugins>
@@ -86,21 +86,22 @@
               <goal>replace</goal>
             </goals>
             <configuration>
-              <file>${webjar.contentDirectory}/web/viewer.js</file>
+              <file>${webjar.contentDirectory}/web/viewer.mjs</file>
               <replacements>
                 <!-- Issue #15: External PDFs are not displayed -->
                 <replacement>
                   <token>const HOSTED_VIEWER_ORIGINS[^;]*</token>
                   <value>$0;
-                    const queryString = document.location.search.substring(1);
-                    const params = (0, _ui_utils.parseQueryString)(queryString);
-                    HOSTED_VIEWER_ORIGINS.push.apply(HOSTED_VIEWER_ORIGINS, params.trustedorigins.split(','))</value>
+  const queryString = document.location.search.substring(1);
+  const params = (0, _ui_utils_js__WEBPACK_IMPORTED_MODULE_0__.parseQueryString)(queryString);
+  HOSTED_VIEWER_ORIGINS.push.apply(HOSTED_VIEWER_ORIGINS, params.trustedorigins.split(','))</value>
                 </replacement>
                 <replacement>
-                  <token>PDFViewerApplication.open\(file\);</token>
+                  <token>PDFViewerApplication.open\(\{</token>
                   <value>
-                    let withCredentials = /withCredentials=1(&amp;|\$)/.test(window.location.search);
-                    PDFViewerApplication.open(file, {'withCredentials': withCredentials});
+    let withCredentials = /withCredentials=1(&amp;|\$)/.test(window.location.search);
+    PDFViewerApplication.open({
+      withCredentials,
                   </value>
                 </replacement>
               </replacements>
@@ -115,9 +116,11 @@
             <configuration>
               <file>${webjar.contentDirectory}/web/viewer.html</file>
               <replacements>
+                <!-- Load our JavaScript customizations before the PDF viewer code. -->
                 <replacement>
-                  <token>&lt;script src="viewer\.js"</token>
-                  <value>&lt;script src="../pdfviewer-customizations.js"&gt;&lt;/script&gt;$0</value>
+                  <token>&lt;script src="viewer\.mjs"</token>
+                  <value>&lt;script src="../pdfviewer-customizations.js"&gt;&lt;/script&gt;
+  $0</value>
                 </replacement>
               </replacements>
             </configuration>
@@ -132,8 +135,9 @@
               <file>${webjar.contentDirectory}/web/viewer.css</file>
               <replacements>
                 <replacement>
-                  <token>mask-image: var\(--toolbarButton-download-icon\);\n}</token>
+                  <token>mask-image:var\(--toolbarButton-download-icon\);\n}</token>
                   <value>$0
+
 .toolbarButton.permalink::before,
 .secondaryToolbarButton.permalink::before {
   -webkit-mask-image: url(images/toolbarButton-permalink.svg);

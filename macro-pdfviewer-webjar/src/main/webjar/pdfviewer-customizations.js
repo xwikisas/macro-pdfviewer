@@ -25,7 +25,7 @@
    });
   // #40: Add a copyable link of the PDF file location in the macro toolbar
   function addPermalinkButton() {
-	  var toolbar = document.getElementById('toolbarViewerRight');
+    var toolbar = document.getElementById('toolbarViewerRight');
     var secondaryToolbar = document.getElementById('secondaryToolbar');
 
     var linkButton = document.getElementById('print').cloneNode(true);
@@ -37,7 +37,7 @@
     linkButton.removeAttribute('data-l10n-id');
 
     secondaryLinkButton.setAttribute('id', 'secondaryPermalink');
- 	  secondaryLinkButton.classList.add('permalink');
+    secondaryLinkButton.classList.add('permalink');
     secondaryLinkButton.classList.remove('print');
     secondaryLinkButton.removeAttribute('data-l10n-id');
 
