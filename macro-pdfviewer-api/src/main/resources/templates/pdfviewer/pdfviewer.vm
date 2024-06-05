@@ -80,7 +80,11 @@
         #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
         #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
         #if ($digestFactory && $encoder)
-          #set ($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
+          #if ($xcontext.getAction() != 'edit' && $xcontext.getAction() != 'get')
+            #set ($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
+          #else
+            #set ($contentAuthor = $services.model.serialize($xcontext.userReference, 'default'))
+          #end
           #set ($digest = $digestFactory.instance)
           #set ($is = $digest.getInputStream($attachment.contentInputStream))
           #set ($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
