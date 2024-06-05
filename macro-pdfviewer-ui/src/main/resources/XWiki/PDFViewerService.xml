@@ -71,7 +71,8 @@
       if (currentUserRef) {
         digest.update(services.model.serialize(currentUserRef, 'default').getBytes('UTF-8'))
       }
-      digest.update(services.model.serialize(userRef, 'default').getBytes('UTF-8'))
+      def userRefKey = services.model.serialize(userRef, 'default') + services.csrf.getToken()
+      digest.update(userRefKey.getBytes('UTF-8'))
       def check = encoder.encode(digest.digest)
       if(key.equals(check)) {
         // Adding the PDF content in the response

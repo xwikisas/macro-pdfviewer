@@ -80,7 +80,13 @@
         #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
         #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
         #if ($digestFactory && $encoder)
-          #set ($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
+          #set($currentUser = $xcontext.context.getUserReference())
+          #if ($xcontext.getAction() != 'edit' && $xcontext.getAction() != 'get')
+            $xcontext.context.setUserReference($doc.contentAuthorReference)
+          #end
+          #set ($contentAuthor = $services.model.serialize($xcontext.userReference, 'default'))
+          #set ($contentAuthorKey = $contentAuthor + $services.csrf.getToken())
+          $xcontext.context.setUserReference($currentUser)
           #set ($digest = $digestFactory.instance)
           #set ($is = $digest.getInputStream($attachment.contentInputStream))
           #set ($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
@@ -89,7 +95,7 @@
             #set ($discard = 
             	$digest.update($services.model.serialize($xcontext.userReference, 'default').getBytes('UTF-8')))
           #end
-          #set ($discard = $digest.update($contentAuthor.getBytes('UTF-8')))
+          #set ($discard = $digest.update($contentAuthorKey.getBytes('UTF-8')))
           #set ($digest = $encoder.encode($digest.digest))
           #set ($queryString = $escapetool.url({
           	'reference': $services.model.serialize($document.documentReference, 'default'),
