@@ -61,6 +61,7 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     {
         super("PDF Viewer", "View PDF attachments inside wiki pages without downloading or importing them.",
             PDFViewerMacroParameters.class);
+        setDefaultCategory(DEFAULT_CATEGORY_CONTENT);
     }
 
     @Override
