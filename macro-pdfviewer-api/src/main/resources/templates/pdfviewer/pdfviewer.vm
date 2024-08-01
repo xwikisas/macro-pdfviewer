@@ -19,100 +19,14 @@
 ## ---------------------------------------------------------------------------
 ##!source.syntax=xwiki/2.1
 {{velocity output="false"}}
-#macro (areAuthorRightsNeeded $documentReference $asAuthor)
-  #if (!$services.security.authorization.hasAccess('view', $documentReference) && $asAuthor &&
-      $xwiki.hasProgrammingRights() && $xwiki.exists('XWiki.PDFViewerService'))
-    #set ($authorRightsNeeded = true)
-  #else
-    #set ($authorRightsNeeded = false)
-  #end
-#end
-
-#macro (maybeGetDocumentAsAuthor $documentReference $asAuthor)
-  #areAuthorRightsNeeded($documentReference $asAuthor)
-  #if ($authorRightsNeeded)
-    #set ($document = $xwiki.getDocumentAsAuthor($documentReference))
-  #else
-    #set ($document = $xwiki.getDocument($documentReference))
-  #end
-#end
-
-#macro (getUrlFromFile $file $docname)
-  #set ($url = $NULL)
-  ## If the url is not directly specified, the attachment reference can be taken either directly from the file macro
-  ## parameter, since an attachment picker is used, or by using both the file and document parameters, for macros added
-  ## in xwiki versions before 11.5.
-  #if ($file.startsWith('http://') || $file.startsWith('https://'))
-    ## If the attachment reference name is the same as the given url, it means that the url directs to a file outside
-    ## of XWiki instance and there is no need to check the user view right or delegated rights.
-    #set ($attachRef = $services.model.resolveAttachment($file, 'resource/standardURL'))
-    #set ($docRef = $attachRef.getDocumentReference())
-    #areAuthorRightsNeeded($docRef)
-    #if ("$attachRef.getName()" == "$file" || $services.security.authorization.hasAccess('view', $docRef)
-      || $authorRightsNeeded)
-        #set ($url = $file)
-    #end
-  #else
-    ## For backwards compatibility with the macros added in older versions, first it is checked if the file name
-    ## specified exists on the defined document or on the current one before considering the file parameter as the full
-    ## reference. The filename is needed for the error message when no attachment is found.
-    #set ($filename = $file)
-    #set ($authorRightsNeeded = false)
-    #if ("$!docname" != '')
-      #maybeGetDocumentAsAuthor($docname $asAuthor)
-    #else
-      #set ($document = $doc)
-    #end
-    #set ($attachment = $document.getAttachment($file))
-    #if (!$attachment)
-      #set ($attachmentReference = $services.model.resolveAttachment($file))
-      #set ($filename = $attachmentReference.name)
-      #maybeGetDocumentAsAuthor($attachmentReference.parent $asAuthor)
-      #set ($attachment = $document.getAttachment($filename))
-      ## This is needed for the error message when the user has no access to the document.
-      #set ($docname = $attachmentReference.parent)
-    #end
-    #set ($url = $NULL)
-    #if ($attachment)
-      #if (!$authorRightsNeeded)
-        #set ($url = $document.getAttachmentURL($attachment.getFilename()))
-      #else
-        #set ($digestFactory = $services.component.getInstance('org.xwiki.crypto.DigestFactory', 'SHA-1'))
-        #set ($encoder = $services.component.getInstance('org.xwiki.crypto.BinaryStringEncoder', 'URLBase64'))
-        #if ($digestFactory && $encoder)
-          #set ($contentAuthor = $services.model.serialize($doc.contentAuthorReference, 'default'))
-          #set ($digest = $digestFactory.instance)
-          #set ($is = $digest.getInputStream($attachment.contentInputStream))
-          #set ($discard = $digest.getInputStream($attachment.contentInputStream).skip(1000))
-          #set ($discard = $is.close())
-          #if ($xcontext.userReference)
-            #set ($discard = 
-            	$digest.update($services.model.serialize($xcontext.userReference, 'default').getBytes('UTF-8')))
-          #end
-          #set ($discard = $digest.update($contentAuthor.getBytes('UTF-8')))
-          #set ($digest = $encoder.encode($digest.digest))
-          #set ($queryString = $escapetool.url({
-          	'reference': $services.model.serialize($document.documentReference, 'default'),
-            'filename': $attachment.filename,
-            'user': $contentAuthor,
-            'key': $digest
-          }))
-          #set ($url = $xwiki.getDocument('XWiki.PDFViewerService').getExternalURL('get', $queryString))
-        #end
-      #end
-    #end
-  #end
-#end
-
-#macro(displayFile $file $docname)
-  #getUrlFromFile($file $docname)
-  #if ($url)
+#macro(displayFile $file)
+  #if ($file.getURL() != "")
     #set ($pdfViewerConfigDoc = $xwiki.getDocument('PDFViewer.Code.PDFViewerConfiguration'))
     #set ($trustedOrigins = $pdfViewerConfigDoc.getValue('trustedOrigins'))
     #set ($withCredentials = $pdfViewerConfigDoc.getValue('withCredentials'))
     #set ($trustedOrigins = $stringtool.join($trustedOrigins.split('\r\n'), ','))
     #set ($queryString = $escapetool.url({
-      'file': $url,
+      'file': $file.getURL(),
       'trustedOrigins': $trustedOrigins,
       'withCredentials': $withCredentials
     }))
@@ -130,18 +44,19 @@
     <![endif]-->
     </div>
     #set ($dispose = $xwiki.jsx.use('XWiki.PDFViewerMacro'))
-  #elseif (!$document || $document.isNew())
+  #elseif (!$file.getAttachmentReference().isPresent())
     #error("$services.localization.render(
-      'pdfviewer.error.nodocument', [$escapetool.xml($docname)])")
+      'pdfviewer.error.nodocument')")
   #else
-    #error("$services.localization.render('pdfviewer.error.noattachment',[$escapetool.html($filename),
-    	$escapetool.html($services.model.serialize($document.documentReference, 'default'))])")
+    #set($pdfReference = $file.getAttachmentReference().get())
+    #error("$services.localization.render('pdfviewer.error.noattachment',[$escapetool.xml($pdfReference.getName()),
+    	$escapetool.xml($services.model.serialize($pdfReference.getDocumentReference(), 'default'))])")
   #end
 #end
 
-#macro(checkIfActive)
+#macro(checkIfActive $pdfReference)
   #set ($activeClass = $NULL)
-  #set ($isActive = ("$!request.file" == '' && $foreach.index == 0) || $request.file == $file)
+  #set ($isActive = ("$!request.file" == '' && $foreach.index == 0) || $request.file == $pdfReference.getName())
   #if ($isActive)
     #set ($activeClass = "class='active'")
   #end
@@ -156,17 +71,13 @@
   {{html clean="false"}}
   #set ($width = $params.width)
   #set ($height = $params.height)
-  #set ($filesDocument = $params.document)
-  #set ($fileParam = $params.file)
-  #set ($asAuthor = $params.asAuthor && ($params.asAuthor == 'true' || $params.asAuthor == 'yes' || $params.asAuthor == '1'))
-  #if (!$fileParam)
+  #if ($files.size() == 0)
     #error("$services.localization.render('pdfviewer.error.nofile')")
   #else
     ## This macro can display multiple PDFs and they are separated by a comma, so make sure that files that contain this
     ## character are not broken.
-    #set ($files = $fileParam.split("(?<=\.pdf),"))
     #if ($files.size() == 1)
-      #displayFile($files[0] $filesDocument)
+      #displayFile($files.get(0))
     #else
       ## Display each PDF file in its own tab, in the page content.
       ##===========
@@ -175,10 +86,14 @@
       <div class="floatcontainer">
         <ul class="xwikitabbar">
         #foreach ($file in $files)
-          #checkIfActive()
-          <li id="$escapetool.xml($file)" $!activeClass>
-            <a href="$doc.getURL('view', "file=$escapetool.url($file)")">$file</a>
-          </li>
+          #if ($file.getAttachmentReference().isPresent())
+            #set ($pdfRef = $file.getAttachmentReference().get())
+            #checkIfActive($pdfRef)
+            <li $!activeClass>
+              <a href="$doc.getURL('view', "file=$escapetool.url($pdfRef.getName())")">
+                $escapetool.xml($pdfRef.getName())</a>
+            </li>
+          #end
         #end
         </ul>
       </div>
@@ -187,10 +102,12 @@
       ##==========================
       <div class='xwikitabpanescontainer'>
       #foreach ($file in $files)
-        #checkIfActive()
-        #if ($isActive)
-          #displayFile($file $filesDocument)
-          #break
+        #if ($file.getAttachmentReference().isPresent())
+          #checkIfActive($file.getAttachmentReference().get())
+          #if ($isActive)
+            #displayFile($file)
+            #break
+          #end
         #end
       #end
       </div>
