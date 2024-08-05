@@ -60,7 +60,7 @@ public class PDFFile
     /**
      * Get PDF file reference.
      *
-     * @return an {@link Optional<>} {@link AttachmentReference}, if the PDF file is attached to a wiki page.
+     * @return an {@link Optional} {@link AttachmentReference}, if the PDF file is attached to a wiki page.
      */
     public Optional<AttachmentReference> getAttachmentReference()
     {
