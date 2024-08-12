@@ -38,8 +38,8 @@
       <div class="box warningmessage">PDF Viewer : Not compatible with IE < 10</div>
     <![endif]-->
     <![if !(lt IE 10)]>
-      <iframe class="pdfviewer" src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="${width}"
-        height="${height}">
+      <iframe class="pdfviewer" src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="
+        $escapetool.xml($width)" height="$escapetool.xml($height)">
       </iframe>
     <![endif]-->
     </div>
