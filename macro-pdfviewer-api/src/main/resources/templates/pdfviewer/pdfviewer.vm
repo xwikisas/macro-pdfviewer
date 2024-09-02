@@ -39,7 +39,7 @@
     <![endif]-->
     <![if !(lt IE 10)]>
       <iframe class="pdfviewer" src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="
-        $escapetool.xml($width)" height="$escapetool.xml($height)">
+        $escapetool.xml($width)" height="$escapetool.xml($height)" data-delegated="$file.areViewRightsDelegated()">
       </iframe>
     <![endif]-->
     </div>

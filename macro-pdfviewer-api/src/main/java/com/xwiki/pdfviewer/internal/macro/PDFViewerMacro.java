@@ -50,6 +50,7 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xwiki.pdfviewer.filter.MJSFilter;
 import com.xwiki.pdfviewer.macro.PDFFile;
 import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 
@@ -64,7 +65,7 @@ import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 @Singleton
 public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
 {
-    private final List<String> delegatedRightsValues = new ArrayList<>();
+    private final List<String> delegatedRightsValues = List.of("1", "true", "yes");
 
     @Inject
     private AuthorizationManager authorizationManager;
@@ -86,6 +87,9 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     @Inject
     private Provider<XWikiContext> wikiContextProvider;
 
+    @Inject
+    private Provider<MJSFilter> mjsFilterProvider;
+
     /**
      * Create and initialize the descriptor of the macro.
      */
@@ -93,19 +97,20 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     {
         super("PDF Viewer", "View PDF attachments inside wiki pages without downloading or importing them.",
             PDFViewerMacroParameters.class);
-        setDefaultCategory(DEFAULT_CATEGORY_CONTENT);
+        // Error when building the project on 14.10.
+//        setDefaultCategory(DEFAULT_CATEGORY_CONTENT);
     }
 
     @Override
     public List<Block> execute(PDFViewerMacroParameters parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
+        mjsFilterProvider.get().maybeAddMJSMimeType();
         Template customTemplate = this.templateManager.getTemplate("pdfviewer/pdfviewer.vm");
 
         try {
             String[] files = parameters.getFile().split("(?<=\\.pdf),");
             List<PDFFile> resourcesList = new ArrayList<>();
-            initializeDelegatedRightsValues();
             for (String file : files) {
                 resourcesList.add(getPDFFile(file, parameters.getAsAuthor(), parameters.getDocument()));
             }
@@ -131,7 +136,8 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
         scriptContext.setAttribute("files", resourcesList, ScriptContext.ENGINE_SCOPE);
     }
 
-    private boolean hasViewRights(DocumentReference documentReference, String delegatedRights)
+    private boolean hasViewRights(DocumentReference documentReference, String delegatedRights, PDFFile pdfFile)
+        throws XWikiException
     {
         XWikiContext wikiContext = wikiContextProvider.get();
         XWiki wiki = wikiContext.getWiki();
@@ -141,7 +147,11 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
             } else if (delegatedRightsValues.contains(delegatedRights.toLowerCase())) {
                 XWikiDocument sdoc = (XWikiDocument) wikiContext.get(XWikiDocument.CKEY_SDOC);
                 DocumentReference currentAuthor = sdoc.getContentAuthorReference();
-                return authorizationManager.hasAccess(Right.VIEW, currentAuthor, documentReference);
+                boolean hasViewRights = authorizationManager.hasAccess(Right.VIEW, currentAuthor, documentReference);
+                if (pdfFile != null) {
+                    pdfFile.setDelegatedViewRights(hasViewRights);
+                }
+                return hasViewRights;
             }
         }
         return false;
@@ -169,20 +179,24 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
         //  outside of XWiki instance and there is no need to check the user view right or delegated rights. We still
         //  send the attachment reference to be able to extract the name for it to be displayed in a tab in the case
         //  of multiple attachments.
+        PDFFile pdfFile = new PDFFile();
         if (attachmentReference.getName().equals(pdfURL)) {
-            return new PDFFile(attachmentReference, pdfURL);
-        } else if (hasViewRights(attachmentReference.getDocumentReference(), delegatedRights)) {
+            pdfFile.setUrl(pdfURL);
+            pdfFile.setAttachmentReference(attachmentReference);
+            return pdfFile;
+        } else if (hasViewRights(attachmentReference.getDocumentReference(), delegatedRights, pdfFile)) {
             DocumentReference docRef = attachmentReference.getDocumentReference();
             XWikiContext wikiContext = wikiContextProvider.get();
             XWikiDocument doc = wikiContext.getWiki().getDocument(docRef, wikiContext);
             // If the user has the rights to view the attachment parent document, but the attachment is not found, an
             // empty URL is returned.
-            if (doc.getAttachment(attachmentReference.getName()) == null) {
-                return new PDFFile(attachmentReference, null);
+            pdfFile.setAttachmentReference(attachmentReference);
+            if (doc.getAttachment(attachmentReference.getName()) != null) {
+                pdfFile.setUrl(pdfURL);
             }
-            return new PDFFile(attachmentReference, pdfURL);
+            return pdfFile;
         }
-        return new PDFFile(null, null);
+        return pdfFile;
     }
 
     private PDFFile handleInternalAttachment(String pdfFileReference, String delegatedRights,
@@ -197,30 +211,31 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
             AttachmentReference attachmentReference =
                 new AttachmentReference(this.entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT));
             DocumentReference parentDocRef = new DocumentReference(attachmentReference.getParent());
-            if (hasViewRights(parentDocRef, delegatedRights)) {
-                return getPDFFile(attachmentReference, parentDocRef);
-            }
+            return getPDFFile(attachmentReference, parentDocRef, delegatedRights);
         } else {
             String url = ownerDocument.getAttachmentURL(attachment.getFilename(), wikiContext);
             return new PDFFile(attachment.getReference(), url);
         }
-        return new PDFFile(null, null);
     }
 
-    private PDFFile getPDFFile(AttachmentReference attachmentReference, DocumentReference parentDocRef)
-        throws XWikiException
+    private PDFFile getPDFFile(AttachmentReference attachmentReference, DocumentReference parentDocRef,
+        String delegatedRights) throws XWikiException
     {
-        XWikiContext wikiContext = this.wikiContextProvider.get();
-        String attachName = attachmentReference.getName();
-        XWikiDocument attachmentDocument = wikiContext.getWiki().getDocument(parentDocRef, wikiContext);
-        XWikiAttachment attachment = attachmentDocument.getAttachment(attachName);
-        // If the attachment does not exist, an empty URL is returned, alongside with the attachment reference.
-        if (attachment != null) {
-            String url = attachmentDocument.getAttachmentURL(attachName, wikiContext);
-            return new PDFFile(attachmentReference, url);
-        } else {
-            return new PDFFile(attachmentReference, null);
+        PDFFile pdfFile = new PDFFile();
+        if (hasViewRights(parentDocRef, delegatedRights, pdfFile)) {
+            XWikiContext wikiContext = this.wikiContextProvider.get();
+            String attachName = attachmentReference.getName();
+            XWikiDocument attachmentDocument = wikiContext.getWiki().getDocument(parentDocRef, wikiContext);
+            XWikiAttachment attachment = attachmentDocument.getAttachment(attachName);
+            // If the attachment does not exist, an empty URL is returned, alongside with the attachment reference.
+            pdfFile.setAttachmentReference(attachmentReference);
+            if (attachment != null) {
+                String url = attachmentDocument.getAttachmentURL(attachName, wikiContext);
+                pdfFile.setUrl(url);
+            }
+            return pdfFile;
         }
+        return pdfFile;
     }
 
     private XWikiDocument getOwnerDocumentFromParameters(String ownerDocumentReference, String delegatedRights)
@@ -234,19 +249,11 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
         if (ownerDocumentReference != null && !ownerDocumentReference.isEmpty()) {
             DocumentReference givenDocumentReference =
                 new DocumentReference(entityReferenceResolver.resolve(ownerDocumentReference, EntityType.DOCUMENT));
-            if (hasViewRights(givenDocumentReference, delegatedRights)) {
+            if (hasViewRights(givenDocumentReference, delegatedRights, null)) {
                 attachmentDocument = wikiContext.getWiki().getDocument(givenDocumentReference, wikiContext);
             }
         }
         return attachmentDocument;
-    }
-
-    private void initializeDelegatedRightsValues()
-    {
-        delegatedRightsValues.clear();
-        delegatedRightsValues.add("1");
-        delegatedRightsValues.add("true");
-        delegatedRightsValues.add("yes");
     }
 
     private Map<String, String> getTemplateParameters(PDFViewerMacroParameters parameters)

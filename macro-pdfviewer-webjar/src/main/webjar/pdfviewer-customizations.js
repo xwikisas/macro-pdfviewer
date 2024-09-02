@@ -50,8 +50,8 @@
   }
   // PDFVIEWER-13: Allow author of the macro to delegate its view right on the PDF document.
   function setViewRights() {
-    var viewerOnly = window.location.search.indexOf('PDFViewerService') !== -1;
-    if (viewerOnly) {
+    var viewerOnly = window.frameElement.getAttribute("data-delegated");
+    if (viewerOnly == 'true') {
       PDFViewerApplication.appConfig.toolbar.download.hidden = true;
       PDFViewerApplication.appConfig.toolbar.print.hidden = true;
       PDFViewerApplication.appConfig.secondaryToolbar.downloadButton.hidden = true;
