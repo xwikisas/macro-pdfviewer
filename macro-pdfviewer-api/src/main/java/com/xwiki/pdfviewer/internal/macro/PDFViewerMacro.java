@@ -20,6 +20,7 @@
 package com.xwiki.pdfviewer.internal.macro;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
-import com.xwiki.pdfviewer.internal.filter.MJSMimeTypeRegistrar;
+import com.xwiki.pdfviewer.internal.MJSMimeTypeRegistrar;
 import com.xwiki.pdfviewer.macro.PDFFile;
 import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 
@@ -97,8 +98,7 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     {
         super("PDF Viewer", "View PDF attachments inside wiki pages without downloading or importing them.",
             PDFViewerMacroParameters.class);
-        // Error when building the project on 14.10.
-//        setDefaultCategory(DEFAULT_CATEGORY_CONTENT);
+        setDefaultCategories(Collections.singleton(DEFAULT_CATEGORY_CONTENT));
     }
 
     @Override
