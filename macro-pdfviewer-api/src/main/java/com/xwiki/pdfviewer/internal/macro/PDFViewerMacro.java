@@ -50,7 +50,7 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
-import com.xwiki.pdfviewer.filter.MJSFilter;
+import com.xwiki.pdfviewer.internal.filter.MJSMimeTypeRegistrar;
 import com.xwiki.pdfviewer.macro.PDFFile;
 import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 
@@ -88,7 +88,7 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     private Provider<XWikiContext> wikiContextProvider;
 
     @Inject
-    private Provider<MJSFilter> mjsFilterProvider;
+    private MJSMimeTypeRegistrar mjsMimeTypeRegistrar;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -105,10 +105,9 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     public List<Block> execute(PDFViewerMacroParameters parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        mjsFilterProvider.get().maybeAddMJSMimeType();
-        Template customTemplate = this.templateManager.getTemplate("pdfviewer/pdfviewer.vm");
-
         try {
+            mjsMimeTypeRegistrar.maybeRegisterMJSMimeType();
+            Template customTemplate = this.templateManager.getTemplate("pdfviewer/pdfviewer.vm");
             String[] files = parameters.getFile().split("(?<=\\.pdf),");
             List<PDFFile> resourcesList = new ArrayList<>();
             for (String file : files) {

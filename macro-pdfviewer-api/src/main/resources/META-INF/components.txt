@@ -1,2 +1,2 @@
 com.xwiki.pdfviewer.internal.macro.PDFViewerMacro
-com.xwiki.pdfviewer.filter.MJSFilter
+com.xwiki.pdfviewer.internal.filter.MJSMimeTypeRegistrar

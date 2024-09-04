@@ -28,7 +28,8 @@
     #set ($queryString = $escapetool.url({
       'file': $file.getURL(),
       'trustedOrigins': $trustedOrigins,
-      'withCredentials': $withCredentials
+      'withCredentials': $withCredentials,
+      'delegatedView': $file.areViewRightsDelegated()
     }))
     #set ($pdfviewerurl = $services.webjars.url('com.xwiki.pdfviewer:macro-pdfviewer-webjar', 'web/viewer.html'))
     ## Attachment URL have query parameters for cache issue.
@@ -39,7 +40,7 @@
     <![endif]-->
     <![if !(lt IE 10)]>
       <iframe class="pdfviewer" src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="
-        $escapetool.xml($width)" height="$escapetool.xml($height)" data-delegated="$file.areViewRightsDelegated()">
+        $escapetool.xml($width)" height="$escapetool.xml($height)">
       </iframe>
     <![endif]-->
     </div>
