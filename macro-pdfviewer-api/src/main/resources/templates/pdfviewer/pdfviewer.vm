@@ -28,7 +28,8 @@
     #set ($queryString = $escapetool.url({
       'file': $file.getURL(),
       'trustedOrigins': $trustedOrigins,
-      'withCredentials': $withCredentials
+      'withCredentials': $withCredentials,
+      'delegatedView': $file.areViewRightsDelegated()
     }))
     #set ($pdfviewerurl = $services.webjars.url('com.xwiki.pdfviewer:macro-pdfviewer-webjar', 'web/viewer.html'))
     ## Attachment URL have query parameters for cache issue.

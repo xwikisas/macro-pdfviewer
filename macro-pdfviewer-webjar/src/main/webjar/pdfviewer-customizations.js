@@ -25,7 +25,7 @@
    });
   // #40: Add a copyable link of the PDF file location in the macro toolbar
   function addPermalinkButton() {
-	  var toolbar = document.getElementById('toolbarViewerRight');
+    var toolbar = document.getElementById('toolbarViewerRight');
     var secondaryToolbar = document.getElementById('secondaryToolbar');
 
     var linkButton = document.getElementById('print').cloneNode(true);
@@ -37,7 +37,7 @@
     linkButton.removeAttribute('data-l10n-id');
 
     secondaryLinkButton.setAttribute('id', 'secondaryPermalink');
- 	  secondaryLinkButton.classList.add('permalink');
+    secondaryLinkButton.classList.add('permalink');
     secondaryLinkButton.classList.remove('print');
     secondaryLinkButton.removeAttribute('data-l10n-id');
 
@@ -50,8 +50,9 @@
   }
   // PDFVIEWER-13: Allow author of the macro to delegate its view right on the PDF document.
   function setViewRights() {
-    var viewerOnly = window.location.search.indexOf('PDFViewerService') !== -1;
-    if (viewerOnly) {
+    const searchParams = new URLSearchParams(window.location.search);
+    const viewerOnly = searchParams.get('delegatedView');
+    if (viewerOnly === 'true') {
       PDFViewerApplication.appConfig.toolbar.download.hidden = true;
       PDFViewerApplication.appConfig.toolbar.print.hidden = true;
       PDFViewerApplication.appConfig.secondaryToolbar.downloadButton.hidden = true;

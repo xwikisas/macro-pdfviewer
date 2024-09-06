@@ -35,6 +35,18 @@ public class PDFFile
 
     private String url;
 
+    private boolean delegatedViewRights;
+
+    /**
+     * Empty constructor.
+     */
+    public PDFFile()
+    {
+        this.url = null;
+        this.attachmentReference = null;
+        this.delegatedViewRights = false;
+    }
+
     /**
      * Default constructor.
      *
@@ -45,6 +57,7 @@ public class PDFFile
     {
         this.url = url;
         this.attachmentReference = attachmentReference;
+        this.delegatedViewRights = false;
     }
 
     /**
@@ -65,5 +78,45 @@ public class PDFFile
     public Optional<AttachmentReference> getAttachmentReference()
     {
         return Optional.ofNullable(attachmentReference);
+    }
+
+    /**
+     * See {@link #getAttachmentReference()}.
+     *
+     * @param attachmentReference the attachment reference.
+     */
+    public void setAttachmentReference(AttachmentReference attachmentReference)
+    {
+        this.attachmentReference = attachmentReference;
+    }
+
+    /**
+     * Return the delegated view rights.
+     *
+     * @return {@code true} if the view rights have been delegated and {@code false} otherwise.
+     */
+    public boolean areViewRightsDelegated()
+    {
+        return delegatedViewRights;
+    }
+
+    /**
+     * See {@link #areViewRightsDelegated()}.
+     *
+     * @param delegatedViewRights the given view rights.
+     */
+    public void setDelegatedViewRights(boolean delegatedViewRights)
+    {
+        this.delegatedViewRights = delegatedViewRights;
+    }
+
+    /**
+     * See {@link #getURL()}.
+     *
+     * @param url the url to the attachment.
+     */
+    public void setUrl(String url)
+    {
+        this.url = url;
     }
 }
