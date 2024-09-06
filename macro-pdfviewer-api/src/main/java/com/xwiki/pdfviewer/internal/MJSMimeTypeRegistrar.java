@@ -71,9 +71,10 @@ public class MJSMimeTypeRegistrar
                 tikaField.set(null, newTika);
             }
         } catch (Exception e) {
-            logger.error("Failed to modify Tika field. Root cause: [{}]", ExceptionUtils.getRootCauseMessage(e));
-            throw new RuntimeException("Failed to add .mjs file extension mime type. "
-                + "Please refer to the documentation regarding how to add a custom mime type for more help!");
+            logger.warn("Failed to register the mime type for ECMAScript modules (.mjs). Root cause: [{}]",
+                ExceptionUtils.getRootCauseMessage(e));
+            throw new RuntimeException("Failed to register the mime type for ECMAScript modules (.mjs). "
+                + "Please refer to the PDF Viewer Macro documentation regarding how to add the required mime type.");
         }
     }
 }
