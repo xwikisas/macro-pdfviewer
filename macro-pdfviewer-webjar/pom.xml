@@ -94,7 +94,7 @@
                   <value>$0;
   const queryString = document.location.search.substring(1);
   const params = (0, _ui_utils_js__WEBPACK_IMPORTED_MODULE_0__.parseQueryString)(queryString);
-  const trustedOrigins = params.get('trustedorigins');
+  const trustedOrigins = (params.get && params.get('trustedorigins')) || params.trustedorigins;
   if (trustedOrigins !== undefined &amp;&amp; trustedOrigins !== '') {
     HOSTED_VIEWER_ORIGINS.push.apply(HOSTED_VIEWER_ORIGINS, trustedOrigins.split(',')) }</value>
                 </replacement>
