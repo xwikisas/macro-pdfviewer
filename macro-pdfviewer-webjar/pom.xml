@@ -94,8 +94,9 @@
                   <value>$0;
   const queryString = document.location.search.substring(1);
   const params = (0, _ui_utils_js__WEBPACK_IMPORTED_MODULE_0__.parseQueryString)(queryString);
-  if (params.trustedorigins !== undefined &amp;&amp; params.trustedorigins !== '') {
-    HOSTED_VIEWER_ORIGINS.push.apply(HOSTED_VIEWER_ORIGINS, params.trustedorigins.split(',')) }</value>
+  const trustedOrigins = params.get('trustedorigins');
+  if (trustedOrigins !== undefined &amp;&amp; trustedOrigins !== '') {
+    HOSTED_VIEWER_ORIGINS.push.apply(HOSTED_VIEWER_ORIGINS, trustedOrigins.split(',')) }</value>
                 </replacement>
                 <replacement>
                   <token>PDFViewerApplication.open\(\{</token>
