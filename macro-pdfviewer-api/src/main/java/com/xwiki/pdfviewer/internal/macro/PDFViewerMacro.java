@@ -37,6 +37,7 @@ import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
@@ -51,6 +52,7 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xwiki.licensing.Licensor;
 import com.xwiki.pdfviewer.internal.MJSMimeTypeRegistrar;
 import com.xwiki.pdfviewer.macro.PDFFile;
 import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
@@ -86,6 +88,9 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     private ScriptContextManager scriptContextManager;
 
     @Inject
+    private Licensor licensor;
+
+    @Inject
     private Provider<XWikiContext> wikiContextProvider;
 
     @Inject
@@ -105,6 +110,12 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     public List<Block> execute(PDFViewerMacroParameters parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
+        DocumentReference licenseDoc =
+            new DocumentReference(wikiContextProvider.get().getWikiId(), List.of("PDFViewer", "Code"), "WebHome");
+        if (!licensor.hasLicensure(licenseDoc)) {
+            licenceError(context);
+        }
+
         try {
             mjsMimeTypeRegistrar.maybeRegisterMJSMimeType();
             Template customTemplate = this.templateManager.getTemplate("pdfviewer/pdfviewer.vm");
@@ -125,6 +136,12 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
     public boolean supportsInlineMode()
     {
         return false;
+    }
+
+    private List<Block> licenceError(MacroTransformationContext context)
+    {
+        return Collections.singletonList(new MacroBlock("missingLicenseMessage",
+            Collections.singletonMap("extensionName", "proMacros.extension.name"), null, context.isInline()));
     }
 
     private void bindValues(PDFViewerMacroParameters parameters, List<PDFFile> resourcesList)
