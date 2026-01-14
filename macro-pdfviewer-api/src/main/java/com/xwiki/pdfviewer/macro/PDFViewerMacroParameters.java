@@ -87,8 +87,9 @@ public class PDFViewerMacroParameters
      * @param file one or a list of PDF files
      */
     @PropertyDisplayType(PDFResourceReference.class)
-    @PropertyDescription("The full PDF file reference, an absolute URL or only the name of the attachment when is used "
-        + "along with the document parameter. Multiple files can be defined.")
+    @PropertyDescription(
+        "The full PDF file reference, or the name of the attachment when it is used along with the document parameter. "
+            + "Multiple files can be defined. At least one of the PDF source fields must be completed.")
     public void setFile(String file)
     {
         this.file = file;
@@ -109,8 +110,11 @@ public class PDFViewerMacroParameters
      */
     @PropertyName("File from external URL")
     @PropertyDescription("A link to an external PDF file reference. Multiple links can be inserted, separated by "
-        + "comma")
-    public void setFileFromExternalUrlFile(String fileFromExternalUrl)
+        + "comma. "
+        + "When using external domains, ensure the domain is appended to the `Trusted Origins`"
+        + " field in the Administration section. "
+        + "At least one of the PDF source fields must be completed.")
+    public void setFileFromExternalUrl(String fileFromExternalUrl)
     {
         this.fileFromExternalUrl = fileFromExternalUrl;
     }

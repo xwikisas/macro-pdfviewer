@@ -39,7 +39,7 @@
   <content>rendering.macro.pdfviewer.name=PDF Viewer
 rendering.macro.pdfviewer.description=PDF Viewer based on Mozilla pdf.js
 rendering.macro.pdfviewer.parameter.file.name=File
-rendering.macro.pdfviewer.parameter.file.description=The full PDF file reference, an absolute URL or only the name of the attachment when is used along with the document parameter. Multiple files can be defined.
+rendering.macro.pdfviewer.parameter.file.description=The full PDF file reference, or the name of the attachment when it is used along with the document parameter. Multiple files can be defined. At least one of the PDF source fields must be completed.
 rendering.macro.pdfviewer.parameter.document.name=Document
 rendering.macro.pdfviewer.parameter.document.description=Reference to the XWiki document to which the file is attached. If not defined, the current document or only the file parameter is used. If file argument is an absolute URL or the attachment does not exist, this argument is ignored. The same is applied for each defined file.
 rendering.macro.pdfviewer.parameter.width.name=Width
