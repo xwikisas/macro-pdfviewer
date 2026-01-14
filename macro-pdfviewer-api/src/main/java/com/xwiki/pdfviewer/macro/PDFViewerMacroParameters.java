@@ -22,7 +22,6 @@ package com.xwiki.pdfviewer.macro;
 import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
-import org.xwiki.properties.annotation.PropertyName;
 
 import com.xwiki.pdfviewer.PDFResourceReference;
 
@@ -87,9 +86,6 @@ public class PDFViewerMacroParameters
      * @param file one or a list of PDF files
      */
     @PropertyDisplayType(PDFResourceReference.class)
-    @PropertyDescription(
-        "The full PDF file reference, or the name of the attachment when it is used along with the document parameter. "
-            + "Multiple files can be defined. At least one of the PDF source fields must be completed.")
     public void setFile(String file)
     {
         this.file = file;
@@ -108,12 +104,6 @@ public class PDFViewerMacroParameters
      *
      * @param fileFromExternalUrl a single URL or a comma-separated list of URLs
      */
-    @PropertyName("File from external URL")
-    @PropertyDescription("A link to an external PDF file reference. Multiple links can be inserted, separated by "
-        + "comma. "
-        + "When using external domains, ensure the domain is appended to the `Trusted Origins`"
-        + " field in the Administration section. "
-        + "At least one of the PDF source fields must be completed.")
     public void setFileFromExternalUrl(String fileFromExternalUrl)
     {
         this.fileFromExternalUrl = fileFromExternalUrl;
