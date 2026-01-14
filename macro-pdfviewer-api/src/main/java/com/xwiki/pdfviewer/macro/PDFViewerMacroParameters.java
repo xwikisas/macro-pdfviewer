@@ -22,6 +22,7 @@ package com.xwiki.pdfviewer.macro;
 import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
+import org.xwiki.stability.Unstable;
 
 import com.xwiki.pdfviewer.PDFResourceReference;
 
@@ -43,6 +44,8 @@ public class PDFViewerMacroParameters
     /**
      * One or multiple PDF files to be viewed, imported from external URLs. In case of multiple files, the
      * {@code String} contains a comma-separated list of URLs.
+     *
+     * @since 2.6.3
      */
     private String fileFromExternalUrl;
 
@@ -93,7 +96,9 @@ public class PDFViewerMacroParameters
 
     /**
      * @return one or a comma-separated list of PDF files from external URLs
+     * @since 2.6.3
      */
+    @Unstable
     public String getFileFromExternalUrl()
     {
         return fileFromExternalUrl;
@@ -103,7 +108,9 @@ public class PDFViewerMacroParameters
      * Set one or multiple PDF files from external URLs.
      *
      * @param fileFromExternalUrl a single URL or a comma-separated list of URLs
+     * @since 2.6.3
      */
+    @Unstable
     public void setFileFromExternalUrl(String fileFromExternalUrl)
     {
         this.fileFromExternalUrl = fileFromExternalUrl;
