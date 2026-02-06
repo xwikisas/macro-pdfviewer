@@ -20,8 +20,10 @@
 package com.xwiki.pdfviewer.internal.token;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,6 +46,11 @@ import org.xwiki.security.authorization.Right;
 @Singleton
 public class DelegatedTokenManager
 {
+    private static final String TOKEN_DELETE_FORMAT =
+        "Deleted delegated token for file [{}] from macro origin document [{}].";
+
+    private final Map<String, DelegatedToken> tokens = new HashMap<>();
+
     @Inject
     private Logger logger;
 
@@ -52,8 +59,6 @@ public class DelegatedTokenManager
 
     @Inject
     private ContextualAuthorizationManager contextualAuthorizationManager;
-
-    private Map<String, DelegatedToken> tokens = new HashMap<>();
 
     /**
      * Get {@link DelegatedToken} corresponding to the given user, {@link AttachmentReference} and macro origin
@@ -72,9 +77,10 @@ public class DelegatedTokenManager
             // If the token author is different from the current one, or if the author lacks the rights to view the
             // attachment, we delete the token.
             if (!userReference.equals(token.getUser())) {
+                logger.debug("Found token author [{}] is different from the given author [{}]. Removing token and "
+                    + "attempting to create a new one.", token.getUser(), userReference);
                 tokens.remove(token.toString());
             } else if (!checkAuthorViewRights(token)) {
-                tokens.remove(token.toString());
                 return "";
             } else {
                 return token.toString();
@@ -88,7 +94,7 @@ public class DelegatedTokenManager
      * Check if the given token exists.
      *
      * @param token {@code String} representation of a token
-     * @return {@code true} if the token is valid, {@code false} otherwise
+     * @return {@code false} if the token is valid, {@code true} otherwise
      */
     public boolean isInvalid(String token)
     {
@@ -107,22 +113,7 @@ public class DelegatedTokenManager
         DelegatedToken foundToken = getExistingToken(fileId, macroOrigin);
         if (foundToken != null) {
             tokens.remove(foundToken.toString());
-            logger.debug("Deleted delegated token for file [{}] from macro origin document [{}].", fileId, macroOrigin);
-        }
-    }
-
-    /**
-     * Remove the token.
-     *
-     * @param fileName id of the edited file
-     * @param attachmentDoc {@link DocumentReference} attachment parent document
-     */
-    public void clearToken(String fileName, DocumentReference attachmentDoc)
-    {
-        DelegatedToken foundToken = getExistingToken(fileName, attachmentDoc);
-        if (foundToken != null) {
-            tokens.remove(foundToken.toString());
-            logger.debug("Deleted delegated token for file [{}] from document [{}].", fileName, attachmentDoc);
+            logger.debug(TOKEN_DELETE_FORMAT, fileId, macroOrigin);
         }
     }
 
@@ -135,8 +126,39 @@ public class DelegatedTokenManager
     {
         if (token != null) {
             tokens.remove(token.toString());
-            logger.debug("Deleted delegated token for file [{}] from macro origin [{}].", token.getFileReference(),
-                token.getMacroOrigin());
+            logger.debug(TOKEN_DELETE_FORMAT, token.getFileReference(), token.getMacroOrigin());
+        }
+    }
+
+    /**
+     * Remove all tokens for a given attachment.
+     *
+     * @param fileName id of the edited file
+     * @param attachmentDoc {@link DocumentReference} attachment parent document
+     */
+    public void clearAttachmentTokens(String fileName, DocumentReference attachmentDoc)
+    {
+        List<DelegatedToken> foundTokens = getAttachmentTokens(fileName, attachmentDoc);
+        for (DelegatedToken token : foundTokens) {
+            String tokenName = token.toString();
+            tokens.remove(tokenName);
+            logger.debug("Deleted delegated token [{}] for file [{}] from document [{}].", tokenName, fileName,
+                attachmentDoc);
+        }
+    }
+
+    /**
+     * Remove all tokens for a given document.
+     *
+     * @param attachmentDoc {@link DocumentReference} target document
+     */
+    public void clearDocumentTokens(DocumentReference attachmentDoc)
+    {
+        List<DelegatedToken> foundTokens = getDocumentTokens(attachmentDoc);
+        for (DelegatedToken token : foundTokens) {
+            String tokenName = token.toString();
+            tokens.remove(tokenName);
+            logger.debug("Deleted delegated token [{}] for attachments from document [{}].", tokenName, attachmentDoc);
         }
     }
 
@@ -185,19 +207,24 @@ public class DelegatedTokenManager
     private DelegatedToken getExistingToken(AttachmentReference fileId, DocumentReference macroOrigin)
     {
         Optional<Map.Entry<String, DelegatedToken>> tokenEntry = this.tokens.entrySet().stream().filter(
-                x -> x.getValue().getFileReference().equals(fileId)
-                    && x.getValue().getMacroOrigin().equals(macroOrigin)).findFirst();
+                x -> x.getValue().getFileReference().equals(fileId) && x.getValue().getMacroOrigin().equals(macroOrigin))
+            .findFirst();
 
         return tokenEntry.map(Map.Entry::getValue).orElse(null);
     }
 
-    private DelegatedToken getExistingToken(String fileId, DocumentReference fileDoc)
+    private List<DelegatedToken> getAttachmentTokens(String fileId, DocumentReference fileDoc)
     {
-        Optional<Map.Entry<String, DelegatedToken>> tokenEntry = this.tokens.entrySet().stream().filter(
-            x -> x.getValue().getFileReference().getName().equals(fileId) && x.getValue().getFileReference()
-                .getDocumentReference().equals(fileDoc)).findFirst();
+        return this.tokens.values().stream().filter(
+            x -> x.getFileReference().getName().equals(fileId) && x.getFileReference().getDocumentReference()
+                .equals(fileDoc)).collect(Collectors.toList());
+    }
 
-        return tokenEntry.map(Map.Entry::getValue).orElse(null);
+    private List<DelegatedToken> getDocumentTokens(DocumentReference fileDoc)
+    {
+        return this.tokens.values().stream().filter(
+                x -> x.getMacroOrigin().equals(fileDoc) || x.getFileReference().getDocumentReference().equals(fileDoc))
+            .collect(Collectors.toList());
     }
 
     private String createNewToken(DocumentReference user, AttachmentReference fileId, DocumentReference macroOrigin)
@@ -207,10 +234,12 @@ public class DelegatedTokenManager
         if (canView) {
             DelegatedToken token = new DelegatedToken(user, fileId, macroOrigin);
             tokens.put(token.toString(), token);
-            logger.debug("New token created for file [{}] on origin [{}] and user [{}],", fileId, macroOrigin, user);
+            logger.debug("New token created for file [{}] on origin [{}] and user [{}].", fileId, macroOrigin, user);
             tokenId = token.toString();
+        } else {
+            logger.warn("Failed to create token for file [{}] on origin [{}] and user [{}] due to insufficient rights.",
+                fileId, macroOrigin, user);
         }
-
         return tokenId;
     }
 }

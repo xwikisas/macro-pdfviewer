@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
+import org.xwiki.bridge.event.DocumentDeletedEvent;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.observation.AbstractEventListener;
 import org.xwiki.observation.event.Event;
@@ -60,21 +61,28 @@ public class PDFViewerListener extends AbstractEventListener
      */
     public PDFViewerListener()
     {
-        super(HINT, new AttachmentDeletedEvent());
+        super(HINT, new AttachmentDeletedEvent(), new DocumentDeletedEvent());
     }
 
     @Override
     public void onEvent(Event event, Object source, Object data)
     {
-        if (event instanceof AttachmentDeletedEvent) {
-            try {
-                delegatedTokenManager.clearToken(((AttachmentDeletedEvent) event).getName(),
+        try {
+            if (event instanceof AttachmentDeletedEvent) {
+                String attachmentName = ((AttachmentDeletedEvent) event).getName();
+                delegatedTokenManager.clearAttachmentTokens(attachmentName,
                     ((XWikiDocument) source).getDocumentReference());
-            } catch (Exception e) {
-                logger.error("There was an error while removing the token. Root cause is: [{}]",
-                    ExceptionUtils.getRootCauseMessage(e));
-                throw new RuntimeException(e);
+                logger.debug("Successfully removed all tokens granted for [{}]", attachmentName);
+            } else if (event instanceof DocumentDeletedEvent) {
+                XWikiDocument document = (XWikiDocument) source;
+                if (document != null) {
+                    delegatedTokenManager.clearDocumentTokens(document.getDocumentReference());
+                }
             }
+        } catch (Exception e) {
+            logger.error("An error occurred while removing PDF Viewer access tokens. Root cause is: [{}]",
+                ExceptionUtils.getRootCauseMessage(e));
+            throw new RuntimeException(e);
         }
     }
 }

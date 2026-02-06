@@ -1,4 +1,6 @@
 com.xwiki.pdfviewer.internal.macro.PDFViewerMacro
+com.xwiki.pdfviewer.internal.macro.PDFFileBuilder
+com.xwiki.pdfviewer.internal.macro.authorization.PDFViewerAuthorizationManager
 com.xwiki.pdfviewer.internal.MJSMimeTypeRegistrar
 com.xwiki.pdfviewer.internal.token.DelegatedTokenManager
 com.xwiki.pdfviewer.internal.rest.DefaultPDFMacroResource

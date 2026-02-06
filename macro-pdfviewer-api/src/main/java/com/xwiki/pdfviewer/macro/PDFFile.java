@@ -23,6 +23,8 @@ import java.util.Optional;
 
 import org.xwiki.model.reference.AttachmentReference;
 
+import com.xwiki.pdfviewer.internal.macro.authorization.PDFFileAuthorization;
+
 /**
  * Represents the resources for a given attachment.
  *
@@ -143,5 +145,11 @@ public class PDFFile
     public void setUrl(String url)
     {
         this.url = url;
+    }
+
+    public void setRights(PDFFileAuthorization fileAuthorization)
+    {
+        this.hasViewRights = fileAuthorization.hasViewRights();
+        this.delegatedViewRights = fileAuthorization.areViewRightsDelegated();
     }
 }
