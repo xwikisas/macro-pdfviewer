@@ -41,6 +41,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit test for {@link PDFViewerListener}
+ *
+ * @version $Id$
+ */
 @ComponentTest
 class PDFViewerListenerTest
 {
@@ -79,7 +84,7 @@ class PDFViewerListenerTest
             assertThrows(RuntimeException.class, () -> this.pdfViewerListener.onEvent(event, xWikiDocument, null));
         assertEquals("java.lang.RuntimeException: test error message", exception.getMessage());
         assertEquals(
-            "An error occurred while removing PDF Viewer access token. Root cause is: [RuntimeException: test error message]",
-            logCapture.getMessage(0));
+            "An error occurred while removing PDF Viewer access tokens. Root cause is: [RuntimeException: test error "
+                + "message]", logCapture.getMessage(0));
     }
 }

@@ -148,21 +148,6 @@ public class DelegatedTokenManager
     }
 
     /**
-     * Remove all tokens for a given document.
-     *
-     * @param attachmentDoc {@link DocumentReference} target document
-     */
-    public void clearDocumentTokens(DocumentReference attachmentDoc)
-    {
-        List<DelegatedToken> foundTokens = getDocumentTokens(attachmentDoc);
-        for (DelegatedToken token : foundTokens) {
-            String tokenName = token.toString();
-            tokens.remove(tokenName);
-            logger.debug("Deleted delegated token [{}] for attachments from document [{}].", tokenName, attachmentDoc);
-        }
-    }
-
-    /**
      * Get the {@link AttachmentReference} of the given token representation.
      *
      * @param tokenId token id
@@ -170,11 +155,12 @@ public class DelegatedTokenManager
      */
     public AttachmentReference getTokenAttachmentReference(String tokenId)
     {
-        DelegatedToken fileToken = tokens.get(tokenId);
-        if (fileToken.getUser() == null) {
-            return null;
+        AttachmentReference attachmentReference = null;
+        if (hasAccess(tokenId)) {
+            DelegatedToken fileToken = tokens.get(tokenId);
+            attachmentReference = fileToken.getFileReference();
         }
-        return fileToken.getFileReference();
+        return attachmentReference;
     }
 
     /**
@@ -207,8 +193,8 @@ public class DelegatedTokenManager
     private DelegatedToken getExistingToken(AttachmentReference fileId, DocumentReference macroOrigin)
     {
         Optional<Map.Entry<String, DelegatedToken>> tokenEntry = this.tokens.entrySet().stream().filter(
-                x -> x.getValue().getFileReference().equals(fileId) && x.getValue().getMacroOrigin().equals(macroOrigin))
-            .findFirst();
+            x -> x.getValue().getFileReference().equals(fileId) && x.getValue().getMacroOrigin().equals(macroOrigin))
+                .findFirst();
 
         return tokenEntry.map(Map.Entry::getValue).orElse(null);
     }
@@ -218,13 +204,6 @@ public class DelegatedTokenManager
         return this.tokens.values().stream().filter(
             x -> x.getFileReference().getName().equals(fileId) && x.getFileReference().getDocumentReference()
                 .equals(fileDoc)).collect(Collectors.toList());
-    }
-
-    private List<DelegatedToken> getDocumentTokens(DocumentReference fileDoc)
-    {
-        return this.tokens.values().stream().filter(
-                x -> x.getMacroOrigin().equals(fileDoc) || x.getFileReference().getDocumentReference().equals(fileDoc))
-            .collect(Collectors.toList());
     }
 
     private String createNewToken(DocumentReference user, AttachmentReference fileId, DocumentReference macroOrigin)

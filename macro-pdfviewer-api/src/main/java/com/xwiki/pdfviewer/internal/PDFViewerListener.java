@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
-import org.xwiki.bridge.event.DocumentDeletedEvent;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.observation.AbstractEventListener;
 import org.xwiki.observation.event.Event;
@@ -61,7 +60,7 @@ public class PDFViewerListener extends AbstractEventListener
      */
     public PDFViewerListener()
     {
-        super(HINT, new AttachmentDeletedEvent(), new DocumentDeletedEvent());
+        super(HINT, new AttachmentDeletedEvent());
     }
 
     @Override
@@ -73,11 +72,6 @@ public class PDFViewerListener extends AbstractEventListener
                 delegatedTokenManager.clearAttachmentTokens(attachmentName,
                     ((XWikiDocument) source).getDocumentReference());
                 logger.debug("Successfully removed all tokens granted for [{}]", attachmentName);
-            } else if (event instanceof DocumentDeletedEvent) {
-                XWikiDocument document = (XWikiDocument) source;
-                if (document != null) {
-                    delegatedTokenManager.clearDocumentTokens(document.getDocumentReference());
-                }
             }
         } catch (Exception e) {
             logger.error("An error occurred while removing PDF Viewer access tokens. Root cause is: [{}]",

@@ -33,6 +33,7 @@ import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.security.authorization.AuthorizationManager;
 import org.xwiki.security.authorization.Right;
+import org.xwiki.user.UserReferenceSerializer;
 
 import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
@@ -44,6 +45,12 @@ import com.xwiki.pdfviewer.internal.macro.authorization.PDFViewerAuthorizationMa
 import com.xwiki.pdfviewer.internal.token.DelegatedTokenManager;
 import com.xwiki.pdfviewer.macro.PDFFile;
 
+/**
+ * Builds {@link PDFFile} objects for PDF attachments by resolving references, while also validating view permissions.
+ *
+ * @version $Id$
+ * @since 2.7
+ */
 @Component(roles = PDFFileBuilder.class)
 @Singleton
 public class PDFFileBuilder
@@ -70,6 +77,21 @@ public class PDFFileBuilder
     @Inject
     private PDFViewerAuthorizationManager pdfViewerAuthManager;
 
+    @Inject
+    @Named("document")
+    private UserReferenceSerializer<DocumentReference> documentUserSerializer;
+
+    /**
+     * Builds a {@link PDFFile} from a given URL. If the URL refers to an attachment within the current XWiki instance,
+     * the view rights are processed. If the URL points outside the XWiki instance, the URL is used as it is and no view
+     * rights checks are done.
+     *
+     * @param pdfURL the attachment URL or external PDF URL
+     * @param delegatedRights {@code true} if the view rights have been delegated by the author, or {@code false}
+     *     otherwise
+     * @return a {@link PDFFile} containing the resolved attachment reference, access URL, and view rights
+     * @throws XWikiException if an error occurs while resolving references or during the authorization check
+     */
     public PDFFile handleExternalURL(String pdfURL, boolean delegatedRights) throws XWikiException
     {
         AttachmentReference attachmentReference =
@@ -83,19 +105,36 @@ public class PDFFileBuilder
         pdfFile.setAttachmentReference(attachmentReference);
         if (attachmentReference.getName().equals(pdfURL)) {
             pdfFile.setUrl(pdfURL);
-        }
-        PDFFileAuthorization fileAuth = pdfViewerAuthManager.hasViewRights(attachmentReference, delegatedRights);
-        if (attachmentExists(attachmentReference) && fileAuth.hasViewRights()) {
-            pdfFile.setRights(fileAuth);
-            if (pdfFile.areViewRightsDelegated()) {
-                pdfFile.setUrl(getTokenURL(attachmentReference));
-            } else {
-                pdfFile.setUrl(pdfURL);
+            pdfFile.setHasViewRights(true);
+        } else {
+            PDFFileAuthorization fileAuth = pdfViewerAuthManager.hasViewRights(attachmentReference, delegatedRights);
+            if (attachmentExists(attachmentReference) && fileAuth.hasViewRights()) {
+                pdfFile.setHasViewRights(fileAuth.hasViewRights());
+                pdfFile.setDelegatedViewRights(fileAuth.areViewRightsDelegated());
+                if (pdfFile.areViewRightsDelegated()) {
+                    pdfFile.setUrl(getTokenURL(attachmentReference));
+                } else {
+                    pdfFile.setUrl(pdfURL);
+                }
             }
         }
         return pdfFile;
     }
 
+    /**
+     * Builds a {@link PDFFile} from an internal attachment reference. The method first attempts to resolve the
+     * attachment relative to the current document or to the provided owner document (for backwards compatibility). If
+     * the attachment is not found in those contexts, the {@code pdfFileReference} parameter is treated as a full
+     * attachment reference.
+     *
+     * @param pdfFileReference the attachment name or full attachment reference
+     * @param delegatedRights {@code true} if the view rights have been delegated by the author, or {@code false}
+     *     otherwise
+     * @param ownerDocumentReference reference of the document that contains the file
+     * @return a {@link PDFFile} containing the resolved attachment reference, access URL, and view rights
+     * @throws XWikiException if an error occurs while resolving the document, attachment, or during the
+     *     authorization check
+     */
     public PDFFile handleInternalAttachment(String pdfFileReference, boolean delegatedRights,
         String ownerDocumentReference) throws XWikiException
     {
@@ -127,7 +166,8 @@ public class PDFFileBuilder
         PDFFile pdfFile = new PDFFile();
         PDFFileAuthorization fileAuthorization = pdfViewerAuthManager.hasViewRights(attachmentRef, delegatedRights);
         if (attachmentExists(attachmentRef) && fileAuthorization.hasViewRights()) {
-            pdfFile.setRights(fileAuthorization);
+            pdfFile.setHasViewRights(fileAuthorization.hasViewRights());
+            pdfFile.setDelegatedViewRights(fileAuthorization.areViewRightsDelegated());
             pdfFile.setAttachmentReference(attachmentRef);
             pdfFile.setUrl(buildAttachmentURL(attachmentRef, pdfFile));
         }
@@ -155,7 +195,8 @@ public class PDFFileBuilder
             // To view the attachment, the user needs to have view rights, no matter if they are delegated (author's
             // view rights) or the user itself has access.
             if (attachmentExists(attachRef) && fileAuthorization.hasViewRights()) {
-                pdfFile.setRights(fileAuthorization);
+                pdfFile.setHasViewRights(fileAuthorization.hasViewRights());
+                pdfFile.setDelegatedViewRights(fileAuthorization.areViewRightsDelegated());
                 attachmentDocument = wikiContext.getWiki().getDocument(givenDocumentReference, wikiContext);
             }
         }
@@ -186,7 +227,7 @@ public class PDFFileBuilder
     {
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument sdoc = (XWikiDocument) wikiContext.get(XWikiDocument.CKEY_SDOC);
-        DocumentReference currentAuthor = sdoc.getContentAuthorReference();
+        DocumentReference currentAuthor = documentUserSerializer.serialize(sdoc.getAuthors().getContentAuthor());
         String tokenId = tokenManager.getToken(currentAuthor, attachmentReference, sdoc.getDocumentReference());
         String encodedToken = Base64.getUrlEncoder().encodeToString(tokenId.getBytes());
         return String.format(PDF_CONTENT_FORMAT, wikiContext.getRequest().getContextPath(), encodedToken);

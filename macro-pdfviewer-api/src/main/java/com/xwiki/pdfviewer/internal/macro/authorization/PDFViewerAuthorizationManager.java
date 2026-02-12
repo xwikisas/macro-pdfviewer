@@ -20,6 +20,7 @@
 package com.xwiki.pdfviewer.internal.macro.authorization;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -28,6 +29,7 @@ import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.security.authorization.AuthorizationManager;
 import org.xwiki.security.authorization.Right;
+import org.xwiki.user.UserReferenceSerializer;
 
 import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
@@ -35,6 +37,12 @@ import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiDocument;
 import com.xwiki.pdfviewer.internal.token.DelegatedTokenManager;
 
+/**
+ * Handles the evaluation of view permissions on the given attachment.
+ *
+ * @version $Id$
+ * @since 2.7
+ */
 @Component(roles = PDFViewerAuthorizationManager.class)
 @Singleton
 public class PDFViewerAuthorizationManager
@@ -48,6 +56,21 @@ public class PDFViewerAuthorizationManager
     @Inject
     private DelegatedTokenManager tokenManager;
 
+    @Inject
+    @Named("document")
+    private UserReferenceSerializer<DocumentReference> documentUserSerializer;
+
+    /**
+     * Evaluates whether an attachment can be viewed, either through direct user permissions or delegated (author)
+     * permissions.
+     *
+     * @param attachmentReference the attachment for which we check the rights
+     * @param delegatedRights {@code true} if the view rights have been delegated by the author, or {@code false}
+     *     otherwise
+     * @return a {@link PDFFileAuthorization} describing whether the attachment can be viewed and if access was
+     *     delegated
+     * @throws XWikiException if an error occurs while attempting to check if the attachment parent document exists
+     */
     public PDFFileAuthorization hasViewRights(AttachmentReference attachmentReference, boolean delegatedRights)
         throws XWikiException
     {
@@ -76,7 +99,7 @@ public class PDFViewerAuthorizationManager
     private void hasDelegatedViewRights(AttachmentReference attachmentReference, XWikiDocument sdoc,
         PDFFileAuthorization fileAuthorization)
     {
-        DocumentReference author = sdoc.getContentAuthorReference();
+        DocumentReference author = documentUserSerializer.serialize(sdoc.getAuthors().getContentAuthor());
         // We check the view rights of the author.
         boolean hasViewRights = hasViewAccess(author, attachmentReference.getDocumentReference());
         fileAuthorization.setDelegatedViewRights(true);

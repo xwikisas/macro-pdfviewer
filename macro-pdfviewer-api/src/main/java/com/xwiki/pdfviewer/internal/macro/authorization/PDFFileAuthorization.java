@@ -19,12 +19,23 @@
  */
 package com.xwiki.pdfviewer.internal.macro.authorization;
 
+import com.xwiki.pdfviewer.macro.PDFFile;
+
+/**
+ * Stores information regarding the view rights on a {@link PDFFile}.
+ *
+ * @version $Id$
+ * @since 2.7
+ */
 public class PDFFileAuthorization
 {
     private boolean delegatedViewRights;
 
     private boolean hasViewRights;
 
+    /**
+     * Default constructor.
+     */
     public PDFFileAuthorization()
     {
         hasViewRights = false;

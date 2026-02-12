@@ -54,8 +54,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit test for {@link DefaultPDFMacroResource}
+ *
+ * @version $Id$
+ */
 @ComponentTest
-public class DefaultPDFMacroResourceTest
+class DefaultPDFMacroResourceTest
 {
     private static final String TOKEN = "this_is_a_test_token";
 
