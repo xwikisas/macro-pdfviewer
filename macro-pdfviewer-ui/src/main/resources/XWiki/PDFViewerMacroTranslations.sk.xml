@@ -38,9 +38,30 @@
   <hidden>true</hidden>
   <content>## XWiki Translation for language sk generated from http://www.l10n.xwiki.org
 rendering.macro.pdfviewer.name=PDF Viewer
-rendering.macro.pdfviewer.parameter.file.description=Súbor, alebo URL k súboru PDF
+### Missing: rendering.macro.pdfviewer.description=PDF Viewer based on Mozilla pdf.js
 rendering.macro.pdfviewer.parameter.file.name=Súbor
-rendering.macro.pdfviewer.parameter.height.name=Výška
+rendering.macro.pdfviewer.parameter.file.description=Súbor, alebo URL k súboru PDF
+### Missing: rendering.macro.pdfviewer.parameter.fileFromExternalUrl.name=File from external URL
+### Missing: rendering.macro.pdfviewer.parameter.fileFromExternalUrl.description=A link to an external PDF file. Multiple links can be inserted, separated by commas. When using external domains to display a PDF file, ensure that you have appended the domain of your wiki and/or subwiki to the Trusted Origins field in the Administration section. At least one of the PDF source inputs must have a value.
+### Missing: rendering.macro.pdfviewer.parameter.document.name=Document
+### Missing: rendering.macro.pdfviewer.parameter.document.description=Reference to the XWiki document to which the file is attached. If not defined, the current document or only the file parameter is used. If file argument is an absolute URL or the attachment does not exist, this argument is ignored. The same is applied for each defined file.
 rendering.macro.pdfviewer.parameter.width.name=Šírka
+### Missing: rendering.macro.pdfviewer.parameter.width.description=The viewer width, defined as a percentage (e.g. 50%, 100%). If not defined, the default value will be used
+rendering.macro.pdfviewer.parameter.height.name=Výška
+### Missing: rendering.macro.pdfviewer.parameter.height.description=The viewer height, in pixels. If not defined, the default value will be used
+### Missing: rendering.macro.pdfviewer.parameter.asAuthor.name=Delegate my view right
+### Missing: rendering.macro.pdfviewer.parameter.asAuthor.description=If this value is true (or 1 or yes) and the viewing user has no access to the document containing the PDF file, the PDF file could still be viewed on behalf of your view right (if you have view right on the containing document).
+### Missing: pdfviewer.error.nodocument=The document does not exist, or you have no access to that document.
+### Missing: pdfviewer.error.noattachment=The file attachment [{0}] does not exist in document [{1}].
+### Missing: pdfviewer.error.nofile=No PDF filename or external URL provided.
+### Missing: pdfviewer.extension.name=PDF Viewer Macro (Pro)
+### Missing: pdfviewer.viewer.notification.linkCopied=PDF file link copied to the clipboard!
+### Missing: pdfviewer.viewer.notification.copyLinkFail=Failed to copy PDF link
+### Missing: pdfviewer.viewer.buttons.copyLink=Copy PDF link
+### Missing: admin.pdfviewermacro=PDF Viewer Macro (Pro)
+### Missing: PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins=Trusted origins
+### Missing: PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins.hint=Add the viewer origins you trust, each on a new line. If you use pdfs located on external domains, you should append the domain of your wiki to this field. i.e. 'http://localhost:8080'.
+### Missing: PDFViewer.Code.PDFViewerConfigurationClass_withCredentials=With credentials
+### Missing: PDFViewer.Code.PDFViewerConfigurationClass_withCredentials.hint=Enable this if you access pdfs located on external domains that need authentication. With this field enabled, your validation cookies will be forwarded to the server that holds the pdfs.
 </content>
 </xwikidoc>
