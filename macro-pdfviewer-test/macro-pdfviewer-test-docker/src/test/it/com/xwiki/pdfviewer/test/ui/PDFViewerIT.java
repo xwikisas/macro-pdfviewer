@@ -70,6 +70,9 @@ public class PDFViewerIT
     void beforeAll(TestUtils testUtils)
     {
         testUtils.loginAsSuperAdmin();
+        testUtils.createUser("UserTest", "UserTest", "");
+
+
     }
 
     @Test
@@ -124,7 +127,7 @@ public class PDFViewerIT
     {
         // Checks that the macro works when the pdf is attached to another page, which is terminal, and the
         // "document" parameter is used.
-        createTerminalPageWithPDFAttached(setup, testConfiguration);
+        createTerminalPageWithPDFAttached(setup);
         createPage(setup, "{{pdfviewer file=\"PDFTest.pdf\" document=\"PDFViewerMacro.TerminalPageWithPDF\"/}}",
             "pdfAttachedToTerminalPageTest");
         PDFViewerMacroPage page = new PDFViewerMacroPage();
@@ -255,7 +258,66 @@ public class PDFViewerIT
         assertTrue(viewer0.getPdfUrl().contains("PDFViewerMacro/NormalPageWithPDF"));
     }
 
-    private void createTerminalPageWithPDFAttached(TestUtils setup, TestConfiguration testConfiguration)
+    @Test
+    @Order(6)
+    void asAuthorTest(TestUtils setup) throws Exception
+    {
+        setup.loginAsSuperAdmin();
+
+        DocumentReference documentReference = new DocumentReference("xwiki", "PDFViewerMacro", "PDFNoRights");
+        setup.createPage(documentReference, "no view rights for UserTest", "PDFNoRights");
+        setup.attachFile(documentReference, "PDFTest.pdf", getClass().getResourceAsStream("/pdfmacro/PDFTest.pdf"),
+            false);
+        setup.setRights(documentReference, "XWiki.XWikiAllGroup", "UserTest", "view", false);
+
+        createPage(setup, getMacroContent("asAuthor.vm"), "asAuthorTest");
+        ViewPage vp = new ViewPage();
+        vp.edit();
+        EditPage ep = new EditPage();
+        ep.clickSaveAndView();
+
+
+        setup.login("UserTest", "UserTest");
+        setup.gotoPage("PDFViewerMacro", "asAuthorTest");
+
+    }
+
+    //@Test
+    @Order(6)
+    void pdfWithSpecialCharactersTest(TestUtils setup, TestConfiguration testConfiguration)
+    {
+        createPage(setup, "{{pdfviewer file=\"Te.t.with.special..chrs.-.test.It.s.a.test.Test.1.and.2.3.4.100.a.test.1.2.3.5.pdf\"/}}", "pdfWithSpecialCharactersTest");
+        uploadFile("Te.t.with.special.+.chrs.-.test.It.s.a.test.Test.1.and.2.3.4.100.a.test.1.2.3.5.pdf", testConfiguration);
+        PDFViewerMacroPage page = new PDFViewerMacroPage();
+        page.reloadPage();
+
+        PDFViewerMacro viewer0 = page.getPDFViewer(0);
+
+        // Checks the default height and width.
+        assertEquals("100%", viewer0.getWidth());
+        assertEquals("1000px", viewer0.getHeight());
+        assertTrue(viewer0.getText().contains("NEW TEST!"));
+    }
+
+    //@Test
+    @Order(7)
+    void pdfAttachedToAnotherPageWithSpecialCharactersTest(TestUtils setup, TestConfiguration testConfiguration)
+    {
+        // Checks that the macro works when the pdf is attached to another page that has a title with special
+        // characters and the "document" parameter is used.
+        createPage(setup, "normal page with a pdf attached", "Page~ With <{PDF}");
+        uploadFile("PDFTest.pdf", testConfiguration);
+
+        createPage(setup, "{{pdfviewer file=\"PDFTest.pdf\" document=\"PDFViewerMacro.Page~ With <{PDF}\"/}}",
+            "pdfAttachedToAnotherPageWithSpecialCharactersTest");
+
+        PDFViewerMacroPage page = new PDFViewerMacroPage();
+
+        assertEquals(1, page.getPDFViewerMacrosCount());
+        PDFViewerMacro viewer0 = page.getPDFViewer(0);
+        assertEquals("PDF file for testing the pdf viewer macro.", viewer0.getText());
+    }
+    private void createTerminalPageWithPDFAttached(TestUtils setup)
         throws Exception
     {
         DocumentReference documentReference = new DocumentReference("xwiki", "PDFViewerMacro", "TerminalPageWithPDF");
