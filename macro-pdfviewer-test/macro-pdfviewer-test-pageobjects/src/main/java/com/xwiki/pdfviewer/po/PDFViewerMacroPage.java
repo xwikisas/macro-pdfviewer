@@ -36,6 +36,9 @@ public class PDFViewerMacroPage extends ViewPage
     @FindBy(css = ".pdfviewer")
     private List<WebElement> macros;
 
+    @FindBy(css = ".errormessage")
+    private List<WebElement> errorMessages;
+
     public int getPDFViewerMacrosCount()
     {
         return macros.size();
@@ -44,5 +47,18 @@ public class PDFViewerMacroPage extends ViewPage
     public PDFViewerMacro getPDFViewer(int index)
     {
         return new PDFViewerMacro(macros.get(index));
+    }
+
+    public boolean hasErrorMessage()
+    {
+        return !errorMessages.isEmpty() && errorMessages.get(0).isDisplayed();
+    }
+
+    public String getErrorMessage(int index)
+    {
+        if (hasErrorMessage()) {
+            return errorMessages.get(index).getText();
+        }
+        return null;
     }
 }
