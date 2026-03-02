@@ -260,8 +260,6 @@ public class PDFViewerIT
     @Order(6)
     void asAuthorTest(TestUtils setup) throws Exception
     {
-        setup.loginAsSuperAdmin();
-
         DocumentReference documentReference = new DocumentReference("xwiki", "PDFViewerMacro", "PDFNoRights");
         setup.createPage(documentReference, "no view rights for UserTest", "PDFNoRights");
         setup.attachFile(documentReference, "PDFTest.pdf", getClass().getResourceAsStream("/pdfmacro/PDFTest.pdf"),
