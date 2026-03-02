@@ -44,7 +44,7 @@
     <![endif]-->
     </div>
     #set ($dispose = $xwiki.jsx.use('XWiki.PDFViewerMacro'))
-  #elseif (!$file.getAttachmentReference().isPresent())
+  #elseif (!$file.getAttachmentReference().isPresent() || !$file.hasViewRights())
     #error("$services.localization.render(
       'pdfviewer.error.nodocument')")
   #else

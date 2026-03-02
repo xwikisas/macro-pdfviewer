@@ -70,6 +70,8 @@ class PDFFileBuilderTest
 
     private static final String PDF_INTERNAL = "some internal attachment";
 
+    private static final String PDF_INTERNAL_2 = "some internal attachment 2";
+
     private static final String PDF_INTERNAL_URL = "some internal attachment URL";
 
     private static final String TOKEN_ID = "tokenID";
@@ -245,6 +247,9 @@ class PDFFileBuilderTest
     @Test
     void handleInternalAttachmentNoOwnerDocTestFound() throws XWikiException
     {
+        PDFFileAuthorization fileAuthorization = new PDFFileAuthorization();
+        fileAuthorization.setHasViewRights(true);
+        when(pdfViewerAuthManager.hasViewRights(attachmentRef, false)).thenReturn(fileAuthorization);
         PDFFile pdfFile = pdfFileBuilder.handleInternalAttachment(PDF_INTERNAL, false, "");
 
         assertEquals(PDF_INTERNAL_URL, pdfFile.getURL());
@@ -273,40 +278,49 @@ class PDFFileBuilderTest
     }
 
     @Test
-    void handleInternalAttachmentNoOwnerDocTest() throws XWikiException
-    {
-        when(wikiDocument.getAttachment(PDF_INTERNAL)).thenReturn(null);
-        when(xwiki.getDocument(docRef, wikiContext)).thenReturn(wikiDocument2);
-        when(wikiDocument2.getAttachment(PDF_INTERNAL)).thenReturn(wikiAttachment);
-        when(wikiDocument2.getAttachmentURL(PDF_INTERNAL, wikiContext)).thenReturn(PDF_INTERNAL_URL);
-        PDFFileAuthorization fileAuthorization = new PDFFileAuthorization();
-        fileAuthorization.setHasViewRights(true);
-        when(pdfViewerAuthManager.hasViewRights(attachmentRef, false)).thenReturn(fileAuthorization);
-        PDFFile pdfFile = pdfFileBuilder.handleInternalAttachment(PDF_INTERNAL, false, "");
-
-        assertEquals(PDF_INTERNAL_URL, pdfFile.getURL());
-        assertTrue(pdfFile.getAttachmentReference().isPresent());
-        assertTrue(pdfFile.hasViewRights());
-        assertEquals(attachmentRef, pdfFile.getAttachmentReference().get());
-    }
-
-    @Test
-    void handleInternalAttachmentNoOwnerDocDelegatedTest() throws XWikiException
+    void handleInternalAttachmentEmptyOptionalTest() throws XWikiException
     {
         String pdfFileReference = "pdfFileReference";
         DocumentReference docRef2 = new DocumentReference("wiki2", "space2", "page2");
-        AttachmentReference attachmentRef2 = new AttachmentReference(PDF_INTERNAL, docRef2);
+        AttachmentReference attachmentRef2 = new AttachmentReference(PDF_INTERNAL_2, docRef2);
         when(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT, docRef)).thenReturn(
             attachmentRef);
         when(authorizationManager.hasAccess(Right.VIEW, userDocRef, docRef)).thenReturn(false);
         when(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT)).thenReturn(attachmentRef2);
-        when(wikiDocument.getAttachment(pdfFileReference)).thenReturn(null);
+        when(wikiDocument.getAttachment(PDF_INTERNAL)).thenReturn(null);
 
         when(xwiki.getDocument(docRef2, wikiContext)).thenReturn(wikiDocument2);
-        when(wikiDocument2.getAttachment(PDF_INTERNAL)).thenReturn(wikiAttachment);
-        PDFFileAuthorization fileAuthorization = new PDFFileAuthorization();
-        fileAuthorization.setDelegatedViewRights(true);
-        when(pdfViewerAuthManager.hasViewRights(attachmentRef, true)).thenReturn(fileAuthorization);
+        when(wikiDocument2.getAttachment(PDF_INTERNAL_2)).thenReturn(wikiAttachment);
+        when(wikiDocument2.getAttachmentURL(PDF_INTERNAL_2, wikiContext)).thenReturn(PDF_INTERNAL_URL);
+
+        PDFFileAuthorization fileAuthorization2 = new PDFFileAuthorization();
+        fileAuthorization2.setHasViewRights(true);
+        when(pdfViewerAuthManager.hasViewRights(attachmentRef2, true)).thenReturn(fileAuthorization2);
+
+        when(tokenManager.getToken(userSdocRef, attachmentRef2, docRef)).thenReturn(TOKEN_ID);
+
+        PDFFile pdfFile = pdfFileBuilder.handleInternalAttachment(pdfFileReference, true, OWNER_DOC_REF);
+
+        assertEquals(PDF_INTERNAL_URL, pdfFile.getURL());
+        assertTrue(pdfFile.getAttachmentReference().isPresent());
+        assertTrue(pdfFile.hasViewRights());
+        assertEquals(attachmentRef2, pdfFile.getAttachmentReference().get());
+    }
+
+    @Test
+    void handleInternalAttachmentEmptyOptionalDelegatedTest() throws XWikiException
+    {
+        String pdfFileReference = "pdfFileReference";
+        DocumentReference docRef2 = new DocumentReference("wiki2", "space2", "page2");
+        AttachmentReference attachmentRef2 = new AttachmentReference(PDF_INTERNAL_2, docRef2);
+        when(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT, docRef)).thenReturn(
+            attachmentRef);
+        when(authorizationManager.hasAccess(Right.VIEW, userDocRef, docRef)).thenReturn(false);
+        when(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT)).thenReturn(attachmentRef2);
+        when(wikiDocument.getAttachment(PDF_INTERNAL)).thenReturn(null);
+
+        when(xwiki.getDocument(docRef2, wikiContext)).thenReturn(wikiDocument2);
+        when(wikiDocument2.getAttachment(PDF_INTERNAL_2)).thenReturn(wikiAttachment);
 
         PDFFileAuthorization fileAuthorization2 = new PDFFileAuthorization();
         fileAuthorization2.setHasViewRights(true);
