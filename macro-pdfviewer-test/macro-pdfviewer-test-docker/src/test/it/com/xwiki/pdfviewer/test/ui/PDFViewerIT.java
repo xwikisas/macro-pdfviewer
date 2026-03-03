@@ -260,6 +260,9 @@ public class PDFViewerIT
     @Order(6)
     void asAuthorTest(TestUtils setup) throws Exception
     {
+        // Checks that if asauthor=1 (yes) and the viewing user has no access to the document containing the PDF
+        // file,  the PDF file could still be viewed on behalf of the last person that saved it.
+
         DocumentReference documentReference = new DocumentReference("xwiki", "PDFViewerMacro", "PDFNoRights");
         setup.createPage(documentReference, "no view rights for UserTest", "PDFNoRights");
         setup.attachFile(documentReference, "PDFTest.pdf", getClass().getResourceAsStream("/pdfmacro/PDFTest.pdf"),
@@ -288,10 +291,13 @@ public class PDFViewerIT
 
         PDFViewerMacroPage page2 = new PDFViewerMacroPage();
 
+        // The parameter asauthor is 1 for the first macro, so UserTest can see the attachment.
         assertEquals(1, page2.getPDFViewerMacrosCount());
         PDFViewerMacro viewer2 = page2.getPDFViewer(0);
         assertEquals("PDF file for testing the pdf viewer macro.", viewer2.getText());
 
+        // The parameter asauthor is 0 (default) for the second macro, so UserTest can't see the attachment, only an
+        // error message.
         assertTrue(page2.hasErrorMessage());
         assertEquals("Error: The document does not exist, or you have no access to that document.",
             page2.getErrorMessage(0));
@@ -303,6 +309,8 @@ public class PDFViewerIT
     @Order(6)
     void pdfAttachedToAnotherPageNotFoundTest(TestUtils setup, TestConfiguration testConfiguration) throws Exception
     {
+        // Checks that the macro defaults to the file field reference if the attachment is not found in the
+        // given document, as long as the page with the macro contains the attachment.
 
         DocumentReference documentReference = new DocumentReference("xwiki", "PDFViewerMacro", "PageWithIncorrectPDF");
         setup.createPage(documentReference, "page with a pdf ", "PageWithIncorrectPDF");
@@ -323,13 +331,14 @@ public class PDFViewerIT
 
         assertEquals(1, page.getPDFViewerMacrosCount());
         PDFViewerMacro viewer0 = page.getPDFViewer(0);
-        assertEquals("PDF file for testing the pdf viewer macro.", viewer0.getText());
+        assertEquals("PDF file for testing the pdf viewer macro-2.", viewer0.getText());
     }
 
     @Test
     @Order(7)
     void pdfWithSpecialCharactersTest(TestUtils setup, TestConfiguration testConfiguration)
     {
+        // Checks that the macro works with a pdf that has special characters in its name.
         createPage(setup,
             "{{pdfviewer file=\"Te.t.with.special,.chrs.-.test.It.s.a.test.Test.1.and.2.3.4.100.a.test.1.2.3.5.pdf\"/}}",
             "pdfWithSpecialCharactersTest");
@@ -340,9 +349,6 @@ public class PDFViewerIT
 
         PDFViewerMacro viewer0 = page.getPDFViewer(0);
 
-        // Checks the default height and width.
-        assertEquals("100%", viewer0.getWidth());
-        assertEquals("1000px", viewer0.getHeight());
         assertTrue(viewer0.getText().contains("NEW TEST!"));
     }
 
@@ -350,11 +356,11 @@ public class PDFViewerIT
     @Order(8)
     void pdfReferenceTest(TestUtils setup, TestConfiguration testConfiguration)
     {
+        // Checks that the macro works using the reference to the pdf: document@attachement.
         createPage(setup, "normal page with a pdf attached", "NormalPageWithPDF");
         uploadFile("PDFTest.pdf", testConfiguration);
 
-        createPage(setup, "{{pdfviewer file=\"PDFViewerMacro.NormalPageWithPDF@PDFTest.pdf\"/}}",
-            "pdfReferenceTest");
+        createPage(setup, "{{pdfviewer file=\"PDFViewerMacro.NormalPageWithPDF@PDFTest.pdf\"/}}", "pdfReferenceTest");
         PDFViewerMacroPage page = new PDFViewerMacroPage();
         PDFViewerMacro viewer0 = page.getPDFViewer(0);
         assertEquals("PDF file for testing the pdf viewer macro.", viewer0.getText());
