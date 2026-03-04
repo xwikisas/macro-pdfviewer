@@ -50,5 +50,6 @@
     <module>macro-pdfviewer-api</module>
     <module>macro-pdfviewer-ui</module>
     <module>macro-pdfviewer-webjar</module>
+    <module>macro-pdfviewer-test</module>
   </modules>
 </project>
