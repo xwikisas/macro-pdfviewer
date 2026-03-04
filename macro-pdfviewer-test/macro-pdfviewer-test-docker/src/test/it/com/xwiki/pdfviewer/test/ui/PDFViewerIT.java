@@ -306,7 +306,7 @@ public class PDFViewerIT
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void pdfAttachedToAnotherPageNotFoundTest(TestUtils setup, TestConfiguration testConfiguration) throws Exception
     {
         // Checks that the macro defaults to the file field reference if the attachment is not found in the
@@ -335,7 +335,7 @@ public class PDFViewerIT
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void pdfWithSpecialCharactersTest(TestUtils setup, TestConfiguration testConfiguration)
     {
         // Checks that the macro works with a pdf that has special characters in its name.
@@ -353,7 +353,7 @@ public class PDFViewerIT
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     void pdfReferenceTest(TestUtils setup, TestConfiguration testConfiguration)
     {
         // Checks that the macro works using the reference to the pdf: document@attachement.
