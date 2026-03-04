@@ -30,7 +30,7 @@ import org.xwiki.test.ui.po.BaseElement;
  * Represents a PDF Viewer macro and provides access to its attributes.
  *
  * @version $Id$
- * @since 2.6.3
+ * @since 2.7
  */
 public class PDFViewerMacro extends BaseElement
 {

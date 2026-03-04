@@ -30,7 +30,7 @@ import org.xwiki.test.ui.po.BaseElement;
  * Represents a PDF Viewer macro that uses the tab layout and provides access to its attributes.
  *
  * @version $Id$
- * @since 2.6.3
+ * @since 2.7
  */
 public class TabLayoutPDFMacro extends BaseElement
 {

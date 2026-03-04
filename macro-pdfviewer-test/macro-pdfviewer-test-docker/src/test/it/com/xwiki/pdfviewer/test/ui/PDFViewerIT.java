@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * UI tests for the PDF Viewer Macro.
  *
  * @version $Id$
- * @since 2.6.3
+ * @since 2.7
  */
 @UITest(extensionOverrides = { @ExtensionOverride(extensionId = "com.google.code.findbugs:jsr305", overrides = {
     "features=com.google.code.findbugs:annotations" }),

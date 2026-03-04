@@ -27,10 +27,10 @@ import org.xwiki.test.docker.junit5.UITest;
  * All UI tests for the PDF Viewer Macro.
  *
  * @version $Id$
- * @since 2.6.3
+ * @since 2.7
  */
 @UITest
-public class AllITs
+public class AllIT
 {
     @Nested
     @DisplayName("PDFViewer Tests")

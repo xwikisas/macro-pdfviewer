@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="XWiki.PDFViewerMacro" locale="">
+<xwikidoc version="1.5" reference="XWiki.PDFViewerMacro" locale="">
   <web>XWiki</web>
   <name>PDFViewerMacro</name>
   <language/>
@@ -87,6 +87,7 @@
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -134,7 +135,16 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>require(['jquery'], function ($) {
+      <code>define('pdfviewer-macro', {
+  prefix: 'pdfviewer.viewer.',
+  keys: [
+    'notification.linkCopied',
+    'notification.copyLinkFail',
+    'buttons.copyLink'
+  ]
+});
+
+require(['jquery', 'xwiki-l10n!pdfviewer-macro'], function ($, l10n) {
   $(function() {
     const iframe = document.getElementsByClassName('pdfviewer')[0];
     const initPermalinkButton = function (iframe) {
@@ -145,17 +155,9 @@
         let fileName = new URL(viewerFrame.attr('src'), location.origin).searchParams.get('file');
         let pdfURL = new URL(fileName, location.origin).toString();
         navigator.clipboard.writeText(pdfURL).then(function() {
-          // After upgrading the parent to 13.8, the Require plugin for translations should be used.
-          // See https://extensions.xwiki.org/xwiki/bin/view/Extension/Localization/#HFromJavaScript
-          new XWiki.widgets.Notification(
-            $jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.linkCopied')),
-            'done'
-          );
+          new XWiki.widgets.Notification(l10n.get('notification.linkCopied'), 'done');
         }, function() {
-          new XWiki.widgets.Notification(
-            $jsontool.serialize($services.localization.render('pdfviewer.viewer.notification.copyLinkFail')),
-            'error'
-          );
+          new XWiki.widgets.Notification(l10n.get('notification.copyLinkFail'), 'error');
         });
         // If the secondary menu is open, we need to close it / untoggle it.
         if (secondaryMenuButton.hasClass('toggled')) {
@@ -164,10 +166,10 @@
       };
       viewerFrame.contents()
         .find('button.permalink')
-          .attr('title', $jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
+          .attr('title', l10n.get('buttons.copyLink'))
           .on('click', copyPdfPermalink)
           .find('span')
-            .text($jsontool.serialize($services.localization.render('pdfviewer.viewer.buttons.copyLink')))
+            .text(l10n.get('buttons.copyLink'))
             .removeAttr('data-l10n-id');
     };
 

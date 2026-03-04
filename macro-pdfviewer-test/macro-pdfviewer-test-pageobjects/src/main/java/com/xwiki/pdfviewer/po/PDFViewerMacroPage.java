@@ -29,7 +29,7 @@ import org.xwiki.test.ui.po.ViewPage;
  * Represents a page containing one or more PDF Viewer macros.
  *
  * @version $Id$
- * @since 2.6.3
+ * @since 2.7
  */
 public class PDFViewerMacroPage extends ViewPage
 {
