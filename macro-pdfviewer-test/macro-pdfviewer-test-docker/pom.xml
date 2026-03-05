@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.pdfviewer</groupId>
     <artifactId>macro-pdfviewer-test</artifactId>
-    <version>2.7-rc-1</version>
+    <version>2.7-rc-2-SNAPSHOT</version>
   </parent>
   <artifactId>macro-pdfviewer-test-docker</artifactId>
   <packaging>jar</packaging>
