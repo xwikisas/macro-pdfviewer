@@ -40,9 +40,9 @@
 ## XWiki Translation for language fr generated from http://www.l10n.xwiki.org
 rendering.macro.pdfviewer.description=PDF Viewer basé sur Mozilla pdf.js
 rendering.macro.pdfviewer.parameter.file.name=Fichier
-rendering.macro.pdfviewer.parameter.file.description=Nom du fichier PDF ou chemin URL absolu vers le fichier PDF
-### Missing: rendering.macro.pdfviewer.parameter.fileFromExternalUrl.name=File from external URL
-### Missing: rendering.macro.pdfviewer.parameter.fileFromExternalUrl.description=A link to an external PDF file. Multiple links can be inserted, separated by commas. When using external domains to display a PDF file, ensure that you have appended the domain of your wiki and/or subwiki to the Trusted Origins field in the Administration section. At least one of the PDF source inputs must have a value.
+rendering.macro.pdfviewer.parameter.file.description=La référence complète du fichier PDF, ou le nom de la pièce jointe lorsqu'il est utilisé avec le paramètre document. Plusieurs fichiers peuvent être définis. Au moins l'une des entrées sources PDF doit contenir une valeur.
+rendering.macro.pdfviewer.parameter.fileFromExternalUrl.name=Fichier d'une URL externe
+rendering.macro.pdfviewer.parameter.fileFromExternalUrl.description=Un lien vers un fichier PDF externe. Plusieurs liens peuvent être insérés, séparés par des virgules. Lorsque vous utilisez des domaines externes pour afficher un fichier PDF, assurez-vous que vous avez annexé le domaine de votre wiki et/ou sous-wiki au champ "Origines de confiance" dans la section Administration. Au moins une des entrées source PDF doit avoir une valeur.
 rendering.macro.pdfviewer.parameter.document.name=Document
 rendering.macro.pdfviewer.parameter.document.description=Référence du document auquel est attaché le fichier. Si elle n'est pas définie, le document courant est utilisé. Si fichier est un chemin URL absolu, la référence est ignorée.
 rendering.macro.pdfviewer.parameter.width.name=Largeur
@@ -53,15 +53,15 @@ rendering.macro.pdfviewer.parameter.asAuthor.name=Délégation de mon droit de v
 rendering.macro.pdfviewer.parameter.asAuthor.description=Si cette valeur est "1" (ou "true" ou "yes") et que l'utilisateur qui consulte le présent document n'a pas d'accès en consultation sur le document contenant le fichier PDF, le fichier PDF peut, malgré tout, être lu grâce à votre propre droit de consultation (si vous avez vous-même le droit de consulter le document contenant le fichier PDF, bien évidemment). Ce paramètre est ignoré pour les URLs.
 pdfviewer.error.nodocument=Le document n'existe pas ou vous n'avez pas accès à ce document.
 pdfviewer.error.noattachment=Le fichier attaché [{0}] n'existe pas dans le document [{1}].
-pdfviewer.error.nofile=Pas de nom de fichier PDF ou de chemin URL absolu fourni.
+pdfviewer.error.nofile=Pas de nom de fichier PDF ou d'URL externe fournis.
 pdfviewer.extension.name=Macro PDF Viewer (Pro)
-### Missing: pdfviewer.viewer.notification.linkCopied=PDF file link copied to the clipboard!
-### Missing: pdfviewer.viewer.notification.copyLinkFail=Failed to copy PDF link
-### Missing: pdfviewer.viewer.buttons.copyLink=Copy PDF link
+pdfviewer.viewer.notification.linkCopied=Lien vers le fichier PDF copié vers le presse-papier !
+pdfviewer.viewer.notification.copyLinkFail=Échec de copie du lien PDF
+pdfviewer.viewer.buttons.copyLink=Copier le lien PDF
 admin.pdfviewermacro=Macro PDF Viewer (Pro)
-### Missing: PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins=Trusted origins
-### Missing: PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins.hint=Add the viewer origins you trust, each on a new line. If you use pdfs located on external domains, you should append the domain of your wiki to this field. i.e. 'http://localhost:8080'.
-### Missing: PDFViewer.Code.PDFViewerConfigurationClass_withCredentials=With credentials
-### Missing: PDFViewer.Code.PDFViewerConfigurationClass_withCredentials.hint=Enable this if you access pdfs located on external domains that need authentication. With this field enabled, your validation cookies will be forwarded to the server that holds the pdfs.
+PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins=Sources de confiance
+PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins.hint=Ajoutez les sources de confiance pour le viewer, chacune sur une nouvelle ligne. Si vous utilisez des PDF situés sur des domaines externes, vous devriez ajouter le domaine de votre wiki à ce champ, c'est-à-dire "http://localhost:8080".
+PDFViewer.Code.PDFViewerConfigurationClass_withCredentials=Avec identifiants
+PDFViewer.Code.PDFViewerConfigurationClass_withCredentials.hint=Activez cela si vous accédez à des PDF situés sur des domaines externes nécessitant une authentification. Avec ce champ activé, vos cookies de validation seront transmis au serveur qui contient les PDF.
 </content>
 </xwikidoc>
