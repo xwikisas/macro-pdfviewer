@@ -36,22 +36,33 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>## XWiki Translation for language fr generated from http://www.l10n.xwiki.org
+  <content>rendering.macro.pdfviewer.name=PDF Viewer
+## XWiki Translation for language fr generated from http://www.l10n.xwiki.org
 rendering.macro.pdfviewer.description=PDF Viewer basé sur Mozilla pdf.js
-rendering.macro.pdfviewer.name=PDF Viewer
 rendering.macro.pdfviewer.parameter.file.name=Fichier
-rendering.macro.pdfviewer.parameter.file.description=Nom du fichier PDF ou chemin URL absolu vers le fichier PDF
+rendering.macro.pdfviewer.parameter.file.description=La référence complète du fichier PDF, ou le nom de la pièce jointe lorsqu'il est utilisé avec le paramètre document. Plusieurs fichiers peuvent être définis. Au moins l'une des entrées sources PDF doit contenir une valeur.
+rendering.macro.pdfviewer.parameter.fileFromExternalUrl.name=Fichier d'une URL externe
+rendering.macro.pdfviewer.parameter.fileFromExternalUrl.description=Un lien vers un fichier PDF externe. Plusieurs liens peuvent être insérés, séparés par des virgules. Lorsque vous utilisez des domaines externes pour afficher un fichier PDF, assurez-vous que vous avez annexé le domaine de votre wiki et/ou sous-wiki au champ "Origines de confiance" dans la section Administration. Au moins une des entrées source PDF doit avoir une valeur.
 rendering.macro.pdfviewer.parameter.document.name=Document
 rendering.macro.pdfviewer.parameter.document.description=Référence du document auquel est attaché le fichier. Si elle n'est pas définie, le document courant est utilisé. Si fichier est un chemin URL absolu, la référence est ignorée.
-rendering.macro.pdfviewer.parameter.height.name=Hauteur
-rendering.macro.pdfviewer.parameter.height.description=La hauteur du viewer en pixels. Si elle n'est pas définie, la valeur par défaut sera utilisée
 rendering.macro.pdfviewer.parameter.width.name=Largeur
 rendering.macro.pdfviewer.parameter.width.description=La largeur du viewer en pixels. Si elle n'est pas définie, la valeur par défaut sera utilisée
+rendering.macro.pdfviewer.parameter.height.name=Hauteur
+rendering.macro.pdfviewer.parameter.height.description=La hauteur du viewer en pixels. Si elle n'est pas définie, la valeur par défaut sera utilisée
 rendering.macro.pdfviewer.parameter.asAuthor.name=Délégation de mon droit de visualisation
 rendering.macro.pdfviewer.parameter.asAuthor.description=Si cette valeur est "1" (ou "true" ou "yes") et que l'utilisateur qui consulte le présent document n'a pas d'accès en consultation sur le document contenant le fichier PDF, le fichier PDF peut, malgré tout, être lu grâce à votre propre droit de consultation (si vous avez vous-même le droit de consulter le document contenant le fichier PDF, bien évidemment). Ce paramètre est ignoré pour les URLs.
+pdfviewer.iframe.title=Iframe PDF Viewer
 pdfviewer.error.nodocument=Le document n'existe pas ou vous n'avez pas accès à ce document.
 pdfviewer.error.noattachment=Le fichier attaché [{0}] n'existe pas dans le document [{1}].
-pdfviewer.error.nofile=Pas de nom de fichier PDF ou de chemin URL absolu fourni.
+pdfviewer.error.nofile=Pas de nom de fichier PDF ou d'URL externe fournis.
 pdfviewer.extension.name=Macro PDF Viewer (Pro)
-admin.pdfviewermacro=Macro PDF Viewer (Pro)</content>
+pdfviewer.viewer.notification.linkCopied=Lien vers le fichier PDF copié vers le presse-papier !
+pdfviewer.viewer.notification.copyLinkFail=Échec de copie du lien PDF
+pdfviewer.viewer.buttons.copyLink=Copier le lien PDF
+admin.pdfviewermacro=Macro PDF Viewer (Pro)
+PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins=Sources de confiance
+PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins.hint=Ajoutez les sources de confiance pour le viewer, chacune sur une nouvelle ligne. Si vous utilisez des PDF situés sur des domaines externes, vous devriez ajouter le domaine de votre wiki à ce champ, c'est-à-dire "http://localhost:8080".
+PDFViewer.Code.PDFViewerConfigurationClass_withCredentials=Avec identifiants
+PDFViewer.Code.PDFViewerConfigurationClass_withCredentials.hint=Activez cela si vous accédez à des PDF situés sur des domaines externes nécessitant une authentification. Avec ce champ activé, vos cookies de validation seront transmis au serveur qui contient les PDF.
+</content>
 </xwikidoc>
