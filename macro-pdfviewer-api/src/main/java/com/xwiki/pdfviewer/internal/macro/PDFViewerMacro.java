@@ -31,7 +31,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.script.ScriptContext;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.Block;
