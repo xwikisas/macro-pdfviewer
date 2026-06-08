@@ -29,12 +29,12 @@
   </parent>
   <groupId>com.xwiki.pdfviewer</groupId>
   <artifactId>macro-pdfviewer</artifactId>
-  <version>2.7.2-SNAPSHOT</version>
+  <version>2.7.3-SNAPSHOT</version>
   <name>PDF Viewer Macro - Parent POM</name>
   <description>Display attached PDF files or PDFs from external URLs inside XWiki pages. Use the tabbed layout to show multiple PDF files in the same XWiki page. The app can be purchased individually or part of the XWiki Pro package. Try it free.</description>
   <packaging>pom</packaging>
   <properties>
-    <licensing.version>1.32.2</licensing.version>
+    <licensing.version>1.32.3</licensing.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
