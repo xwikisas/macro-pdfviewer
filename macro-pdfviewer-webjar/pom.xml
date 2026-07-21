@@ -36,7 +36,7 @@
     <webjar.contentDirectory>
       ${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}
     </webjar.contentDirectory>
-    <pdfjs.version>4.2.67</pdfjs.version>
+    <pdfjs.version>4.4.168</pdfjs.version>
   </properties>
   <build>
     <plugins>
