@@ -42,12 +42,10 @@ public interface PDFMacroResource extends XWikiRestComponent
      * Get file content.
      *
      * @param token {@code String} representation of the delegation token
-     * @param csrfToken {@code String} representation of the CSRF token
      * @return the content of the file saved in the token
      * @throws XWikiRestException if an error occurred while retrieving the file content
      */
     @GET
     @Path("/contents")
-    Response getContents(@QueryParam("access_token") String token, @QueryParam("form_token") String csrfToken)
-        throws XWikiRestException;
+    Response getContents(@QueryParam("access_token") String token) throws XWikiRestException;
 }

@@ -19,9 +19,15 @@
  */
 package com.xwiki.pdfviewer.internal.token;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.xwiki.component.util.ReflectionUtils;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.security.authorization.AuthorizationManager;
@@ -49,6 +55,8 @@ import static org.mockito.Mockito.when;
 class DelegatedTokenManagerTest
 {
     private static final String ATTACH_NAME = "file.pdf";
+
+    private static final Instant NOW = Instant.parse("2026-10-22T10:00:00Z");
 
     private final DocumentReference author = new DocumentReference("wiki", "XWiki", "Author");
 
@@ -83,6 +91,7 @@ class DelegatedTokenManagerTest
     @BeforeEach
     void setup()
     {
+        setNow(NOW);
         setAuthorViewRight(this.author, this.attachmentDoc, true);
         setAuthorViewRight(this.otherAuthor, this.attachmentDoc, true);
         setAuthorViewRight(this.author, this.otherAttachmentDoc, true);
@@ -209,6 +218,88 @@ class DelegatedTokenManagerTest
         assertTrue(this.tokenManager.isInvalid(otherOriginToken));
         assertFalse(this.tokenManager.isInvalid(otherAttachmentToken));
         assertFalse(this.tokenManager.isInvalid(sameNameToken));
+    }
+
+    @Test
+    void tokenExpires()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        setNow(NOW.plus(Duration.ofHours(1)));
+
+        assertFalse(this.tokenManager.hasAccess(token));
+        assertTrue(this.tokenManager.isInvalid(token));
+    }
+
+    @Test
+    void tokenRenewedWhenIssuedAgain()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        setNow(NOW.plus(Duration.ofMinutes(50)));
+        assertEquals(token, this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin));
+
+        setNow(NOW.plus(Duration.ofMinutes(100)));
+        assertFalse(this.tokenManager.isInvalid(token));
+    }
+
+    @Test
+    void expiredTokenReplaced()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        setNow(NOW.plus(Duration.ofHours(2)));
+        String newToken = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        assertNotEquals(token, newToken);
+        assertTrue(this.tokenManager.isInvalid(token));
+        assertFalse(this.tokenManager.isInvalid(newToken));
+    }
+
+    @Test
+    void expiredTokensPurgedWhenCreatingToken()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        setNow(NOW.plus(Duration.ofHours(2)));
+        this.tokenManager.getToken(this.author, this.otherAttachment, this.otherMacroOrigin);
+
+        // The expired token is gone from the store, not only rejected.
+        setNow(NOW);
+        assertTrue(this.tokenManager.isInvalid(token));
+    }
+
+    @Test
+    void clearOriginTokens()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        String otherAttachmentToken = this.tokenManager.getToken(this.author, this.otherAttachment, this.macroOrigin);
+        String otherOriginToken = this.tokenManager.getToken(this.author, this.attachment, this.otherMacroOrigin);
+
+        this.tokenManager.clearOriginTokens(this.macroOrigin);
+
+        assertTrue(this.tokenManager.isInvalid(token));
+        assertTrue(this.tokenManager.isInvalid(otherAttachmentToken));
+        assertFalse(this.tokenManager.isInvalid(otherOriginToken));
+    }
+
+    @Test
+    void tokenHasRandomValue()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        this.tokenManager.clearToken(this.attachment, this.macroOrigin);
+        String token2 = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        String prefix = String.format("wopi_%s_%s_%s_", this.author, this.attachment, this.macroOrigin);
+        String randomValue = token.substring(prefix.length());
+        // 128 random bits, URL-safe Base64 encoded without padding.
+        assertEquals(22, randomValue.length());
+        assertNotEquals(randomValue, token2.substring(prefix.length()));
+    }
+
+    private void setNow(Instant now)
+    {
+        ReflectionUtils.setFieldValue(this.tokenManager, "clock", Clock.fixed(now, ZoneOffset.UTC));
     }
 
     private void setAuthorViewRight(DocumentReference user, DocumentReference document, boolean allowed)

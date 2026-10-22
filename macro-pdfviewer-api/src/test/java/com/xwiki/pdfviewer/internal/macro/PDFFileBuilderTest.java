@@ -27,7 +27,6 @@ import javax.inject.Provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.xwiki.csrf.CSRFToken;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.document.DocumentAuthors;
 import org.xwiki.model.reference.AttachmentReference;
@@ -66,7 +65,7 @@ import static org.mockito.Mockito.when;
 @ComponentTest
 class PDFFileBuilderTest
 {
-    private static final String PDF_CONTENT_FORMAT = "%s/rest/pdfmacro/contents?access_token=%s&form_token=%s";
+    private static final String PDF_CONTENT_FORMAT = "%s/rest/pdfmacro/contents?access_token=%s";
 
     private static final String PDF_URL_EXTERNAL = "https://some_attachment";
 
@@ -87,8 +86,7 @@ class PDFFileBuilderTest
     private static final String OTHER_ATTACHMENT_URL = "other attachment URL";
 
     private static final String EXPECTED_PATH =
-        String.format(PDF_CONTENT_FORMAT, CONTEXT_PATH, Base64.getUrlEncoder().encodeToString(TOKEN_ID.getBytes()),
-            "csrf_token");
+        String.format(PDF_CONTENT_FORMAT, CONTEXT_PATH, Base64.getUrlEncoder().encodeToString(TOKEN_ID.getBytes()));
 
     private final DocumentReference docRef = new DocumentReference("wiki", "space", "page");
 
@@ -120,8 +118,6 @@ class PDFFileBuilderTest
     @Named("document")
     private UserReferenceSerializer<DocumentReference> documentUserSerializer;
 
-    @MockComponent
-    private CSRFToken csrf;
 
     @Mock
     private DocumentReference userSdocRef;
@@ -187,7 +183,6 @@ class PDFFileBuilderTest
         when(entityReferenceResolver.resolve(PDF_INTERNAL, EntityType.ATTACHMENT)).thenReturn(attachmentRef);
         when(tokenManager.getToken(userSdocRef, attachmentRef, docRef)).thenReturn(TOKEN_ID);
 
-        when(csrf.getToken()).thenReturn("csrf_token");
     }
 
     @Test

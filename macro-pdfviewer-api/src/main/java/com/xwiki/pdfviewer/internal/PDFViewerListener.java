@@ -25,12 +25,17 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
+import org.xwiki.bridge.event.DocumentDeletedEvent;
+import org.xwiki.bridge.event.DocumentUpdatedEvent;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.observation.AbstractEventListener;
 import org.xwiki.observation.event.Event;
 
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xpn.xwiki.internal.event.AbstractAttachmentEvent;
 import com.xpn.xwiki.internal.event.AttachmentDeletedEvent;
+import com.xpn.xwiki.internal.event.AttachmentUpdatedEvent;
 import com.xwiki.pdfviewer.internal.token.DelegatedTokenManager;
 
 /**
@@ -56,22 +61,28 @@ public class PDFViewerListener extends AbstractEventListener
     private DelegatedTokenManager delegatedTokenManager;
 
     /**
-     * Creates an event-listener filtering for AttachmentDeletedEvent.
+     * Creates an event-listener filtering the events that invalidate delegated tokens.
      */
     public PDFViewerListener()
     {
-        super(HINT, new AttachmentDeletedEvent());
+        super(HINT, new AttachmentDeletedEvent(), new AttachmentUpdatedEvent(), new DocumentDeletedEvent(),
+            new DocumentUpdatedEvent());
     }
 
     @Override
     public void onEvent(Event event, Object source, Object data)
     {
         try {
-            if (event instanceof AttachmentDeletedEvent) {
-                String attachmentName = ((AttachmentDeletedEvent) event).getName();
-                delegatedTokenManager.clearAttachmentTokens(attachmentName,
-                    ((XWikiDocument) source).getDocumentReference());
+            DocumentReference documentReference = ((XWikiDocument) source).getDocumentReference();
+            if (event instanceof AbstractAttachmentEvent) {
+                // The tokens are issued again for the new attachment content when the macro is rendered.
+                String attachmentName = ((AbstractAttachmentEvent) event).getName();
+                delegatedTokenManager.clearAttachmentTokens(attachmentName, documentReference);
                 logger.debug("Successfully removed all tokens granted for [{}]", attachmentName);
+            } else {
+                // The macros of the deleted or modified document may not delegate the view right anymore. The tokens
+                // still needed are issued again when the document is rendered.
+                delegatedTokenManager.clearOriginTokens(documentReference);
             }
         } catch (Exception e) {
             logger.error("An error occurred while removing PDF Viewer access tokens. Root cause is: [{}]",

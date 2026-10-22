@@ -20,6 +20,8 @@
 package com.xwiki.pdfviewer.internal.token;
 
 import java.security.SecureRandom;
+import java.time.Instant;
+import java.util.Base64;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -36,20 +38,28 @@ public class DelegatedToken
 {
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
+    private static final int RANDOM_BYTES = 16;
+
     private final DocumentReference user;
 
     private final AttachmentReference fileReference;
 
     private final DocumentReference macroOrigin;
 
-    private final int randomNumber;
+    private final String randomValue;
 
-    DelegatedToken(DocumentReference user, AttachmentReference file, DocumentReference macroOrigin)
+    private volatile Instant expirationDate;
+
+    DelegatedToken(DocumentReference user, AttachmentReference file, DocumentReference macroOrigin,
+        Instant expirationDate)
     {
         this.user = user;
         this.fileReference = file;
         this.macroOrigin = macroOrigin;
-        this.randomNumber = Math.abs(SECURE_RANDOM.nextInt());
+        byte[] randomBytes = new byte[RANDOM_BYTES];
+        SECURE_RANDOM.nextBytes(randomBytes);
+        this.randomValue = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+        this.expirationDate = expirationDate;
     }
 
     /**
@@ -76,18 +86,35 @@ public class DelegatedToken
         return macroOrigin;
     }
 
+    /**
+     * @param now the current date
+     * @return {@code true} if the token cannot be used anymore, {@code false} otherwise
+     */
+    public boolean isExpired(Instant now)
+    {
+        return !now.isBefore(this.expirationDate);
+    }
+
+    /**
+     * @param newExpirationDate the date after which the token cannot be used anymore
+     */
+    void setExpirationDate(Instant newExpirationDate)
+    {
+        this.expirationDate = newExpirationDate;
+    }
+
     @Override
     public String toString()
     {
         return String.format("wopi_%s_%s_%s_%s", this.user.toString(), this.fileReference.toString(),
-            this.getMacroOrigin().toString(), this.randomNumber);
+            this.getMacroOrigin().toString(), this.randomValue);
     }
 
     @Override
     public int hashCode()
     {
         return new HashCodeBuilder().append(this.getUser()).append(this.getFileReference().toString())
-            .append(this.getMacroOrigin().toString()).append(this.getRandomNumber()).toHashCode();
+            .append(this.getMacroOrigin().toString()).append(this.getRandomValue()).toHashCode();
     }
 
     @Override
@@ -102,14 +129,14 @@ public class DelegatedToken
         builder.append(this.getUser(), other.getUser());
         builder.append(this.getFileReference(), other.getFileReference());
         builder.append(this.getMacroOrigin(), other.getMacroOrigin());
-        builder.append(this.getRandomNumber(), other.getRandomNumber());
+        builder.append(this.getRandomValue(), other.getRandomValue());
 
         return builder.build();
     }
 
-    private int getRandomNumber()
+    private String getRandomValue()
     {
-        return this.randomNumber;
+        return this.randomValue;
     }
 }
 

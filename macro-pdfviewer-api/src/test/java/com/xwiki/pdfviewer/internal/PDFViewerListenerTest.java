@@ -22,6 +22,8 @@ package com.xwiki.pdfviewer.internal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
+import org.xwiki.bridge.event.DocumentDeletedEvent;
+import org.xwiki.bridge.event.DocumentUpdatedEvent;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.observation.event.Event;
 import org.xwiki.test.LogLevel;
@@ -32,6 +34,7 @@ import org.xwiki.test.junit5.mockito.MockComponent;
 
 import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.internal.event.AttachmentDeletedEvent;
+import com.xpn.xwiki.internal.event.AttachmentUpdatedEvent;
 import com.xwiki.pdfviewer.internal.token.DelegatedTokenManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,5 +89,31 @@ class PDFViewerListenerTest
         assertEquals(
             "An error occurred while removing PDF Viewer access tokens. Root cause is: [RuntimeException: test error "
                 + "message]", logCapture.getMessage(0));
+    }
+
+    @Test
+    void onAttachmentUpdatedEvent()
+    {
+        Event event = new AttachmentUpdatedEvent("test document name", "test attachment name");
+        when(xWikiDocument.getDocumentReference()).thenReturn(documentReference);
+        pdfViewerListener.onEvent(event, xWikiDocument, null);
+        assertEquals("Successfully removed all tokens granted for [test attachment name]", logCapture.getMessage(0));
+        verify(tokenManager).clearAttachmentTokens("test attachment name", documentReference);
+    }
+
+    @Test
+    void onDocumentDeletedEvent()
+    {
+        when(xWikiDocument.getDocumentReference()).thenReturn(documentReference);
+        pdfViewerListener.onEvent(new DocumentDeletedEvent(), xWikiDocument, null);
+        verify(tokenManager).clearOriginTokens(documentReference);
+    }
+
+    @Test
+    void onDocumentUpdatedEvent()
+    {
+        when(xWikiDocument.getDocumentReference()).thenReturn(documentReference);
+        pdfViewerListener.onEvent(new DocumentUpdatedEvent(), xWikiDocument, null);
+        verify(tokenManager).clearOriginTokens(documentReference);
     }
 }
