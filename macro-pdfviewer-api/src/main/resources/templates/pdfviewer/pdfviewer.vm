@@ -26,7 +26,6 @@
     #set ($trustedOrigins = $stringtool.join($trustedOrigins.split('\r\n'), ','))
     #set ($queryString = $escapetool.url({
       'file': $file.getURL(),
-      'trustedOrigins': $trustedOrigins,
       'withCredentials': $withCredentials,
       'delegatedView': $file.areViewRightsDelegated()
     }))
@@ -39,7 +38,8 @@
     <![endif]-->
     <![if !(lt IE 10)]>
       <iframe class="pdfviewer" title="$escapetool.xml($services.localization.render('pdfviewer.iframe.title'))"
-      src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}" width="$escapetool.xml($width)" height="$escapetool.xml($height)">
+      src="${pdfviewerurl}?${queryString}#locale=${xcontext.locale}"
+      data-trusted-origins="$escapetool.xml($trustedOrigins)" width="$escapetool.xml($width)" height="$escapetool.xml($height)">
       </iframe>
     <![endif]-->
     </div>
