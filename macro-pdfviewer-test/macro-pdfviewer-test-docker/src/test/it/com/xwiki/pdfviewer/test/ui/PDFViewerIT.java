@@ -36,6 +36,7 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
+import org.xwiki.test.ui.po.ViewPage;
 
 import com.xwiki.pdfviewer.po.PDFViewerMacro;
 import com.xwiki.pdfviewer.po.PDFViewerMacroPage;
@@ -243,6 +244,22 @@ class PDFViewerIT
         assertTrue(page.hasErrorMessage());
         assertEquals(NO_ACCESS_ERROR, page.getErrorMessage(0));
         assertEquals(NO_ACCESS_ERROR, page.getErrorMessage(1));
+
+        setup.loginAsSuperAdmin();
+    }
+
+    @Test
+    @Order(6)
+    void configurationEditedOnlyByAdmins(TestUtils setup)
+    {
+        // The configuration (trusted origins, credentials) applies to every macro of the wiki.
+        DocumentReference configurationReference =
+            new DocumentReference("xwiki", List.of("PDFViewer", "Code"), "PDFViewerConfiguration");
+        setup.login("UserTest", "UserTest");
+        setup.gotoPage(configurationReference, "edit");
+        assertTrue(new ViewPage().isForbidden());
+        setup.gotoPage(configurationReference, "delete");
+        assertTrue(new ViewPage().isForbidden());
 
         setup.loginAsSuperAdmin();
     }
