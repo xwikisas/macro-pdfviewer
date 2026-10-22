@@ -22,7 +22,6 @@ package com.xwiki.pdfviewer.internal.token;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.Mock;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.security.authorization.AuthorizationManager;
@@ -36,19 +35,38 @@ import org.xwiki.test.junit5.mockito.MockComponent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link DelegatedTokenManager}
+ * Unit test for {@link DelegatedTokenManager}.
  *
  * @version $Id$
  */
 @ComponentTest
 class DelegatedTokenManagerTest
 {
-    private static final String ATTACH_NAME = "attach name";
+    private static final String ATTACH_NAME = "file.pdf";
+
+    private final DocumentReference author = new DocumentReference("wiki", "XWiki", "Author");
+
+    private final DocumentReference otherAuthor = new DocumentReference("wiki", "XWiki", "OtherAuthor");
+
+    private final DocumentReference attachmentDoc = new DocumentReference("wiki", "Space", "Attachments");
+
+    private final DocumentReference otherAttachmentDoc = new DocumentReference("wiki2", "Space", "Attachments");
+
+    private final AttachmentReference attachment = new AttachmentReference(ATTACH_NAME, attachmentDoc);
+
+    private final AttachmentReference otherAttachment = new AttachmentReference("other.pdf", attachmentDoc);
+
+    private final AttachmentReference sameNameAttachment = new AttachmentReference(ATTACH_NAME, otherAttachmentDoc);
+
+    private final DocumentReference macroOrigin = new DocumentReference("wiki", "Space", "MacroOrigin");
+
+    private final DocumentReference otherMacroOrigin = new DocumentReference("wiki", "Space", "OtherMacroOrigin");
 
     @InjectMockComponents
     private DelegatedTokenManager tokenManager;
@@ -60,185 +78,141 @@ class DelegatedTokenManagerTest
     private AuthorizationManager authorizationManager;
 
     @RegisterExtension
-    private LogCaptureExtension logCapture = new LogCaptureExtension(LogLevel.DEBUG);
-
-    @Mock
-    private DocumentReference userRef;
-
-    @Mock
-    private DocumentReference userRef2;
-
-    @Mock
-    private AttachmentReference attachmentReference;
-
-    @Mock
-    private AttachmentReference attachmentReference2;
-
-    @Mock
-    private DocumentReference documentReference;
-
-    @Mock
-    private DocumentReference documentReference2;
-
-    @Mock
-    private DocumentReference macroOrigin;
-
-    @Mock
-    private DocumentReference macroOrigin2;
+    private LogCaptureExtension logCapture = new LogCaptureExtension(LogLevel.WARN);
 
     @BeforeEach
     void setup()
     {
-        when(attachmentReference.getDocumentReference()).thenReturn(documentReference);
-        when(attachmentReference2.getDocumentReference()).thenReturn(documentReference2);
-        when(authorizationManager.hasAccess(Right.VIEW, userRef, documentReference2)).thenReturn(true);
-        when(authorizationManager.hasAccess(Right.VIEW, userRef2, documentReference2)).thenReturn(true);
+        setAuthorViewRight(this.author, this.attachmentDoc, true);
+        setAuthorViewRight(this.otherAuthor, this.attachmentDoc, true);
+        setAuthorViewRight(this.author, this.otherAttachmentDoc, true);
+        when(this.contextualAuthorizationManager.hasAccess(Right.VIEW, this.macroOrigin)).thenReturn(true);
+        when(this.contextualAuthorizationManager.hasAccess(Right.VIEW, this.otherMacroOrigin)).thenReturn(true);
     }
 
     @Test
-    void getTokenCreate()
+    void getTokenCreatesValidToken()
     {
-        createToken(userRef, attachmentReference, macroOrigin, true);
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(0));
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+
+        assertFalse(token.isEmpty());
+        assertFalse(this.tokenManager.isInvalid(token));
+        assertTrue(this.tokenManager.hasAccess(token));
+        assertEquals(this.attachment, this.tokenManager.getTokenAttachmentReference(token));
     }
 
     @Test
-    void getTokenNoAccess()
+    void getTokenWithoutAuthorViewRight()
     {
-        createToken(userRef, attachmentReference, macroOrigin, false);
-        assertEquals("Failed to create token for file [attachmentReference] on origin [macroOrigin] and user "
-            + "[userRef] due to insufficient rights.", logCapture.getMessage(0));
+        setAuthorViewRight(this.author, this.attachmentDoc, false);
+
+        assertEquals("", this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin));
+        assertEquals("Failed to create token for file [Attachment wiki:Space.Attachments@file.pdf] on origin "
+            + "[wiki:Space.MacroOrigin] and user [wiki:XWiki.Author] due to insufficient rights.",
+            this.logCapture.getMessage(0));
     }
 
     @Test
-    void getTokenExists()
+    void getTokenReusesExistingToken()
     {
-        String token = createToken(userRef, attachmentReference, macroOrigin, true);
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(0));
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
 
-        String token2 = tokenManager.getToken(userRef, attachmentReference, macroOrigin);
-        assertEquals(token, token2);
+        assertEquals(token, this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin));
     }
 
     @Test
-    void getTokenExistsDifferentAuthor()
+    void getTokenIsBoundToTheMacroOrigin()
     {
-        createToken(userRef, attachmentReference, macroOrigin, true);
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(0));
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        String otherToken = this.tokenManager.getToken(this.author, this.attachment, this.otherMacroOrigin);
 
-        createToken(userRef2, attachmentReference, macroOrigin, true);
-        assertEquals("Found token author [userRef] is different from the given author [userRef2]. Removing token and "
-            + "attempting to create a new one.", logCapture.getMessage(1));
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef2].",
-            logCapture.getMessage(2));
+        assertNotEquals(token, otherToken);
+        assertFalse(this.tokenManager.isInvalid(token));
+        assertFalse(this.tokenManager.isInvalid(otherToken));
     }
 
     @Test
-    void getTokenExistsNoRights()
+    void getTokenWithDifferentAuthorReplacesToken()
     {
-        createToken(userRef, attachmentReference, macroOrigin, true);
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(0));
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
 
-        createToken(userRef, attachmentReference, macroOrigin, false);
-        assertEquals("Deleted delegated token for file [attachmentReference] from macro origin document [macroOrigin].",
-            logCapture.getMessage(1));
+        String newToken = this.tokenManager.getToken(this.otherAuthor, this.attachment, this.macroOrigin);
+
+        assertNotEquals(token, newToken);
+        assertTrue(this.tokenManager.isInvalid(token));
+        assertFalse(this.tokenManager.isInvalid(newToken));
+    }
+
+    @Test
+    void getTokenAfterAuthorLostViewRight()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        setAuthorViewRight(this.author, this.attachmentDoc, false);
+
+        assertEquals("", this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin));
+        assertTrue(this.tokenManager.isInvalid(token));
+    }
+
+    @Test
+    void isInvalidWithUnknownToken()
+    {
+        assertTrue(this.tokenManager.isInvalid("unknown"));
+        assertFalse(this.tokenManager.hasAccess("unknown"));
+        assertNull(this.tokenManager.getTokenAttachmentReference("unknown"));
+    }
+
+    @Test
+    void hasAccessWithoutViewRightOnMacroOrigin()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        when(this.contextualAuthorizationManager.hasAccess(Right.VIEW, this.macroOrigin)).thenReturn(false);
+
+        assertFalse(this.tokenManager.hasAccess(token));
+        assertNull(this.tokenManager.getTokenAttachmentReference(token));
+        // The token belongs to the author, so another viewer of the macro origin can still use it.
+        assertFalse(this.tokenManager.isInvalid(token));
+    }
+
+    @Test
+    void hasAccessAfterAuthorLostViewRight()
+    {
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        setAuthorViewRight(this.author, this.attachmentDoc, false);
+
+        assertFalse(this.tokenManager.hasAccess(token));
+        assertTrue(this.tokenManager.isInvalid(token));
     }
 
     @Test
     void clearToken()
     {
-        createToken(userRef, attachmentReference, macroOrigin, true);
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(0));
-        tokenManager.clearToken(attachmentReference, macroOrigin);
-        assertEquals("Deleted delegated token for file [attachmentReference] from macro origin document [macroOrigin].",
-            logCapture.getMessage(1));
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        String otherOriginToken = this.tokenManager.getToken(this.author, this.attachment, this.otherMacroOrigin);
+
+        this.tokenManager.clearToken(this.attachment, this.macroOrigin);
+
+        assertTrue(this.tokenManager.isInvalid(token));
+        assertFalse(this.tokenManager.isInvalid(otherOriginToken));
     }
 
     @Test
     void clearAttachmentTokens()
     {
-        DocumentReference docRef = new DocumentReference("wiki", "space", "page");
-        AttachmentReference attachRef = new AttachmentReference(ATTACH_NAME, docRef);
+        String token = this.tokenManager.getToken(this.author, this.attachment, this.macroOrigin);
+        String otherOriginToken = this.tokenManager.getToken(this.otherAuthor, this.attachment, this.otherMacroOrigin);
+        String otherAttachmentToken = this.tokenManager.getToken(this.author, this.otherAttachment, this.macroOrigin);
+        String sameNameToken = this.tokenManager.getToken(this.author, this.sameNameAttachment, this.macroOrigin);
 
-        DocumentReference docRef2 = new DocumentReference("wiki2", "space2", "page2");
-        AttachmentReference attachRef2 = new AttachmentReference(ATTACH_NAME, docRef2);
+        this.tokenManager.clearAttachmentTokens(ATTACH_NAME, this.attachmentDoc);
 
-        when(authorizationManager.hasAccess(any(), any(), any(DocumentReference.class))).thenReturn(true);
-        String token1 = createToken(userRef, attachRef, macroOrigin, true);
-        String token2 = createToken(userRef2, attachRef, macroOrigin2, true);
-        String token3 = createToken(userRef2, attachRef2, macroOrigin2, true);
-        assertEquals(
-            "New token created for file [Attachment wiki:space.page@attach name] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(0));
-        assertEquals(
-            "New token created for file [Attachment wiki:space.page@attach name] on origin [macroOrigin2] and user [userRef2].",
-            logCapture.getMessage(1));
-        assertEquals(
-            "New token created for file [Attachment wiki2:space2.page2@attach name] on origin [macroOrigin2] and user "
-                + "[userRef2].", logCapture.getMessage(2));
-
-        tokenManager.clearAttachmentTokens(ATTACH_NAME, docRef);
-        String lastLogs = logCapture.getMessage(3) + logCapture.getMessage(4);
-        assertTrue(lastLogs.contains(token1) && lastLogs.contains(token2));
-        assertFalse(tokenManager.isInvalid(token3));
+        assertTrue(this.tokenManager.isInvalid(token));
+        assertTrue(this.tokenManager.isInvalid(otherOriginToken));
+        assertFalse(this.tokenManager.isInvalid(otherAttachmentToken));
+        assertFalse(this.tokenManager.isInvalid(sameNameToken));
     }
 
-    @Test
-    void getTokenAttachmentReferenceTest()
+    private void setAuthorViewRight(DocumentReference user, DocumentReference document, boolean allowed)
     {
-        when(contextualAuthorizationManager.hasAccess(Right.VIEW, macroOrigin)).thenReturn(true);
-        String token = createToken(userRef2, attachmentReference2, macroOrigin, true);
-        createToken(userRef, attachmentReference, macroOrigin, true);
-        createToken(userRef2, attachmentReference, macroOrigin2, true);
-        createToken(userRef, attachmentReference2, macroOrigin2, true);
-
-        assertEquals("New token created for file [attachmentReference2] on origin [macroOrigin] and user [userRef2].",
-            logCapture.getMessage(0));
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(1));
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin2] and user [userRef2].",
-            logCapture.getMessage(2));
-        assertEquals("New token created for file [attachmentReference2] on origin [macroOrigin2] and user [userRef].",
-            logCapture.getMessage(3));
-
-        assertEquals(attachmentReference2, tokenManager.getTokenAttachmentReference(token));
-    }
-
-    @Test
-    void hasAccessTest()
-    {
-        when(contextualAuthorizationManager.hasAccess(Right.VIEW, macroOrigin)).thenReturn(false);
-        String token = createToken(userRef2, attachmentReference2, macroOrigin, true);
-        createToken(userRef, attachmentReference, macroOrigin, true);
-        createToken(userRef2, attachmentReference, macroOrigin2, true);
-        createToken(userRef, attachmentReference2, macroOrigin2, true);
-
-        assertEquals("New token created for file [attachmentReference2] on origin [macroOrigin] and user [userRef2].",
-            logCapture.getMessage(0));
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin] and user [userRef].",
-            logCapture.getMessage(1));
-        assertEquals("New token created for file [attachmentReference] on origin [macroOrigin2] and user [userRef2].",
-            logCapture.getMessage(2));
-        assertEquals("New token created for file [attachmentReference2] on origin [macroOrigin2] and user [userRef].",
-            logCapture.getMessage(3));
-        assertFalse(tokenManager.hasAccess(token));
-    }
-
-    private String createToken(DocumentReference userRef, AttachmentReference attachmentReference,
-        DocumentReference macroOrigin, boolean hasView)
-    {
-        when(authorizationManager.hasAccess(Right.VIEW, userRef, documentReference)).thenReturn(hasView);
-        String token = tokenManager.getToken(userRef, attachmentReference, macroOrigin);
-        if (hasView) {
-            assertTrue(token.contains(String.format("wopi_%s_%s_%s_", userRef, attachmentReference, macroOrigin)));
-        } else {
-            assertEquals("", token);
-        }
-        return token;
+        when(this.authorizationManager.hasAccess(Right.VIEW, user, document)).thenReturn(allowed);
     }
 }

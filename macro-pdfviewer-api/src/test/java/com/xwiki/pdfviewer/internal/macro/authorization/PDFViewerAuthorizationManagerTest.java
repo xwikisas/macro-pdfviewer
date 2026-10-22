@@ -40,9 +40,14 @@ import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xwiki.pdfviewer.internal.token.DelegatedTokenManager;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -61,6 +66,9 @@ class PDFViewerAuthorizationManagerTest
 
     @MockComponent
     private Provider<XWikiContext> contextProvider;
+
+    @MockComponent
+    private DelegatedTokenManager tokenManager;
 
     @MockComponent
     @Named("document")
@@ -93,6 +101,8 @@ class PDFViewerAuthorizationManagerTest
     @Mock
     private DocumentAuthors documentAuthors;
 
+    private final DocumentReference macroOrigin = new DocumentReference("wiki", "Space", "MacroOrigin");
+
     @BeforeEach
     void setup() throws XWikiException
     {
@@ -102,6 +112,7 @@ class PDFViewerAuthorizationManagerTest
         when(wiki.exists(documentReference, wikiContext)).thenReturn(true);
         when(wikiContext.get(XWikiDocument.CKEY_SDOC)).thenReturn(sdoc);
         when(sdoc.getAuthors()).thenReturn(documentAuthors);
+        when(sdoc.getDocumentReference()).thenReturn(macroOrigin);
         when(documentAuthors.getContentAuthor()).thenReturn(sdocUserRef);
         when(documentUserSerializer.serialize(sdocUserRef)).thenReturn(sdocUserDocRef);
         when(attachmentReference.getDocumentReference()).thenReturn(documentReference);
@@ -116,6 +127,21 @@ class PDFViewerAuthorizationManagerTest
 
         assertFalse(fileAuthorization.hasViewRights());
         assertFalse(fileAuthorization.areViewRightsDelegated());
+        verifyNoInteractions(tokenManager);
+    }
+
+    @Test
+    void hasViewRightsMissingDocument() throws XWikiException
+    {
+        when(wiki.exists(documentReference, wikiContext)).thenReturn(false);
+        when(authorizationManager.hasAccess(Right.VIEW, userRef, documentReference)).thenReturn(true);
+        when(authorizationManager.hasAccess(Right.VIEW, sdocUserDocRef, documentReference)).thenReturn(true);
+
+        PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, true);
+
+        assertFalse(fileAuthorization.hasViewRights());
+        assertFalse(fileAuthorization.areViewRightsDelegated());
+        verifyNoInteractions(tokenManager);
     }
 
     @Test
@@ -126,15 +152,17 @@ class PDFViewerAuthorizationManagerTest
         PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, false);
         assertTrue(fileAuthorization.hasViewRights());
         assertFalse(fileAuthorization.areViewRightsDelegated());
+        verify(tokenManager, never()).clearToken(any(AttachmentReference.class), any());
     }
 
     @Test
     void hasViewRightsNoRightNotDelegated() throws XWikiException
     {
-
         PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, false);
         assertFalse(fileAuthorization.hasViewRights());
         assertFalse(fileAuthorization.areViewRightsDelegated());
+        // A token previously delegated by this macro must not keep granting access once asAuthor is disabled.
+        verify(tokenManager).clearToken(attachmentReference, macroOrigin);
     }
 
     @Test
@@ -145,6 +173,8 @@ class PDFViewerAuthorizationManagerTest
         PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, true);
         assertFalse(fileAuthorization.hasViewRights());
         assertTrue(fileAuthorization.areViewRightsDelegated());
+        // A token previously delegated by this macro must not keep granting access once the author lost view right.
+        verify(tokenManager).clearToken(attachmentReference, macroOrigin);
     }
 
     @Test
@@ -155,5 +185,6 @@ class PDFViewerAuthorizationManagerTest
         PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, true);
         assertTrue(fileAuthorization.hasViewRights());
         assertTrue(fileAuthorization.areViewRightsDelegated());
+        verify(tokenManager, never()).clearToken(any(AttachmentReference.class), any());
     }
 }

@@ -52,6 +52,10 @@ import com.xwiki.pdfviewer.internal.token.DelegatedTokenManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -70,6 +74,8 @@ class DefaultPDFMacroResourceTest
 
     private static final String UNAUTHORIZED_ERROR_MESSAGE =
         "Failed to get content of requested file due to invalid token or restricted rights.";
+
+    private static final String INTERNAL_ERROR_MESSAGE = "An error occurred while attempting to retrieve file content.";
 
     @InjectMockComponents
     private DefaultPDFMacroResource defaultPDFMacroResource;
@@ -92,11 +98,9 @@ class DefaultPDFMacroResourceTest
     @Mock
     private XWiki wiki;
 
-    @Mock
-    private AttachmentReference attachmentReference;
+    private final DocumentReference docRef = new DocumentReference("wiki", "Space", "Page");
 
-    @Mock
-    private DocumentReference docRef;
+    private final AttachmentReference attachmentReference = new AttachmentReference("file.pdf", docRef);
 
     @Mock
     private XWikiDocument document;
@@ -112,71 +116,93 @@ class DefaultPDFMacroResourceTest
         when(tokenManager.isInvalid(TOKEN)).thenReturn(false);
         when(tokenManager.hasAccess(TOKEN)).thenReturn(true);
         when(csrf.isTokenValid(FORM_TOKEN)).thenReturn(true);
+        when(tokenManager.getTokenAttachmentReference(TOKEN)).thenReturn(attachmentReference);
     }
 
     @Test
     void getContents() throws XWikiException, XWikiRestException, IOException
     {
-
-        when(tokenManager.getTokenAttachmentReference(TOKEN)).thenReturn(attachmentReference);
-        when(attachmentReference.getDocumentReference()).thenReturn(docRef);
         when(wiki.getDocument(docRef, wikiContext)).thenReturn(document);
-        when(document.getAttachment(null)).thenReturn(attachment);
+        when(document.getAttachment("file.pdf")).thenReturn(attachment);
         when(attachment.getContentInputStream(wikiContext)).thenReturn(
             new ByteArrayInputStream(ATTACHMENT_CONTENT.getBytes()));
 
-        Response response =
-            defaultPDFMacroResource.getContents(new String(Base64.getEncoder().encode(TOKEN.getBytes())), FORM_TOKEN);
+        Response response = defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN);
         assertEquals(200, response.getStatus());
+        assertEquals("application/pdf", String.valueOf(response.getMetadata().getFirst("Content-Type")));
         assertEquals(ATTACHMENT_CONTENT,
             IOUtils.toString((ByteArrayInputStream) response.getEntity(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void getContentsInvalidToken() throws XWikiRestException
+    void getContentsInvalidToken() throws XWikiRestException, XWikiException
     {
         when(tokenManager.isInvalid(TOKEN)).thenReturn(true);
 
-        Response response =
-            defaultPDFMacroResource.getContents(new String(Base64.getEncoder().encode(TOKEN.getBytes())), FORM_TOKEN);
+        Response response = defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN);
         assertEquals(401, response.getStatus());
         assertEquals(UNAUTHORIZED_ERROR_MESSAGE, logCapture.getMessage(0));
+        verify(wiki, never()).getDocument(any(DocumentReference.class), any());
     }
 
     @Test
-    void getContentsNoAccess() throws XWikiRestException
+    void getContentsNoAccess() throws XWikiRestException, XWikiException
     {
         when(tokenManager.hasAccess(TOKEN)).thenReturn(false);
 
-        Response response =
-            defaultPDFMacroResource.getContents(new String(Base64.getEncoder().encode(TOKEN.getBytes())), FORM_TOKEN);
+        Response response = defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN);
         assertEquals(401, response.getStatus());
         assertEquals(UNAUTHORIZED_ERROR_MESSAGE, logCapture.getMessage(0));
+        verify(wiki, never()).getDocument(any(DocumentReference.class), any());
     }
 
     @Test
-    void getContentsInvalidCSRF() throws XWikiRestException
+    void getContentsInvalidCSRF() throws XWikiRestException, XWikiException
     {
         when(csrf.isTokenValid(FORM_TOKEN)).thenReturn(false);
 
-        Response response =
-            defaultPDFMacroResource.getContents(new String(Base64.getEncoder().encode(TOKEN.getBytes())), FORM_TOKEN);
+        Response response = defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN);
         assertEquals(401, response.getStatus());
         assertEquals(UNAUTHORIZED_ERROR_MESSAGE, logCapture.getMessage(0));
+        verify(wiki, never()).getDocument(any(DocumentReference.class), any());
     }
 
     @Test
     void getContentsAttachmentError() throws XWikiException
     {
-
-        when(tokenManager.getTokenAttachmentReference(TOKEN)).thenReturn(attachmentReference);
-        when(attachmentReference.getDocumentReference()).thenReturn(docRef);
         when(wiki.getDocument(docRef, wikiContext)).thenThrow(
             new XWikiException("test exception", new RuntimeException()));
         WebApplicationException exception = assertThrows(WebApplicationException.class,
-            () -> defaultPDFMacroResource.getContents(new String(Base64.getEncoder().encode(TOKEN.getBytes())),
-                FORM_TOKEN));
+            () -> defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN));
         assertEquals(500, exception.getResponse().getStatus());
-        assertEquals("An error occurred while attempting to retrieve file content.", logCapture.getMessage(0));
+        assertEquals(INTERNAL_ERROR_MESSAGE, logCapture.getMessage(0));
+    }
+
+    @Test
+    void getContentsMissingAttachment() throws XWikiException
+    {
+        when(wiki.getDocument(docRef, wikiContext)).thenReturn(document);
+        when(document.getAttachment("file.pdf")).thenReturn(null);
+
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
+            () -> defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN));
+        assertEquals(500, exception.getResponse().getStatus());
+        assertEquals(INTERNAL_ERROR_MESSAGE, logCapture.getMessage(0));
+    }
+
+    @Test
+    void getContentsMalformedToken()
+    {
+        // The token is not valid Base64: the request is rejected before any token or document lookup.
+        WebApplicationException exception = assertThrows(WebApplicationException.class,
+            () -> defaultPDFMacroResource.getContents("not%base64", FORM_TOKEN));
+        assertEquals(500, exception.getResponse().getStatus());
+        assertEquals(INTERNAL_ERROR_MESSAGE, logCapture.getMessage(0));
+        verifyNoInteractions(tokenManager, wiki);
+    }
+
+    private static String encode(String token)
+    {
+        return Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
     }
 }
