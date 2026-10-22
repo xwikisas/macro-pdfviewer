@@ -44,10 +44,19 @@ public class TabLayoutPDFMacro extends BaseElement
         this.tabs = tabs;
     }
 
-    public void clickTab(int index)
+    /**
+     * Selects a tab, which reloads the page to display the PDF of that tab in all the macros of the page.
+     *
+     * @param index the index of the tab to select
+     * @return the reloaded page
+     */
+    public TabLayoutPDFMacroPage clickTab(int index)
     {
         List<WebElement> tabElements = tabs.findElements(By.cssSelector("li a"));
+        getDriver().addPageNotYetReloadedMarker();
         tabElements.get(index).click();
+        getDriver().waitUntilPageIsReloaded();
+        return new TabLayoutPDFMacroPage();
     }
 
     public int getActiveTab()
@@ -97,7 +106,7 @@ public class TabLayoutPDFMacro extends BaseElement
         return getIFrame().getAttribute("width").trim();
     }
 
-    public List<WebElement> getTabs()
+    private List<WebElement> getTabs()
     {
         return tabs.findElements(By.tagName("li"));
     }

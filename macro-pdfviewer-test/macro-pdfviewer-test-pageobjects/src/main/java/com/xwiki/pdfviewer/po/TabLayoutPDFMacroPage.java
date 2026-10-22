@@ -19,6 +19,9 @@
  */
 package com.xwiki.pdfviewer.po;
 
+import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.openqa.selenium.WebElement;
@@ -47,5 +50,22 @@ public class TabLayoutPDFMacroPage extends ViewPage
     public TabLayoutPDFMacro getPDFViewer(int index)
     {
         return new TabLayoutPDFMacro(macros.get(index), tabs.get(index));
+    }
+
+    /**
+     * @return the name of the PDF file selected through the page URL (the {@code file} query string parameter), or
+     *     {@code null} when none is selected
+     */
+    public String getSelectedFile()
+    {
+        String query = URI.create(getDriver().getCurrentUrl()).getRawQuery();
+        if (query != null) {
+            for (String parameter : query.split("&")) {
+                if (parameter.startsWith("file=")) {
+                    return URLDecoder.decode(parameter.substring("file=".length()), StandardCharsets.UTF_8);
+                }
+            }
+        }
+        return null;
     }
 }
