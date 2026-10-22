@@ -19,6 +19,7 @@
  */
 package com.xwiki.pdfviewer.internal.rest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import javax.inject.Inject;
@@ -67,24 +68,45 @@ public class DefaultPDFMacroResource implements PDFMacroResource
     @Override
     public Response getContents(String token, String formToken) throws XWikiRestException
     {
+        String decodedToken = decodeToken(token);
+        if (decodedToken == null || tokenManager.isInvalid(decodedToken) || !tokenManager.hasAccess(decodedToken)
+            || !csrf.isTokenValid(formToken))
+        {
+            logger.warn("Failed to get content of requested file due to invalid token or restricted rights.");
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         try {
-            String decodedToken = new String(Base64.getDecoder().decode(token));
-            if (tokenManager.isInvalid(decodedToken) || !tokenManager.hasAccess(decodedToken) || !csrf.isTokenValid(
-                formToken))
-            {
-                logger.warn("Failed to get content of requested file due to invalid token or restricted rights.");
-                return Response.status(Response.Status.UNAUTHORIZED).build();
-            }
             XWikiContext context = contextProvider.get();
             XWiki wiki = context.getWiki();
             AttachmentReference attachRef = tokenManager.getTokenAttachmentReference(decodedToken);
             XWikiDocument wikiDoc = wiki.getDocument(attachRef.getDocumentReference(), context);
             XWikiAttachment attachment = wikiDoc.getAttachment(attachRef.getName());
+            if (attachment == null) {
+                logger.warn("Failed to get content of requested file [{}] since it doesn't exist.", attachRef);
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
             return Response.status(Response.Status.OK).entity(attachment.getContentInputStream(context))
                 .type("application/pdf").build();
         } catch (Exception e) {
             logger.error("An error occurred while attempting to retrieve file content.", e);
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param token the Base64 encoded access token received in the request
+     * @return the decoded token, or {@code null} when the token is missing or isn't valid Base64, so that such a
+     *     request is rejected as unauthorized like any other invalid token
+     */
+    private String decodeToken(String token)
+    {
+        if (token == null) {
+            return null;
+        }
+        try {
+            return new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 }

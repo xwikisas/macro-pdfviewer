@@ -179,25 +179,33 @@ class DefaultPDFMacroResourceTest
     }
 
     @Test
-    void getContentsMissingAttachment() throws XWikiException
+    void getContentsMissingAttachment() throws XWikiException, XWikiRestException
     {
         when(wiki.getDocument(docRef, wikiContext)).thenReturn(document);
         when(document.getAttachment("file.pdf")).thenReturn(null);
 
-        WebApplicationException exception = assertThrows(WebApplicationException.class,
-            () -> defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN));
-        assertEquals(500, exception.getResponse().getStatus());
-        assertEquals(INTERNAL_ERROR_MESSAGE, logCapture.getMessage(0));
+        Response response = defaultPDFMacroResource.getContents(encode(TOKEN), FORM_TOKEN);
+        assertEquals(404, response.getStatus());
+        assertEquals("Failed to get content of requested file [Attachment wiki:Space.Page@file.pdf] since it doesn't "
+            + "exist.", logCapture.getMessage(0));
     }
 
     @Test
-    void getContentsMalformedToken()
+    void getContentsMalformedToken() throws XWikiRestException
     {
         // The token is not valid Base64: the request is rejected before any token or document lookup.
-        WebApplicationException exception = assertThrows(WebApplicationException.class,
-            () -> defaultPDFMacroResource.getContents("not%base64", FORM_TOKEN));
-        assertEquals(500, exception.getResponse().getStatus());
-        assertEquals(INTERNAL_ERROR_MESSAGE, logCapture.getMessage(0));
+        Response response = defaultPDFMacroResource.getContents("not%base64", FORM_TOKEN);
+        assertEquals(401, response.getStatus());
+        assertEquals(UNAUTHORIZED_ERROR_MESSAGE, logCapture.getMessage(0));
+        verifyNoInteractions(tokenManager, wiki);
+    }
+
+    @Test
+    void getContentsMissingToken() throws XWikiRestException
+    {
+        Response response = defaultPDFMacroResource.getContents(null, FORM_TOKEN);
+        assertEquals(401, response.getStatus());
+        assertEquals(UNAUTHORIZED_ERROR_MESSAGE, logCapture.getMessage(0));
         verifyNoInteractions(tokenManager, wiki);
     }
 
