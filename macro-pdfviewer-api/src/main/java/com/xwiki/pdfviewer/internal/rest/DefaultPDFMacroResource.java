@@ -31,7 +31,6 @@ import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.csrf.CSRFToken;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.rest.XWikiRestException;
 
@@ -62,16 +61,11 @@ public class DefaultPDFMacroResource implements PDFMacroResource
     @Inject
     private Logger logger;
 
-    @Inject
-    private CSRFToken csrf;
-
     @Override
-    public Response getContents(String token, String formToken) throws XWikiRestException
+    public Response getContents(String token) throws XWikiRestException
     {
         String decodedToken = decodeToken(token);
-        if (decodedToken == null || tokenManager.isInvalid(decodedToken) || !tokenManager.hasAccess(decodedToken)
-            || !csrf.isTokenValid(formToken))
-        {
+        if (decodedToken == null || tokenManager.isInvalid(decodedToken) || !tokenManager.hasAccess(decodedToken)) {
             logger.warn("Failed to get content of requested file due to invalid token or restricted rights.");
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -95,8 +89,9 @@ public class DefaultPDFMacroResource implements PDFMacroResource
 
     /**
      * @param token the Base64 encoded access token received in the request
-     * @return the decoded token, or {@code null} when the token is missing or isn't valid Base64, so that such a
-     *     request is rejected as unauthorized like any other invalid token
+     * @return the decoded token, or {@code null} when the token is missing or isn't valid URL-safe Base64 (the
+     *     encoding used by the macro when building the content URL), so that such a request is rejected as
+     *     unauthorized like any other invalid token
      */
     private String decodeToken(String token)
     {
@@ -104,7 +99,7 @@ public class DefaultPDFMacroResource implements PDFMacroResource
             return null;
         }
         try {
-            return new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8);
+            return new String(Base64.getUrlDecoder().decode(token), StandardCharsets.UTF_8);
         } catch (IllegalArgumentException e) {
             return null;
         }

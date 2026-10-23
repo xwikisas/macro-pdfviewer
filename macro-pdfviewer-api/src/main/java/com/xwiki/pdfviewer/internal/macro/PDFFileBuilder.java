@@ -28,7 +28,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.csrf.CSRFToken;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
@@ -54,10 +53,7 @@ import com.xwiki.pdfviewer.macro.PDFFile;
 @Singleton
 public class PDFFileBuilder
 {
-    private static final String PDF_CONTENT_FORMAT = "%s/rest/pdfmacro/contents?access_token=%s&form_token=%s";
-
-    @Inject
-    private CSRFToken csrf;
+    private static final String PDF_CONTENT_FORMAT = "%s/rest/pdfmacro/contents?access_token=%s";
 
     @Inject
     @Named("resource/standardURL")
@@ -246,7 +242,6 @@ public class PDFFileBuilder
         DocumentReference currentAuthor = documentUserSerializer.serialize(sdoc.getAuthors().getContentAuthor());
         String tokenId = tokenManager.getToken(currentAuthor, attachmentReference, sdoc.getDocumentReference());
         String encodedToken = Base64.getUrlEncoder().encodeToString(tokenId.getBytes());
-        String formToken = this.csrf.getToken();
-        return String.format(PDF_CONTENT_FORMAT, wikiContext.getRequest().getContextPath(), encodedToken, formToken);
+        return String.format(PDF_CONTENT_FORMAT, wikiContext.getRequest().getContextPath(), encodedToken);
     }
 }

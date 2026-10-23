@@ -19,10 +19,13 @@
  */
 package com.xwiki.pdfviewer.internal.token;
 
-import java.util.HashMap;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -49,7 +52,12 @@ public class DelegatedTokenManager
     private static final String TOKEN_DELETE_FORMAT =
         "Deleted delegated token for file [{}] from macro origin document [{}].";
 
-    private final Map<String, DelegatedToken> tokens = new HashMap<>();
+    // A token is renewed each time the macro is rendered, so it only has to outlive the loading of the viewer.
+    private static final Duration TOKEN_VALIDITY = Duration.ofHours(1);
+
+    private final Map<String, DelegatedToken> tokens = new ConcurrentHashMap<>();
+
+    private Clock clock = Clock.systemUTC();
 
     @Inject
     private Logger logger;
@@ -82,7 +90,10 @@ public class DelegatedTokenManager
                 tokens.remove(token.toString());
             } else if (!checkAuthorViewRights(token)) {
                 return "";
+            } else if (token.isExpired(now())) {
+                clearToken(token);
             } else {
+                token.setExpirationDate(getExpirationDate());
                 return token.toString();
             }
         }
@@ -99,6 +110,10 @@ public class DelegatedTokenManager
     public boolean isInvalid(String token)
     {
         DelegatedToken foundToken = tokens.get(token);
+        if (foundToken != null && foundToken.isExpired(now())) {
+            clearToken(foundToken);
+            return true;
+        }
         return foundToken == null;
     }
 
@@ -148,6 +163,22 @@ public class DelegatedTokenManager
     }
 
     /**
+     * Remove all tokens issued by the macros of a given document.
+     *
+     * @param macroOrigin {@link DocumentReference} of the macro origin document
+     */
+    public void clearOriginTokens(DocumentReference macroOrigin)
+    {
+        tokens.values().removeIf(token -> {
+            boolean matches = token.getMacroOrigin().equals(macroOrigin);
+            if (matches) {
+                logger.debug(TOKEN_DELETE_FORMAT, token.getFileReference(), macroOrigin);
+            }
+            return matches;
+        });
+    }
+
+    /**
      * Get the {@link AttachmentReference} of the given token representation.
      *
      * @param tokenId token id
@@ -171,7 +202,8 @@ public class DelegatedTokenManager
     public boolean hasAccess(String token)
     {
         DelegatedToken fileToken = tokens.getOrDefault(token, null);
-        return fileToken != null && checkAuthorViewRights(fileToken) && checkUserViewRights(fileToken);
+        return fileToken != null && !fileToken.isExpired(now()) && checkAuthorViewRights(fileToken)
+            && checkUserViewRights(fileToken);
     }
 
     private boolean checkAuthorViewRights(DelegatedToken fileToken)
@@ -211,7 +243,9 @@ public class DelegatedTokenManager
         String tokenId = "";
         boolean canView = this.authorizationManager.hasAccess(Right.VIEW, user, fileId.getDocumentReference());
         if (canView) {
-            DelegatedToken token = new DelegatedToken(user, fileId, macroOrigin);
+            Instant now = now();
+            tokens.values().removeIf(existingToken -> existingToken.isExpired(now));
+            DelegatedToken token = new DelegatedToken(user, fileId, macroOrigin, getExpirationDate());
             tokens.put(token.toString(), token);
             logger.debug("New token created for file [{}] on origin [{}] and user [{}].", fileId, macroOrigin, user);
             tokenId = token.toString();
@@ -220,5 +254,15 @@ public class DelegatedTokenManager
                 fileId, macroOrigin, user);
         }
         return tokenId;
+    }
+
+    private Instant now()
+    {
+        return this.clock.instant();
+    }
+
+    private Instant getExpirationDate()
+    {
+        return now().plus(TOKEN_VALIDITY);
     }
 }
