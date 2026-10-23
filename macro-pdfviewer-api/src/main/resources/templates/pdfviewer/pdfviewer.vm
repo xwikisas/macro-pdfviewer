@@ -44,13 +44,11 @@
     <![endif]-->
     </div>
     #set ($dispose = $xwiki.jsx.use('XWiki.PDFViewerMacro'))
-  #elseif (!$file.getAttachmentReference().isPresent() || !$file.hasViewRights())
-    #error("$services.localization.render(
-      'pdfviewer.error.nodocument')")
   #else
-    #set($pdfReference = $file.getAttachmentReference().get())
-    #error("$services.localization.render('pdfviewer.error.noattachment',[$escapetool.xml($pdfReference.getName()),
-    	$escapetool.xml($services.model.serialize($pdfReference.getDocumentReference(), 'default'))])")
+    ## The same error is displayed whether the attachment doesn't exist or the user can't view it, so that it doesn't
+    ## reveal the existence of an attachment the user can't view.
+    #error($escapetool.xml($services.localization.render('pdfviewer.error.unavailableFile',
+      [$file.getAttachmentReference().get().getName()])))
   #end
 #end
 
@@ -78,15 +76,15 @@
     ##===========
     <div class="floatcontainer">
       <ul class="xwikitabbar">
+      ## Each file gets a tab, even when it can't be displayed, so that the user can see the error of a file they
+      ## expect instead of the file being silently left out.
       #foreach ($file in $files)
-        #if ($file.getAttachmentReference().isPresent())
-          #set ($pdfRef = $file.getAttachmentReference().get())
-          #checkIfActive($pdfRef)
-          <li $!activeClass>
-            <a href="$doc.getURL('view', "file=$escapetool.url($pdfRef.getName())")">
-              $escapetool.xml($pdfRef.getName())</a>
-          </li>
-        #end
+        #set ($pdfRef = $file.getAttachmentReference().get())
+        #checkIfActive($pdfRef)
+        <li $!activeClass>
+          <a href="$doc.getURL('view', "file=$escapetool.url($pdfRef.getName())")">
+            $escapetool.xml($pdfRef.getName())</a>
+        </li>
       #end
       </ul>
     </div>
@@ -95,12 +93,10 @@
     ##==========================
     <div class='xwikitabpanescontainer'>
     #foreach ($file in $files)
-      #if ($file.getAttachmentReference().isPresent())
-        #checkIfActive($file.getAttachmentReference().get())
-        #if ($isActive)
-          #displayFile($file)
-          #break
-        #end
+      #checkIfActive($file.getAttachmentReference().get())
+      #if ($isActive)
+        #displayFile($file)
+        #break
       #end
     #end
     </div>

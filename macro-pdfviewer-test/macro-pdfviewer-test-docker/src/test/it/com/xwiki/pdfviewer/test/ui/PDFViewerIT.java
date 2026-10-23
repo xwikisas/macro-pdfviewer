@@ -68,8 +68,8 @@ class PDFViewerIT
 
     private static final String PDF_TEXT_FORMAT = "PDF file for testing the pdf viewer macro-%d.";
 
-    private static final String NO_ACCESS_ERROR =
-        "Error: The document does not exist, or you have no access to that document.";
+    private static final String UNAVAILABLE_FILE_ERROR =
+        "Error: The file [%s] does not exist or you are not allowed to view it.";
 
     private static final String SPECIAL_CHARACTERS_PDF =
         "Te.t.with.special,.chrs.-.test.It.s.a.test.Test.1.and.2.3.4.100.a.test.1.2.3.5.pdf";
@@ -242,8 +242,46 @@ class PDFViewerIT
         assertEquals(1, page.getPDFViewerMacrosCount());
         assertEquals(PDF_TEXT, page.getPDFViewer(0).getText());
         assertTrue(page.hasErrorMessage());
-        assertEquals(NO_ACCESS_ERROR, page.getErrorMessage(0));
-        assertEquals(NO_ACCESS_ERROR, page.getErrorMessage(1));
+        assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest-2.pdf"), page.getErrorMessage(0));
+        assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest-2.pdf"), page.getErrorMessage(1));
+
+        setup.loginAsSuperAdmin();
+    }
+
+    @Test
+    @Order(6)
+    void tabLayoutWithUnavailableFiles(TestUtils setup, TestReference testReference) throws Exception
+    {
+        // UserTest can't view PDFNoRights, created by asAuthor(). A PDF the user can't view, or that doesn't exist,
+        // still gets its tab, with the same error whatever the way the attachment is referenced: as a full reference
+        // in the first macro, with the "document" parameter in the second one.
+        setup.loginAsSuperAdmin();
+        setup.createPage(testReference, String.join("\n\n",
+            "{{pdfviewer file=\"PDFViewerMacro.PDFNoRights@PDFTest.pdf,PDFTest-1.pdf,missing.pdf\"/}}",
+            "{{pdfviewer file=\"PDFTest.pdf,PDFTest-1.pdf,missing.pdf\" document=\"PDFViewerMacro.PDFNoRights\"/}}"));
+        attachFile(setup, testReference, "PDFTest-1.pdf");
+
+        setup.login("UserTest", "UserTest");
+        setup.gotoPage(testReference);
+        TabLayoutPDFMacroPage page = new TabLayoutPDFMacroPage();
+        assertEquals(2, page.getPDFViewerMacrosCount());
+        for (int i = 0; i < 2; i++) {
+            TabLayoutPDFMacro macro = page.getPDFViewer(i);
+            assertEquals(List.of("PDFTest.pdf", "PDFTest-1.pdf", "missing.pdf"), macro.getTabsNames());
+            assertActiveTab(macro, 0, "PDFTest.pdf");
+            assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest.pdf"), macro.getErrorMessage());
+        }
+
+        page = page.getPDFViewer(0).clickTab(1);
+        for (int i = 0; i < 2; i++) {
+            assertEquals(String.format(PDF_TEXT_FORMAT, 1), page.getPDFViewer(i).getText());
+        }
+
+        // A missing attachment displays the same error as an attachment the user can't view.
+        page = page.getPDFViewer(0).clickTab(2);
+        for (int i = 0; i < 2; i++) {
+            assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "missing.pdf"), page.getPDFViewer(i).getErrorMessage());
+        }
 
         setup.loginAsSuperAdmin();
     }

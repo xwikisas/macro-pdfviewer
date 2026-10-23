@@ -96,6 +96,14 @@ public class TabLayoutPDFMacro extends BaseElement
         }
     }
 
+    /**
+     * @return the error message displayed instead of the PDF of the active tab
+     */
+    public String getErrorMessage()
+    {
+        return macro.findElement(By.cssSelector(".errormessage")).getText();
+    }
+
     public String getHeight()
     {
         return getIFrame().getAttribute("height");
