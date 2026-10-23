@@ -116,7 +116,10 @@ public class PDFViewerMacro extends AbstractMacro<PDFViewerMacroParameters>
                 Collections.addAll(allFiles, filesFromExternalUrl);
             }
             List<PDFFile> resourcesList = new ArrayList<>();
-            boolean delegatedRights = delegatedRightsValues.contains(parameters.getAsAuthor().toLowerCase());
+            // The view right is delegated for the content written by the author of the page, which isn't the case of
+            // a restricted rendering (e.g. a comment).
+            boolean delegatedRights = !context.getTransformationContext().isRestricted()
+                && delegatedRightsValues.contains(parameters.getAsAuthor().toLowerCase());
             for (String file : allFiles) {
                 resourcesList.add(getPDFFile(file, delegatedRights, parameters.getDocument()));
             }

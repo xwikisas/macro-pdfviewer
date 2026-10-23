@@ -219,6 +219,19 @@ class PDFViewerMacroTest
         verify(this.fileBuilder).handleInternalAttachment("file.pdf", true, null);
     }
 
+    @Test
+    void executeWithDelegatedRightsInRestrictedContext() throws Exception
+    {
+        // Restricted renderings, such as comments, display content that wasn't written by the author of the page.
+        this.macroContext.getTransformationContext().setRestricted(true);
+        this.parameters.setFile("file.pdf");
+        this.parameters.setAsAuthor("true");
+
+        this.macro.execute(this.parameters, null, this.macroContext);
+
+        verify(this.fileBuilder).handleInternalAttachment("file.pdf", false, null);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = { "0", "false", "no", "", "on" })
     void executeWithoutDelegatedRights(String asAuthor) throws Exception

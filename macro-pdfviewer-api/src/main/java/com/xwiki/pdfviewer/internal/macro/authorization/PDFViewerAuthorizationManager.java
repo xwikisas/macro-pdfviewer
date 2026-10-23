@@ -88,12 +88,22 @@ public class PDFViewerAuthorizationManager
         }
 
         XWikiDocument sdoc = (XWikiDocument) wikiContext.get(XWikiDocument.CKEY_SDOC);
+        if (!canDelegate(sdoc, wikiContext)) {
+            return fileAuthorization;
+        }
         if (!delegatedRights) {
             tokenManager.clearToken(attachmentReference, sdoc.getDocumentReference());
             return fileAuthorization;
         }
         hasDelegatedViewRights(attachmentReference, sdoc, fileAuthorization);
         return fileAuthorization;
+    }
+
+    private boolean canDelegate(XWikiDocument sdoc, XWikiContext wikiContext) throws XWikiException
+    {
+        // The view right is delegated by the author of a saved document only, e.g. not for the content rendered by a
+        // filesystem template.
+        return sdoc != null && wikiContext.getWiki().exists(sdoc.getDocumentReference(), wikiContext);
     }
 
     private void hasDelegatedViewRights(AttachmentReference attachmentReference, XWikiDocument sdoc,

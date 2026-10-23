@@ -113,6 +113,7 @@ class PDFViewerAuthorizationManagerTest
         when(wikiContext.get(XWikiDocument.CKEY_SDOC)).thenReturn(sdoc);
         when(sdoc.getAuthors()).thenReturn(documentAuthors);
         when(sdoc.getDocumentReference()).thenReturn(macroOrigin);
+        when(wiki.exists(macroOrigin, wikiContext)).thenReturn(true);
         when(documentAuthors.getContentAuthor()).thenReturn(sdocUserRef);
         when(documentUserSerializer.serialize(sdocUserRef)).thenReturn(sdocUserDocRef);
         when(attachmentReference.getDocumentReference()).thenReturn(documentReference);
@@ -186,5 +187,28 @@ class PDFViewerAuthorizationManagerTest
         assertTrue(fileAuthorization.hasViewRights());
         assertTrue(fileAuthorization.areViewRightsDelegated());
         verify(tokenManager, never()).clearToken(any(AttachmentReference.class), any());
+    }
+
+    @Test
+    void hasViewRightsDelegatedWhenSecureDocumentIsNotSaved() throws XWikiException
+    {
+        // The content rendered by a filesystem template has a secure document that doesn't exist in the store.
+        when(wiki.exists(macroOrigin, wikiContext)).thenReturn(false);
+        when(authorizationManager.hasAccess(Right.VIEW, sdocUserDocRef, documentReference)).thenReturn(true);
+
+        PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, true);
+        assertFalse(fileAuthorization.hasViewRights());
+        assertFalse(fileAuthorization.areViewRightsDelegated());
+        verify(authorizationManager, never()).hasAccess(Right.VIEW, sdocUserDocRef, documentReference);
+    }
+
+    @Test
+    void hasViewRightsDelegatedWithoutSecureDocument() throws XWikiException
+    {
+        when(wikiContext.get(XWikiDocument.CKEY_SDOC)).thenReturn(null);
+
+        PDFFileAuthorization fileAuthorization = pdfAuthorizationManager.hasViewRights(attachmentReference, true);
+        assertFalse(fileAuthorization.hasViewRights());
+        assertFalse(fileAuthorization.areViewRightsDelegated());
     }
 }
