@@ -263,6 +263,7 @@ class PDFFileBuilderTest
 
         assertEquals("", pdfFile.getURL());
         assertFalse(pdfFile.hasViewRights());
+        assertEquals(attachmentRef, pdfFile.getAttachmentReference().get());
     }
 
     @Test
@@ -276,6 +277,7 @@ class PDFFileBuilderTest
 
         assertEquals("", pdfFile.getURL());
         assertFalse(pdfFile.hasViewRights());
+        assertEquals(attachmentRef, pdfFile.getAttachmentReference().get());
         verifyNoInteractions(tokenManager);
     }
 
@@ -422,7 +424,8 @@ class PDFFileBuilderTest
 
         assertEquals("", pdfFile.getURL());
         assertFalse(pdfFile.hasViewRights());
-        assertTrue(pdfFile.areViewRightsDelegated());
+        assertFalse(pdfFile.areViewRightsDelegated());
+        assertEquals(attachmentRef, pdfFile.getAttachmentReference().get());
         verifyNoInteractions(tokenManager);
     }
 
@@ -439,9 +442,32 @@ class PDFFileBuilderTest
 
         PDFFile pdfFile = pdfFileBuilder.handleInternalAttachment(pdfFileReference, false, null);
 
+        // The reference is kept to display the file in a tab, as when it's found in the given or current document.
         assertEquals("", pdfFile.getURL());
         assertFalse(pdfFile.hasViewRights());
-        assertFalse(pdfFile.getAttachmentReference().isPresent());
+        assertEquals(fullRef, pdfFile.getAttachmentReference().get());
+        verify(otherDocument, never()).getAttachmentURL(PDF_INTERNAL, wikiContext);
+    }
+
+    @Test
+    void handleInternalAttachmentFullReferenceMissingAttachmentTest() throws XWikiException
+    {
+        // Not found in the given nor the current document, then resolved as a full reference to a missing attachment.
+        String pdfFileReference = "Other.Page@" + PDF_INTERNAL;
+        when(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT, docRef)).thenReturn(
+            new AttachmentReference("missing.pdf", docRef));
+        AttachmentReference fullRef = mockAttachmentInOtherDocument();
+        when(otherDocument.getAttachment(PDF_INTERNAL)).thenReturn(null);
+        when(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT)).thenReturn(fullRef);
+        PDFFileAuthorization fileAuthorization = new PDFFileAuthorization();
+        fileAuthorization.setHasViewRights(true);
+        when(pdfViewerAuthManager.hasViewRights(fullRef, false)).thenReturn(fileAuthorization);
+
+        PDFFile pdfFile = pdfFileBuilder.handleInternalAttachment(pdfFileReference, false, null);
+
+        assertEquals("", pdfFile.getURL());
+        assertFalse(pdfFile.hasViewRights());
+        assertEquals(fullRef, pdfFile.getAttachmentReference().get());
     }
 
     private AttachmentReference mockAttachmentInOtherDocument() throws XWikiException

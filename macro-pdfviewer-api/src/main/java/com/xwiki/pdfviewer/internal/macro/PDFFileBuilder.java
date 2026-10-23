@@ -144,19 +144,22 @@ public class PDFFileBuilder
         if (fileOptional.isEmpty()) {
             AttachmentReference attachmentReference =
                 new AttachmentReference(entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT));
-            return getPDFFile(attachmentReference, delegatedRights);
+            return buildPDFFile(attachmentReference, delegatedRights);
         }
         return fileOptional.get();
     }
 
-    private PDFFile getPDFFile(AttachmentReference attachmentRef, boolean delegatedRights) throws XWikiException
+    private PDFFile buildPDFFile(AttachmentReference attachmentRef, boolean delegatedRights) throws XWikiException
     {
+        // The attachment reference is always set, so that the file is displayed in a tab named after it even when it
+        // can't be viewed. The URL and the view rights are only set when the attachment exists and the user can view
+        // it, either with their own view right or the one delegated by the author.
         PDFFile pdfFile = new PDFFile();
+        pdfFile.setAttachmentReference(attachmentRef);
         PDFFileAuthorization fileAuthorization = pdfViewerAuthManager.hasViewRights(attachmentRef, delegatedRights);
         if (attachmentExists(attachmentRef) && fileAuthorization.hasViewRights()) {
-            pdfFile.setHasViewRights(fileAuthorization.hasViewRights());
+            pdfFile.setHasViewRights(true);
             pdfFile.setDelegatedViewRights(fileAuthorization.areViewRightsDelegated());
-            pdfFile.setAttachmentReference(attachmentRef);
             pdfFile.setUrl(buildAttachmentURL(attachmentRef, pdfFile));
         }
         return pdfFile;
@@ -175,7 +178,7 @@ public class PDFFileBuilder
             AttachmentReference localAttachRef = new AttachmentReference(
                 this.entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT, docRef));
             if (attachmentExists(localAttachRef)) {
-                optionalPDFFile = Optional.of(generatePDFFile(delegatedRights, localAttachRef));
+                optionalPDFFile = Optional.of(buildPDFFile(localAttachRef, delegatedRights));
             }
         }
         return optionalPDFFile;
@@ -192,31 +195,10 @@ public class PDFFileBuilder
                 this.entityReferenceResolver.resolve(pdfFileReference, EntityType.ATTACHMENT, givenDocumentReference));
 
             if (attachmentExists(attachRef)) {
-                pdfFile = generatePDFFile(delegatedRights, attachRef);
+                pdfFile = buildPDFFile(attachRef, delegatedRights);
             }
         }
         return Optional.ofNullable(pdfFile);
-    }
-
-    private PDFFile generatePDFFile(boolean delegatedRights, AttachmentReference attachRef) throws XWikiException
-    {
-        XWikiContext wikiContext = wikiContextProvider.get();
-        PDFFile pdfFile = new PDFFile();
-        PDFFileAuthorization fileAuthorization = pdfViewerAuthManager.hasViewRights(attachRef, delegatedRights);
-        pdfFile.setAttachmentReference(attachRef);
-        pdfFile.setHasViewRights(fileAuthorization.hasViewRights());
-        pdfFile.setDelegatedViewRights(fileAuthorization.areViewRightsDelegated());
-        // To view the attachment, the user needs to have view rights, no matter if they are delegated (author's
-        // view rights) or the user itself has access.
-        if (pdfFile.areViewRightsDelegated() && pdfFile.hasViewRights()) {
-            pdfFile.setUrl(getTokenURL(attachRef));
-        } else if (pdfFile.hasViewRights()) {
-            XWikiDocument attachmentDocument =
-                wikiContext.getWiki().getDocument(attachRef.getDocumentReference(), wikiContext);
-            String url = attachmentDocument.getAttachmentURL(attachRef.getName(), wikiContext);
-            pdfFile.setUrl(url);
-        }
-        return pdfFile;
     }
 
     private boolean attachmentExists(AttachmentReference attachmentReference) throws XWikiException
