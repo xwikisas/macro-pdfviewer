@@ -236,6 +236,19 @@ class PDFViewerIT
         assertEquals(String.format(PDF_TEXT_FORMAT, 2), page.getPDFViewer(1).getText());
         assertEquals(String.format(PDF_TEXT_FORMAT, 2), page.getPDFViewer(2).getText());
 
+        // The macro works in comments, but they are rendered in restricted mode, so the view right isn't delegated
+        // there.
+        String restrictedFile = "PDFViewerMacro.PDFNoRights@PDFTest.pdf";
+        setup.addObject(testReference, "XWiki.XWikiComments", "author", "XWiki.superadmin", "comment",
+            "{{pdfviewer file=\"" + restrictedFile + "\"/}}");
+        setup.addObject(testReference, "XWiki.XWikiComments", "author", "XWiki.superadmin", "comment",
+            "{{pdfviewer file=\"" + restrictedFile + "\" asauthor=\"1\"/}}");
+
+        page = gotoComments(setup, testReference);
+        assertEquals(2, page.getPDFViewerMacrosCount());
+        assertEquals(PDF_TEXT, page.getPDFViewer(0).getText());
+        assertEquals(PDF_TEXT, page.getPDFViewer(1).getText());
+
         setup.login("UserTest", "UserTest");
         page = gotoPDFViewerMacroPage(setup, testReference);
 
@@ -244,6 +257,11 @@ class PDFViewerIT
         assertTrue(page.hasErrorMessage());
         assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest-2.pdf"), page.getErrorMessage(0));
         assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest-2.pdf"), page.getErrorMessage(1));
+
+        page = gotoComments(setup, testReference);
+        assertEquals(0, page.getPDFViewerMacrosCount());
+        assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest.pdf"), page.getErrorMessage(0));
+        assertEquals(String.format(UNAVAILABLE_FILE_ERROR, "PDFTest.pdf"), page.getErrorMessage(1));
 
         setup.loginAsSuperAdmin();
     }
@@ -313,6 +331,13 @@ class PDFViewerIT
     private PDFViewerMacroPage gotoPDFViewerMacroPage(TestUtils setup, EntityReference reference)
     {
         setup.gotoPage(reference);
+        return new PDFViewerMacroPage();
+    }
+
+    private PDFViewerMacroPage gotoComments(TestUtils setup, EntityReference reference)
+    {
+        // The comments viewer displays only the comments, without the page content.
+        setup.gotoPage(reference, "view", "viewer=comments");
         return new PDFViewerMacroPage();
     }
 

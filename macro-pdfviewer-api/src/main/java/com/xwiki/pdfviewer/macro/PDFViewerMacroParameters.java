@@ -195,9 +195,8 @@ public class PDFViewerMacroParameters
      *            that requests to see it through the macro, false (or 0 or no) otherwise
      */
     @PropertyAdvanced
-    @PropertyDescription("If this value is true (or 1 or yes) and the viewing user has no access to the document "
-        + "containing the PDF file, the PDF file could still be viewed on behalf of your view right (if you have view "
-        + "right on the containing document).")
+    @PropertyDescription("Readers who can't access the PDF file can view it with your view right (use values true, 1 "
+        + "or yes). Works only in the page content.")
     public void setAsAuthor(String asAuthor)
     {
         this.asAuthor = asAuthor;
