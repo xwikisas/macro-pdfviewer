@@ -50,9 +50,9 @@ rendering.macro.pdfviewer.parameter.width.description=A megtekintő szélessége
 rendering.macro.pdfviewer.parameter.height.name=Magasság
 rendering.macro.pdfviewer.parameter.height.description=A megtekintő magassága pixelekben. Amennyiben nincs definiálva az alapértelmezett érték lesz használva.
 ### Missing: rendering.macro.pdfviewer.parameter.asAuthor.name=Delegate my view right
-### Missing: rendering.macro.pdfviewer.parameter.asAuthor.description=If this value is true (or 1 or yes) and the viewing user has no access to the document containing the PDF file, the PDF file could still be viewed on behalf of your view right (if you have view right on the containing document).
-### Missing: pdfviewer.error.nodocument=The document does not exist, or you have no access to that document.
-### Missing: pdfviewer.error.noattachment=The file attachment [{0}] does not exist in document [{1}].
+rendering.macro.pdfviewer.parameter.asAuthor.description=If this value is true (or 1 or yes) and the viewing user has no access to the document containing the PDF file, the PDF file could still be viewed on behalf of your view right (if you have view right on the containing document).
+### Missing: pdfviewer.iframe.title=PDF Viewer iframe
+### Missing: pdfviewer.error.unavailableFile=The file [{0}] does not exist or you are not allowed to view it.
 ### Missing: pdfviewer.error.nofile=No PDF filename or external URL provided.
 ### Missing: pdfviewer.extension.name=PDF Viewer Macro (Pro)
 ### Missing: pdfviewer.viewer.notification.linkCopied=PDF file link copied to the clipboard!
@@ -63,5 +63,8 @@ rendering.macro.pdfviewer.parameter.height.description=A megtekintő magassága 
 ### Missing: PDFViewer.Code.PDFViewerConfigurationClass_trustedOrigins.hint=Add the viewer origins you trust, each on a new line. If you use pdfs located on external domains, you should append the domain of your wiki to this field. i.e. 'http://localhost:8080'.
 ### Missing: PDFViewer.Code.PDFViewerConfigurationClass_withCredentials=With credentials
 ### Missing: PDFViewer.Code.PDFViewerConfigurationClass_withCredentials.hint=Enable this if you access pdfs located on external domains that need authentication. With this field enabled, your validation cookies will be forwarded to the server that holds the pdfs.
+### Missing: pdfviewer.error.nodocument=The document does not exist, or you have no access to that document.
+### Missing: pdfviewer.error.noattachment=The file attachment [{0}] does not exist in document [{1}].
+#@deprecatedend
 </content>
 </xwikidoc>
